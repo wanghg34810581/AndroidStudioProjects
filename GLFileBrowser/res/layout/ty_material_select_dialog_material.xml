@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--TYRD: weina 20150624 add -->
+<view class="com.android.internal.app.AlertController$RecycleListView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@*android:id/select_dialog_listview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:cacheColorHint="@null"
+    android:divider="@drawable/ty_material_list_padding_divider"
+    android:scrollbars="vertical"
+    android:overScrollMode="ifContentScrolls"
+    />

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--TYRD: weina 20150624 add -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:gravity="center_vertical"
+    android:paddingLeft="?android:attr/listPreferredItemPaddingStart"
+    android:paddingRight="?android:attr/listPreferredItemPaddingEnd">
+    <LinearLayout 
+        android:id="@*android:id/icon_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:minWidth="58dp"
+        android:gravity="start|center_vertical"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <ImageView 
+            android:id="@*android:id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dip"/>
+    </LinearLayout>
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <TextView android:id="@*android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine ="true"
+            android:textAppearance="?android:attr/textAppearanceListItem" />
+        <TextView android:id="@*android:id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@*android:id/title"
+            android:layout_alignLeft="@*android:id/title"
+            android:maxLines="10"
+            android:textAppearance="?android:attr/textAppearanceListItemSecondary" /> 
+    </RelativeLayout>
+    <LinearLayout android:id="@*android:id/widget_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="end|center_vertical"
+        android:paddingLeft="10dp"
+        android:orientation="vertical"/>
+</LinearLayout>
+    

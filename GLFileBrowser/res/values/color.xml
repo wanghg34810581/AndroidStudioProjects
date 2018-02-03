@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<resources>
+    <color name="yellow">#FFF000</color>
+    <color name="gray">#A6A6A0</color>
+    <color name="orange">#ff9900</color>
+    <color name="deepcolor">#faaa5f</color>
+    <color name="shadowcolor">#333333</color>
+    <color name="naming">#ABABAB</color>
+    <color name="red">#FF0000</color>
+    <color name="background">#ffffffff</color>
+    <color name="orange_yellow">#9b9ba0</color>
+
+    <drawable name="semi_black">#80000000</drawable>
+
+    <color name="remote_connect_text">#FFe78018</color>
+    <color name="remote_disconnect_text">#FF901821</color>
+    <color name="tab_item_bg_normal">#FF394652</color>
+    <color name="tab_item_text_normal">#aaFFFFFF</color>
+    <color name="tab_item_text_light">#FFFFFFFF</color>
+    <!--TYRD: weina 20150624 add begin-->
+    <color name="ty_material_actionbar_background">#394652</color>
+    <color name="ty_material_ab_title_text_color">#ffffff</color>
+    <color name="ty_material_ab_subtitle_text_color">#80ffffff</color>
+    <color name="ty_material_primary_text_default_color">#000000</color>
+    <color name="ty_material_secondary_text_default_color">#787878</color>
+    <color name="ty_meterial_buttonbar_divider_color">#d7d6d9</color>
+    <color name="ty_material_background_color">#ffffffff</color>
+    <color name="ty_material_list_divider_color">#eaeaea</color>
+    <color name="ty_material_tab_background_color">#394652</color>
+    <color name="ty_material_tab_selected_text_color">#FFffffff</color>
+    <color name="ty_material_tab_default_text_color">#FF888d93</color>   
+    <color name="ty_material_color_control_normal">#969595</color>
+    <color name="ty_material_color_control_activated">#4cda64</color>
+    <color name="ty_material_actionbar_menu_text_color">#ffffff</color>
+    <color name="ty_material_edit_text_background_color">#eaeaea</color>
+    
+    <!--TYRD: weina 20150624 add end-->
+</resources>

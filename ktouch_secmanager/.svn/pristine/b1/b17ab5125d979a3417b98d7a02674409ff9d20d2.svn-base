@@ -1,0 +1,24 @@
+package com.guli.secmanager.Checkup;
+
+import android.view.View;
+
+/**
+ * Created by yujie on 16-4-11.
+ */
+// 为控件高度变化动画而加入的包装类
+class ViewWrapper {
+    public static final String TAG = "ViewWrapper";
+    private View mTarget;
+    public ViewWrapper(View target) {
+        mTarget = target;
+    }
+
+    public int getHeight() {
+        return mTarget.getLayoutParams().height;
+    }
+
+    public void setHeight(int height) {
+        mTarget.getLayoutParams().height = height;
+        mTarget.requestLayout();
+    }
+}

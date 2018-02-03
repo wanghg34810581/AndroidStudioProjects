@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:left="@dimen/normal_gap" android:right="@dimen/normal_gap">
+        <shape android:shape="rectangle" android:thickness="1px">
+            <solid android:color="@color/divider_color" />
+        </shape>
+    </item>
+</layer-list>

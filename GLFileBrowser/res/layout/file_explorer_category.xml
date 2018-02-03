@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/file_browse_frame"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <!-- path -->
+    <!--TYRD: weina 20150624 change android:layout_height="wrap_content" to android:layout_height="40dp"-->
+    <LinearLayout
+        android:id="@+id/navigation_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/secondary_title_background"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:visibility="gone" >
+        <!--TYRD: weina 20150624 change style="?android:attr/textAppearanceMedium" to android:textAppearance="?android:attr/textAppearanceMedium"-->
+        <TextView
+            android:id="@+id/current_path_view"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:paddingLeft="10dip"
+            android:singleLine="true" />
+
+        
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:id="@+id/current_path_pane"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/path_pane_bg"
+                android:gravity="center_vertical"
+                android:maxWidth="300dip" >
+
+                <LinearLayout
+                    android:id="@+id/current_path_scroller"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dip"
+                    android:layout_weight="1" >
+                    <!--TYRD: weina 20150624 change style="?android:attr/textAppearanceMedium" to android:textAppearance="?android:attr/textAppearanceMedium"-->
+                    <TextView
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="start"
+                        android:paddingLeft="10dip"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/path_pane_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/arrow_down"
+                    android:visibility="gone" />
+            </LinearLayout> 
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/path_pane_up_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginLeft="5dip"
+            android:src="@drawable/path_up_level"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+    <!-- end path -->
+    <!---TYRD: weina 20150624 add begin-->
+    <!--<HorizontalScrollView
+        android:id="@+id/dropdown_navigation"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:scrollbars="none"
+        android:background="@drawable/secondary_title_background" >
+
+        <LinearLayout
+            android:id="@+id/dropdown_navigation_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </HorizontalScrollView>-->
+    <LinearLayout 
+    
+        android:id="@+id/dropdown_navigation"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/secondary_title_background"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/storge_path"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:singleLine="true"
+            android:gravity="center_vertical"
+            android:background="@drawable/dropdown_item_bg"
+            android:visibility="gone"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        <HorizontalScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="none"
+            android:id="@+id/scroll_id">
+    
+            <LinearLayout
+                android:id="@+id/dropdown_navigation_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" 
+                >
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+    <!--TYRD: weina 20150624 add end-->
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1" >
+
+        <ListView
+            android:id="@+id/file_path_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:footerDividersEnabled="true"
+            android:headerDividersEnabled="true"
+            android:visibility="gone" />
+        <!--TYRD: weina 20150624 change android:layout_height="wrap_content" to android:layout_height="match_parent"-->
+        <ListView
+            android:id="@+id/favorite_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:footerDividersEnabled="true"
+            android:headerDividersEnabled="true"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/empty_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+            <!--TYRD: weina 20150624 add android:id="@+id/icon"-->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/icon"
+                android:src="@drawable/empty_icon" />
+           <!--TYRD: weina 20150624 add android:id="@+id/text" and android:layout_marginTop="12dp",android:textSize="19sp"
+	   deleted android:textColor="#e2e2e2"-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:id="@+id/text"
+                android:text="@string/no_file"
+                android:layout_marginTop="12dp"
+                android:textSize="19sp" />
+        </LinearLayout>
+	<!--TYRD: weina 20150624 deleted begin-->
+<!--
+        <ScrollView
+            android:id="@+id/dropdown_navigation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dropdown"
+            android:overScrollMode="never"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:id="@+id/dropdown_navigation_list"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </ScrollView>
+-->
+<!--TYRD: weina 20150624 deleted end-->
+        <LinearLayout
+            android:id="@+id/sd_not_available_page"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25px"
+                android:src="@drawable/sd_not_available" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/enable_sd_card"
+                android:textSize="22px" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/category_page"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/category_buttons"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:id="@+id/category_music"
+                        style="@style/CategoryButtonStyle"
+                        android:background="@drawable/category_button_left" >
+
+                        <ImageView
+                            style="@style/CategoryButtonIconStyle"
+                            android:src="@drawable/category_icon_music" />
+
+                        <TextView
+                            style="@style/CategoryButtonTextStyle"
+                            android:text="@string/category_music" />
+
+                        <TextView
+                            android:id="@+id/category_music_count"
+                            style="@style/CategoryButtonCountTextStyle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/category_video"
+                        style="@style/CategoryButtonStyle"
+                        android:background="@drawable/category_button_middle" >
+
+                        <ImageView
+                            style="@style/CategoryButtonIconStyle"
+                            android:src="@drawable/category_icon_video" />
+
+                        <TextView
+                            style="@style/CategoryButtonTextStyle"
+                            android:text="@string/category_video" />
+
+                        <TextView
+                            android:id="@+id/category_video_count"
+                            style="@style/CategoryButtonCountTextStyle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/category_picture"
+                        style="@style/CategoryButtonStyle"
+                        android:background="@drawable/category_button_right" >
+
+                        <ImageView
+                            style="@style/CategoryButtonIconStyle"
+                            android:src="@drawable/category_icon_picture" />
+
+                        <TextView
+                            style="@style/CategoryButtonTextStyle"
+                            android:text="@string/category_picture" />
+
+                        <TextView
+                            android:id="@+id/category_picture_count"
+                            style="@style/CategoryButtonCountTextStyle" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal" >
+
+                    <!--
+                         <LinearLayout android:id="@+id/category_theme"
+                        style="@style/CategoryButtonStyle"
+                        android:background="@drawable/category_button_left">
+                        <ImageView android:src="@drawable/category_icon_theme"
+                            style="@style/CategoryButtonIconStyle" />
+                        <TextView android:text="@string/category_theme"
+                            style="@style/CategoryButtonTextStyle" />
+                        <TextView android:id="@+id/category_theme_count"
+                            style="@style/CategoryButtonCountTextStyle" />
+                    </LinearLayout>
+                    -->
+
+                    <LinearLayout
+                        android:id="@+id/category_apk"
+                        style="@style/CategoryButtonStyle"
+                        android:background="@drawable/category_button_left" >
+
+                        <ImageView
+                            style="@style/CategoryButtonIconStyle"
+                            android:src="@drawable/category_icon_apk" />
+
+                        <TextView
+                            style="@style/CategoryButtonTextStyle"
+                            android:text="@string/category_apk" />
+
+                        <TextView
+                            android:id="@+id/category_apk_count"
+                            style="@style/CategoryButtonCountTextStyle" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/category_document"
+                        style="@style/CategoryButtonStyle"
+                        android:background="@drawable/category_button_middle" >
+
+                        <ImageView
+                            style="@style/CategoryButtonIconStyle"
+                            android:src="@drawable/category_icon_document" />
+
+                        <TextView
+                            style="@style/CategoryButtonTextStyle"
+                            android:text="@string/category_document" />
+
+                        <TextView
+                            android:id="@+id/category_document_count"
+                            style="@style/CategoryButtonCountTextStyle" />
+                    </LinearLayout>
+                    <!--
+                         <LinearLayout android:id="@+id/category_zip"
+                        style="@style/CategoryButtonStyle"
+                        android:background="@drawable/category_button_right">
+                        <ImageView android:src="@drawable/category_icon_zip"
+                            style="@style/CategoryButtonIconStyle" />
+                        <TextView android:text="@string/category_zip"
+                            style="@style/CategoryButtonTextStyle" />
+                        <TextView android:id="@+id/category_zip_count"
+                            style="@style/CategoryButtonCountTextStyle" />
+                    </LinearLayout>
+                    -->
+
+                    <LinearLayout
+                        android:id="@+id/category_favorite"
+                        style="@style/CategoryButtonStyle"
+                        android:background="@drawable/category_button_right" >
+
+                        <ImageView
+                            style="@style/CategoryButtonIconStyle"
+                            android:src="@drawable/category_icon_favorite" />
+
+                        <TextView
+                            style="@style/CategoryButtonTextStyle"
+                            android:text="@string/category_favorite" />
+
+                        <TextView
+                            android:id="@+id/category_favorite_count"
+                            style="@style/CategoryButtonCountTextStyle" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone" >
+
+                    <LinearLayout
+                        style="@style/CategoryButtonStyle"
+                        android:background="@drawable/category_button_right" >
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <!--TYRD: weina 20150624 deleted begin-->
+            <!--<RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="47dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="10dp" >
+
+                <TextView
+                    android:id="@+id/sd_card_capacity"
+                    style="@style/InformationTextStyle"
+                    android:drawableLeft="@drawable/sd_card_icon"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/phone_storage"
+                    android:textSize="15sp"
+                    android:textColor="#ff323232"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_marginRight="10dp">
+
+                    <TextView
+                        android:id="@+id/sd_card_available"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/phone_storage"
+                        android:textColor="@color/gray"
+                        android:textSize="12sp" />
+
+                    <ProgressBar
+                        android:id="@+id/sd_card_progressbar"
+                        android:layout_width="80dp"
+                        android:layout_height="10px"
+                        android:layout_gravity="center_vertical"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:max="100" />
+                </LinearLayout>
+            </RelativeLayout>-->
+<!--TYRD: weina 20150624 deleted end-->
+            <Button
+                android:id="@+id/clear_button"
+                android:layout_width="fill_parent"
+                android:layout_height="47dp"
+                android:background="@drawable/clear_button_bg"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="17dp"
+                android:text="@string/phone_clear"
+                android:textSize="15sp"
+                android:textColor="#ff323232"
+                android:visibility="gone"/>
+            <!--TYRD: weina 20150624 change android:layout_marginTop="35dp" to android:layout_marginTop="24dp"-->
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical" >
+                <!--TYRD: weina 20150624 add android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="21dp"-->
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="21dp">
+                    <!--TYRD: weina 20150624 deleted android:layout_marginBottom="5dip"
+                        android:layout_marginLeft="20px"-->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+                        <!--TYRD: weina 20150624 change android:layout_weight="2"to android:layout_weight="1.5"-->
+                        <TextView
+                            android:id="@+id/category_legend_music"
+                            style="@style/CategoryLegendStyle"
+                            android:layout_weight="1.5"
+                            android:drawableLeft="@drawable/legend_music" />
+
+                        <TextView
+                            android:id="@+id/category_legend_video"
+                            style="@style/CategoryLegendStyle"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/legend_video" />
+                    </LinearLayout>
+                    <!--TYRD: weina 20150624 deleted android:layout_marginBottom="5dip"
+                        android:layout_marginLeft="20px" and add android:paddingTop="18dp"-->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="18dp"
+                        android:orientation="horizontal" >
+                        <!--TYRD: weina 20150624 change android:layout_weight="2" to android:layout_weight="1.5"-->
+                        <TextView
+                            android:id="@+id/category_legend_picture"
+                            style="@style/CategoryLegendStyle"
+                            android:layout_weight="1.5"
+                            android:drawableLeft="@drawable/legend_picture" />
+
+                        <TextView
+                            android:id="@+id/category_legend_apk"
+                            style="@style/CategoryLegendStyle"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/legend_apk" />
+
+                        <TextView
+                            android:id="@+id/category_legend_theme"
+                            style="@style/CategoryLegendStyle"
+                            android:drawableLeft="@drawable/legend_theme"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/category_legend_zip"
+                            style="@style/CategoryLegendStyle"
+                            android:drawableLeft="@drawable/legend_zip"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                    <!--TYRD: weina 20150624 deleted android:layout_marginBottom="5dip"
+                        android:layout_marginLeft="20px" and add android:paddingTop="18dp"-->
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="18dp"
+                        android:orientation="horizontal" >
+                        <!--TYRD: weina 20150624 change android:layout_weight="2" to android:layout_weight="1.5"-->
+                        <TextView
+                            android:id="@+id/category_legend_document"
+                            style="@style/CategoryLegendStyle"
+                            android:layout_weight="1.5"
+                            android:drawableLeft="@drawable/legend_document" />
+
+                        <TextView
+                            android:id="@+id/category_legend_other"
+                            style="@style/CategoryLegendStyle"
+                            android:layout_weight="1"
+                            android:drawableLeft="@drawable/legend_other" />
+
+                        <TextView
+                            style="@style/CategoryLegendStyle"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+
+ <!--TYRD: weina 20150624 modity  begin-->   
+            <!-- <com.realfame.fileexplorer.CategoryBar
+                    android:id="@+id/category_bar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="14px"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="25dip"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="5dip"
+                    android:layout_marginTop="25dip" >
+                </com.realfame.fileexplorer.CategoryBar>-->            
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical">
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="8dp">
+                        <FrameLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+                            <com.realfame.fileexplorer.CategoryBar
+                                 android:id="@+id/category_bar"
+                                 android:layout_width="fill_parent"
+                                 android:layout_height="fill_parent"
+                                 android:layout_gravity="center">
+                            </com.realfame.fileexplorer.CategoryBar>
+                        </FrameLayout>
+                        <FrameLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+                            <RelativeLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent">
+                                <ImageView
+                                   android:id="@+id/leftview"
+                                   android:layout_height="match_parent"
+                                   android:layout_width="wrap_content"
+                                   android:layout_alignParentLeft="true"
+                                   android:layout_marginLeft="0dip"
+                                   android:src="@drawable/left_corner"/>
+                                <ImageView
+                                    android:id="@+id/rightview"
+                                    android:layout_height="match_parent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginRight="0dip"
+                                    android:src="@drawable/right_corner"/>  
+                            </RelativeLayout>    
+                        </FrameLayout>   
+                    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/sd_card_capacity"
+                        style="@style/InformationTextStyle"
+                        android:drawableLeft="@drawable/sd_card_icon"
+                        android:visibility="gone" />
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:id ="@+id/phone_storage"
+                            android:text="@string/phone_storage"
+                            android:textSize="14sp"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:textColor="#ff323232"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:id ="@+id/free_space"
+                            android:textSize="14sp"
+                            android:layout_weight="1.2"
+                            android:textColor="#ff323232"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/total_space"
+                            android:textSize="14sp"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:textColor="#ff323232"/>
+                   </LinearLayout >    
+                </LinearLayout>
+		<!--TYRD: weina 20150624 modity end-->
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+<!--TYRD: weina 20150623 modity begin-->
+    <!--<LinearLayout
+        android:id="@+id/moving_operation_bar"
+        style="@style/BottomButtonBar"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/button_moving_confirm"
+            style="@style/BottomButton.Left"
+            android:text="@string/confirm" />
+
+        <Button
+            android:id="@+id/button_moving_cancel"
+            style="@style/BottomButton.Right"
+            android:text="@string/operation_cancel" />
+    </LinearLayout>-->
+	<LinearLayout  
+        android:id="@+id/operatrion_menu_bar"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:gravity="center|center_horizontal|center_vertical"
+        >
+        <ImageView
+            android:id = "@+id/operatrion_menu_copy"
+            android:src="@drawable/operation_button_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id = "@+id/operatrion_menu_move"
+            android:src="@drawable/operation_button_move"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id = "@+id/operatrion_menu_delete"
+            android:src="@drawable/operation_button_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id = "@+id/operatrion_menu_more"
+            android:src="@drawable/ic_menu_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+    </LinearLayout>    
+    <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/moving_operation_bar"
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal" 
+        android:visibility="gone"
+        android:gravity="center|center_horizontal|center_vertical"
+        android:dividerPadding="0dp">
+
+        <Button
+            android:id="@+id/button_moving_confirm"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="21sp"
+            android:textColor="#000000"
+            android:text="@string/confirm" />
+
+        <Button
+            android:id="@+id/button_moving_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="21sp"
+            android:textColor="#000000"
+            android:text="@string/operation_cancel" />
+    </LinearLayout>
+    <!--TYRD: weina 20150623 modity end-->
+</LinearLayout>

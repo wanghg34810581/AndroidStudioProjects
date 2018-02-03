@@ -1,0 +1,613 @@
+package com.guli.secmanager.Checkup;
+
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+
+import android.os.StatFs;
+import android.provider.Telephony;
+import android.provider.CallLog;
+import android.support.annotation.Nullable;
+
+import android.util.DisplayMetrics;
+import android.util.Log;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.guli.secmanager.R;
+import com.guli.secmanager.Utils.FileSizeFormatter;
+import com.guli.secmanager.Utils.ShareUtil;
+import com.guli.secmanager.Utils.UnitConverter;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import tmsdk.common.module.qscanner.QScanResultEntity;
+
+/**
+ * Created by yujie on 16-4-8.
+ */
+public class ScaleScreen extends Fragment {
+    public static final String TAG = "ScaleScreen";
+    public static final String VIRUS_SCAN_START_ACTION = "start_virus_scan_activity";
+    public static final String VIRUS_SCAN_RESULT = "com.guli.secmanager.Checkup.virus_scan_result";
+    public static final String VIRUS_INTENT_DATA = "com.guli.secmanager.Checkup.DATA";
+    private static final String SCORE_VALUE = "com.guli.secmanager.Checkup.score_value";
+    private static final String CLEANED_RUBBISH_SIZE = "com.guli.secmanager.Checkup.cleaned_rubbish_size";
+    private static final String VIRUS_RESULT = "com.guli.secmanager.Checkup.virus_result";
+    public static final String VIRUS_SCANED_SOFTWARE_COUNT = "com.guli.secmanager.Checkup.virus_scaned_software_count";
+    private static final String FLOW_MON_SWITCH = "com.guli.secmanager.Checkup.flow_mon_switch";
+
+    // for tos
+    private static final String FIREWALL_SWITCH = "com.guli.secmanager.Checkup.firewall_switch";
+
+    private TextView mScreenMainTitle;
+    //private Button mScoreButton;
+    private View mScoreButton;
+    private ListView mCheckupResult;
+    private CheckResultAdapter mAdapter;
+    private Button mOptimizeComplete;
+    private View mDivider;
+    private Handler mHandler;
+    private int mIndex;
+    private int mScoreValue;
+    private TextView mScoreValueTextView;
+    private TextView mScoreUnit;
+    private long mTotalStorageSize;
+    private long mFreeStorageSize;
+    private int mStorageStatus;
+
+    private long mCleanedRubbishSize;
+    private ArrayList<QScanResultEntity> mVirusResult;
+    private int mScanedSoftwareCount;
+    private boolean mFlowMonSwitch;
+    private boolean mGotoFlowMonModule;
+    private int mFirewallSwitch;
+    private boolean mGotoFirewallModule;
+
+    private boolean mTosApkInstalled;
+    private boolean mFirstRunFlag;
+
+    private boolean mHasSensltivePermission;
+    private boolean mGotoPermissionModule;
+
+    private String mRemainTime;
+
+    //private Button mTestButton;
+    private ArrayList<CheckupResultItem> mSecurityResultList;
+    private ArrayList<CheckupResultItem> mRiskResultList;
+    private ArrayList<CheckupResultItem> mDataList;
+    private ArrayList<CheckupResultItem> mResultItemArrayList;
+
+    public interface Callbacks {
+        void onOptimizeComplete(int score);
+    }
+
+    public void performAnimate() {
+
+        // 分值背景button的动画定义
+        if (isVisible()) {
+            DisplayMetrics outMetrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+            int screenHeight = outMetrics.heightPixels;
+            Log.i(TAG, "ScreenHeight = " + screenHeight);
+            int targetHeightByDp = 134; // 目标高度，134个dp
+            int targetHeightByPx = UnitConverter.dp2px(mScoreButton, targetHeightByDp);
+            Log.i(TAG, "targetHeightByPx value = " + targetHeightByPx);
+
+            mScoreButton.setPivotX(0);
+            mScoreButton.setPivotY(0);
+            ObjectAnimator anim1 = ObjectAnimator.ofFloat(mScoreButton, "scaleY", 1f, (float)(targetHeightByPx)/screenHeight);
+            anim1.addListener(new Animator.AnimatorListener() {
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    Log.i(TAG, "onAnimationStart");
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    Log.i(TAG, "onAnimationEnd enter...");
+                    //mCheckupResult.setVisibility(View.VISIBLE);
+                    mOptimizeComplete.setVisibility(View.VISIBLE);
+                    mDivider.setVisibility(View.VISIBLE);
+                    mCheckupResult.setVisibility(View.VISIBLE);
+                    displayListItem();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    Log.i(TAG, "onAnimationCancel");
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                    Log.i(TAG, "onAnimationRepeat");
+                }
+            });
+            // 分值TextView的动画定义
+            //float ScoreValueTextViewCx = mScoreValueTextView.getX();
+            float ScoreValueTextViewCy = mScoreValueTextView.getTranslationY();
+            //Log.i(TAG, "x = " + ScoreValueTextViewCx + " ; y = " + ScoreValueTextViewCy);
+            //float newX = ScoreValueTextViewCx;
+            float newY = (float) UnitConverter.dp2px(mScoreValueTextView, 240);// 距离父layout顶部20个dp
+            //Log.i(TAG, "new x value = " + newX);
+            //ObjectAnimator anim3 = ObjectAnimator.ofFloat(mScoreValueTextView, "x", ScoreValueTextViewCx, newX);
+            ObjectAnimator anim2 = ObjectAnimator.ofFloat(mScoreValueTextView, "TranslationY", ScoreValueTextViewCy,  -newY);
+
+            // 分值单位TextView的动画定义
+            //float ScoreValueUnitCx = mScoreUnit.getX();
+            float ScoreValueUnitCy = mScoreUnit.getTranslationY();
+            //float newUnitX = ScoreValueUnitCx;
+            //float newUnitY = (float) UnitConverter.dp2px(mScoreUnit, 20);// 距离父layout顶部20个dp
+            Log.i(TAG, "--->>> scorevalueTextView y = " + ScoreValueTextViewCy + "; ScoreValueUnit y = " +  ScoreValueUnitCy);
+            //ObjectAnimator anim4 = ObjectAnimator.ofFloat(mScoreUnit, "x", ScoreValueUnitCx, newUnitX);
+            ObjectAnimator anim5 = ObjectAnimator.ofFloat(mScoreUnit, "TranslationY", ScoreValueUnitCy, -newY);
+
+            AnimatorSet animSet = new AnimatorSet();
+            animSet.setDuration(500);
+            animSet.setInterpolator(new LinearInterpolator());
+            //三个动画同时执行
+            animSet.playTogether(anim1, anim2, anim5);
+
+            animSet.start(); // 开始播放动画
+        }
+    }
+
+    // 返回已拦截短信条数，仅在guli firewall已安装的环境下调用
+    int getInterceptMmsCount() {
+        if (mTosApkInstalled) {
+            Uri CONTENT_URI = Uri.parse("content://sms");
+            Cursor cursor = getActivity().getContentResolver().query(CONTENT_URI, new String[]{Telephony.Sms._ID,},
+                    "intercept_type = ? OR intercept_type = ?", new String[]{"1", "2"}, null);
+            return cursor.getCount();
+        }
+        return 0;
+    }
+
+    // 返回已拦截电话个数，仅在guli firewall已安装的环境下调用
+    int getInterceptCallCount() {
+        if (mTosApkInstalled) {
+            Uri CONTENT_URI = Uri.parse("content://call_log/calls");
+            Cursor cursor = getActivity().getContentResolver().query(CONTENT_URI, new String[]{CallLog.Calls._ID},
+                    CallLog.Calls.TYPE+" = ? OR "+CallLog.Calls.TYPE + " = ?", new String[]{"10", "11"}, null);
+            return cursor.getCount();
+        }
+        return 0;
+    }
+
+    private void displayListItem() {
+        if (mAdapter != null && mIndex < mDataList.size()) {
+            mResultItemArrayList.add(0, mDataList.get(mIndex));
+            mAdapter.notifyDataSetChanged();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    displayListItem();
+                }
+            }, 500);
+
+            if (mIndex >= mDataList.size()) {
+                mIndex = 0;
+            } else {
+                mIndex++;
+            }
+        }
+    }
+
+    private void displayAllListItem() {
+        if (mAdapter != null && mDataList.size() > 0) {
+            for (int i = 0; i < mDataList.size(); i++) {
+                mResultItemArrayList.add(0, mDataList.get(i));
+            }
+        }
+    }
+
+    public static ScaleScreen newInstance(int score, ArrayList<Object> results){
+        Bundle args = new Bundle();
+        args.putInt(SCORE_VALUE, score);
+        long rubbishSize = (long)results.get(0);
+        args.putLong(CLEANED_RUBBISH_SIZE, rubbishSize);
+        List<QScanResultEntity> virusEntities = (List<QScanResultEntity>)results.get(1);
+        ArrayList<QScanResultEntity> temp = new ArrayList<QScanResultEntity>();
+        if (virusEntities != null) {
+            for(QScanResultEntity i: virusEntities) {
+                temp.add(i);
+            }
+        }
+        args.putSerializable(VIRUS_RESULT, temp);
+        int scanedSoftwareCount = (int) results.get(2);
+        args.putInt(VIRUS_SCANED_SOFTWARE_COUNT, scanedSoftwareCount);
+        boolean flowMonSwitch = (boolean)results.get(3);
+        args.putBoolean(FLOW_MON_SWITCH, flowMonSwitch);
+
+        if (results.size() > 4) {
+            int firewallSwitch = (int) results.get(4);
+            Log.i(TAG, "--->>> firewallSwitch = " + firewallSwitch);
+            args.putInt(FIREWALL_SWITCH, firewallSwitch);
+        }
+        ScaleScreen fragment = new ScaleScreen();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private void fillItemList() {
+        if (mSecurityResultList == null) {
+            mSecurityResultList = new ArrayList<CheckupResultItem>();
+            mSecurityResultList.ensureCapacity(10);
+        } else {
+            mSecurityResultList.clear();
+        }
+
+        if (mRiskResultList == null) {
+            mRiskResultList = new ArrayList<CheckupResultItem>();
+            mRiskResultList.ensureCapacity(10);
+        } else {
+            mRiskResultList.clear();
+        }
+        if (mDataList == null) {
+            mDataList = new ArrayList<CheckupResultItem>();
+            mDataList.ensureCapacity(10);
+        } else {
+            mDataList.clear();
+        }
+
+        if (mResultItemArrayList == null) {
+            mResultItemArrayList = new ArrayList<CheckupResultItem>();
+            mResultItemArrayList.ensureCapacity(20);
+        } else {
+            mResultItemArrayList.clear();
+        }
+
+        // 检查拦截短信和电话的数量
+        if (mTosApkInstalled) {
+
+            int MmsCount = getInterceptMmsCount();
+            int CallCount = getInterceptCallCount();
+            Log.i(TAG, "--->>> Mms count is: " + MmsCount);
+            Log.i(TAG, "--->>> Call Count is: " + CallCount);
+            CheckupResultItem cri01 = null;
+            cri01 = new CheckupResultItem(getString(R.string.InterceptedMms), MmsCount + getString(R.string.MmsUnit), CheckupResultItem.ItemType.SECURITY);
+            mSecurityResultList.add(cri01);
+
+            CheckupResultItem cri02 = null;
+            cri02 = new CheckupResultItem(getString(R.string.InterceptedCall), CallCount + getString(R.string.CallUnit), CheckupResultItem.ItemType.SECURITY);
+            mSecurityResultList.add(cri02);
+
+            CheckupResultItem cri03 = null;
+            cri03 = new CheckupResultItem(getString(R.string.BatteryRemain), mRemainTime, CheckupResultItem.ItemType.SECURITY);
+            mSecurityResultList.add(cri03);
+        }
+
+        // 检查手机空间
+        CheckupResultItem cri1 = null;
+        if (mStorageStatus == 0) {
+            cri1 = new CheckupResultItem(getString(R.string.phone_storage_status), getString(R.string.phone_storage_enough), CheckupResultItem.ItemType.SECURITY);
+        } else {
+            cri1 = new CheckupResultItem(getString(R.string.phone_storage_status), getString(R.string.phone_storage_not_enough), CheckupResultItem.ItemType.SECURITY);
+        }
+        mSecurityResultList.add(cri1);
+
+        // 检查流量监控开关
+        CheckupResultItem cri2 = null;
+        if (mFlowMonSwitch) {
+            cri2 = new CheckupResultItem(getString(R.string.flow_switch), getString(R.string.flow_switch_open), CheckupResultItem.ItemType.SECURITY);
+            mSecurityResultList.add(cri2);
+        } else {
+            cri2 = new CheckupResultItem(getString(R.string.flow_switch), getString(R.string.flow_switch_close), CheckupResultItem.ItemType.RISK);
+            mRiskResultList.add(cri2);
+        }
+
+        // 检查骚扰拦截开关
+        if (mTosApkInstalled) {
+            CheckupResultItem cri22 = null;
+            if (mFirewallSwitch != 1) {
+                cri22 = new CheckupResultItem(getString(R.string.firewall_switch), getString(R.string.firewall_switch_open), CheckupResultItem.ItemType.SECURITY);
+                mSecurityResultList.add(cri22);
+            } else {
+                cri22 = new CheckupResultItem(getString(R.string.firewall_switch), getString(R.string.firewall_switch_close), CheckupResultItem.ItemType.RISK);
+                mRiskResultList.add(cri22);
+            }
+        }
+
+        // 检查垃圾清理结果
+        String cleanedRubbishSize = FileSizeFormatter.transformShortType(mCleanedRubbishSize);
+        CheckupResultItem cri3 = new CheckupResultItem(getString(R.string.rubbish_cleaned), cleanedRubbishSize, CheckupResultItem.ItemType.SECURITY);
+        mSecurityResultList.add(cri3);
+
+        // 检查风险软件扫描结果
+        int virusSize = mVirusResult.size();
+        CheckupResultItem cri4 = null;
+        if (virusSize == 0) {
+            cri4 = new CheckupResultItem(getString(R.string.virus_status), "0" + getString(R.string.virus_has_found), CheckupResultItem.ItemType.SECURITY);
+            mSecurityResultList.add(cri4);
+        } else {
+            cri4 = new CheckupResultItem(getString(R.string.virus_status), virusSize + getString(R.string.virus_has_found), CheckupResultItem.ItemType.RISK);
+            mRiskResultList.add(cri4);
+        }
+
+        // 检查TOS权限管理模块是否存在敏感权限
+        if (mTosApkInstalled) {
+            CheckupResultItem cri5 = null;
+            if (!mHasSensltivePermission) {
+                cri5 = new CheckupResultItem(getString(R.string.permission_manager), getString(R.string.PermissionSafe), CheckupResultItem.ItemType.SECURITY);
+                mSecurityResultList.add(cri5);
+            } else {
+                cri5 = new CheckupResultItem(getString(R.string.permission_manager), getString(R.string.PermissionRisk), CheckupResultItem.ItemType.RISK);
+                mRiskResultList.add(cri5);
+            }
+        }
+
+
+        for(CheckupResultItem i: mSecurityResultList) {
+            mDataList.add(i);
+        }
+        for(CheckupResultItem j: mRiskResultList) {
+            mDataList.add(j);
+        }
+        mSecurityResultList.clear();
+        mRiskResultList.clear();
+    }
+
+    void readSensltivePermissionFlag() {
+        SharedPreferences sp = getActivity().getSharedPreferences(PermissionReceiver.DATABASE_PERMISSION, Activity.MODE_PRIVATE);
+        //SharedPreferences.Editor editer = sp.edit();
+        int result = sp.getInt(PermissionReceiver.PERMISSIONSTATE, 0);
+        String remainTime = sp.getString(PermissionReceiver.BATTERYREMAINTIME, "5小时33分钟");
+        Log.i(TAG, "readSensltivePermissionFlag-> SensitivePermission Flag = " + result);
+        Log.i(TAG, "readSensltivePermissionFlag-> BatteryRemainTime = " + remainTime);
+        mRemainTime = remainTime;
+        if (result != 0) {
+            mHasSensltivePermission = true;
+        } else {
+            mHasSensltivePermission = false;
+        }
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFirstRunFlag = true;
+        mGotoFlowMonModule = false;
+        mGotoFirewallModule = false;
+        mGotoPermissionModule = false;
+        mRemainTime = "";
+        mTosApkInstalled = UnitConverter.isTosApkInstalled(getActivity());
+        mScoreValue = getArguments().getInt(SCORE_VALUE);
+        mCleanedRubbishSize = getArguments().getLong(CLEANED_RUBBISH_SIZE);
+        mVirusResult = (ArrayList<QScanResultEntity>)getArguments().getSerializable(VIRUS_RESULT);
+        mScanedSoftwareCount = getArguments().getInt(VIRUS_SCANED_SOFTWARE_COUNT);
+        mFlowMonSwitch = getArguments().getBoolean(FLOW_MON_SWITCH, false);
+        if (mTosApkInstalled) {
+            mFirewallSwitch = getArguments().getInt(FIREWALL_SWITCH);
+        }
+        readSensltivePermissionFlag();
+        mHandler = new Handler();
+        mStorageStatus = getStorageStatus();
+        fillItemList();
+    }
+
+    private void updateSwithValue() {
+        if (mGotoFlowMonModule) {
+            SharedPreferences sPreferences = getActivity().getSharedPreferences(ShareUtil.DATABASE_NAME, Activity.MODE_WORLD_READABLE);
+            boolean flowMonSwitch = sPreferences.getBoolean(ShareUtil.AUTO_BREAK_STATE, false);
+            mFlowMonSwitch = flowMonSwitch;
+            if (mFlowMonSwitch) {
+                mScoreValue += 2;
+                String temp = String.valueOf(mScoreValue);
+                mScoreValueTextView.setText(temp);
+            }
+        }
+
+        if (mGotoFirewallModule) {
+            Context othercontext = null;
+            try {
+                othercontext = getActivity().createPackageContext("com.guli.firewall", Context.CONTEXT_IGNORE_SECURITY);
+            } catch (PackageManager.NameNotFoundException ex) {
+                ex.printStackTrace();
+                return;
+            }
+            SharedPreferences pref = othercontext.getSharedPreferences("count", Context.MODE_MULTI_PROCESS);
+            int firewallSwitch = pref.getInt("count", 1); // 读取骚扰拦截配置 1-不拦截；2-智能拦截；3-只拦截黑名单；4-只接受白名单
+            mFirewallSwitch = firewallSwitch;
+            if (mFirewallSwitch != 1) {
+                mScoreValue += 2;
+                String temp = String.valueOf(mScoreValue);
+                mScoreValueTextView.setText(temp);
+            }
+        }
+
+        if (mGotoPermissionModule) {
+            readSensltivePermissionFlag();
+            if (!mHasSensltivePermission) {
+                mScoreValue += 2;
+                String temp = String.valueOf(mScoreValue);
+                mScoreValueTextView.setText(temp);
+            }
+
+        }
+    }
+
+    private boolean backupFromSumModule() {
+        if (mGotoFlowMonModule || mGotoFirewallModule || mGotoPermissionModule) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 发送Intent，通知permission manager更新敏感权限状态
+        if (mGotoPermissionModule) {
+            Intent i = new Intent(CheckupFragment.QUERY_PERMISSION_STATE);
+            getActivity().sendOrderedBroadcast(i, null);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.i(TAG, "--->>> onResume");
+        if (!mFirstRunFlag &&  mAdapter != null && backupFromSumModule()) {
+            Log.i(TAG, "--->>> call notifyDataSetChanged");
+            updateSwithValue();
+            fillItemList();
+            displayAllListItem();
+            mAdapter.notifyDataSetChanged();
+            //displayListItem();
+
+        }
+        if (mFirstRunFlag) {
+            mFirstRunFlag = false;
+        }
+        mGotoFlowMonModule = false;
+        mGotoFirewallModule = false;
+        mGotoPermissionModule = false;
+
+    }
+
+    @SuppressWarnings("deprecation")
+    private void readStorageSpace() {
+        String state = Environment.getExternalStorageState();
+        if(Environment.MEDIA_MOUNTED.equals(state)) {
+            File ExternalStorgeDir = Environment.getExternalStorageDirectory();
+            StatFs sf = new StatFs(ExternalStorgeDir.getPath());
+            long blockSize = sf.getBlockSize();
+            long blockCount = sf.getBlockCount();
+            long availCount = sf.getAvailableBlocks();
+            mTotalStorageSize = blockSize*blockCount;
+            mFreeStorageSize = availCount*blockSize;
+            Log.d(TAG, "block大小:"+ blockSize+",block数目:"+ blockCount+",总大小:"+FileSizeFormatter.transformShortType(blockSize*blockCount));
+            Log.d(TAG, "可用的block数目：:" + availCount + ",剩余空间:" + FileSizeFormatter.transformShortType(availCount*blockSize));
+        }
+    }
+
+    // return value: 0 - 空间充足(剩余空间大于30%)； 1 - 空间紧张(剩余空间小于30%)
+    private int getStorageStatus() {
+        int retValue = 0;
+        readStorageSpace();
+        Log.i(TAG, "Storage status is : " + (mFreeStorageSize / (double) mTotalStorageSize));
+        if (mFreeStorageSize/(double)mTotalStorageSize < 0.3) {
+            retValue = 1;
+        }
+        return retValue;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView");
+        View v = inflater.inflate(R.layout.scale_screen, container, false);
+        mScoreValueTextView = (TextView) v.findViewById(R.id.tv_score_value_s);
+        mScoreUnit = (TextView) v.findViewById(R.id.tv_score_unit_s);
+        mScoreButton = (View) v.findViewById(R.id.bt_score);
+        //mTestButton = (Button) v.findViewById(R.id.bt_test);
+        mCheckupResult = (ListView) v.findViewById(R.id.lv_checkup_result);
+
+        mAdapter = new CheckResultAdapter(getActivity(), R.layout.checkup_result_item, mResultItemArrayList);
+        mCheckupResult.setAdapter(mAdapter);
+        mCheckupResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "--->>> onItemClick: positon = " + position);
+                if (mResultItemArrayList.get(position).getType() == CheckupResultItem.ItemType.RISK) {
+                    String virusItemName = getString(R.string.virus_status);
+                    String flowSwitchItemName = getString(R.string.flow_switch);
+                    String currItemName = mResultItemArrayList.get(position).getName();
+                    if (virusItemName.equals(currItemName)) {
+                        Log.i(TAG, "--->>> goto Virus module");
+                        Intent i = new Intent();
+                        i.setClass(getActivity(), com.guli.secmanager.VirusScan.VirusScanActivity.class);
+                        i.setAction(VIRUS_SCAN_START_ACTION);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(VIRUS_SCAN_RESULT, mVirusResult);
+                        bundle.putInt(VIRUS_SCANED_SOFTWARE_COUNT, mScanedSoftwareCount);
+                        i.putExtra(VIRUS_INTENT_DATA, bundle);
+                        startActivity(i);
+                    } else if (flowSwitchItemName.equals(currItemName)) {
+                        Intent intent = new Intent();
+                        intent.setClass(getActivity(), com.guli.secmanager.flowmonitor.FlowMonitorActivity.class);
+                        startActivity(intent);
+                        Log.i(TAG, "--->>> goto FlowMon module");
+                        mGotoFlowMonModule = true;
+                    }
+
+                    if (mTosApkInstalled) {
+                        String firewallSwitchItemName = getString(R.string.firewall_switch);
+                        String permissionManagerItemName = getString(R.string.permission_manager);
+                        String currentItemName = mResultItemArrayList.get(position).getName();
+                        if (firewallSwitchItemName.equals(currentItemName)) {
+                            Log.i(TAG, "--->>> goto tos firewall module");
+
+                            Intent i = new Intent();
+                            i.setClassName("com.guli.firewall", "com.guli.firewall.ui.WallSetting");
+                            startActivity(i);
+                            mGotoFirewallModule = true;
+                        }
+
+                        if (permissionManagerItemName.equals(currentItemName)) {
+                            Log.i(TAG, "--->>> goto tos permission module");
+                            Intent i = new Intent(CheckupFragment.QUERY_PERMISSION_STATE);
+                            getActivity().sendOrderedBroadcast(i, null);
+
+                            // 调用权限管理相关Activity
+                            Intent i2 = new Intent();
+                            i2.setClassName("com.ktouch.security", "com.ktouch.security.ui.PermissionControlPageActivity");
+                            startActivity(i2);
+                            mGotoPermissionModule = true;
+                        }
+                    }
+                }
+            }
+        });
+
+        mOptimizeComplete = (Button) v.findViewById(R.id.bt_optimize_complete);
+        UnitConverter.updateButtonBg2(getActivity(), mOptimizeComplete);
+        mOptimizeComplete.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "mOptimizeComplete button Clicked.");
+                if (getActivity() instanceof Callbacks) {
+                    ((Callbacks) getActivity()).onOptimizeComplete(mScoreValue);
+                }
+            }
+        });
+        mDivider = v.findViewById(R.id.vi_divider);
+        String temp = String.valueOf(mScoreValue);
+
+        mScoreValueTextView.setText(temp);
+        //Log.i(TAG, "--->>> mScanedSoftwareCount = "+mScanedSoftwareCount);
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                performAnimate();
+            }
+        }, 300);
+        return v;
+    }
+}

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TY:20140701 merge for PROD10297212-->
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root22"
+    android:orientation="vertical"
+    android:background="@drawable/main_bg"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:id="@+id/layout_root"
+        android:orientation="vertical"
+        android:background="@color/white_bg"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+    <!--Top backgroud-->
+    <View
+        android:id="@+id/note_top"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/skin_default_head"
+        />
+
+    <ScrollView 
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+        <LinearLayout
+            android:id="@+id/edit_content"
+            android:orientation="vertical"            
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        >
+        <!--android:textCursorDrawable="@drawable/ic_ling"-->
+        <com.android.gnotes.LineEditText
+        android:id="@+id/note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/g_note_padding_top"
+        android:textCursorDrawable="@drawable/short_cursor"
+        android:textSize="@dimen/g_note_text_size"
+        android:paddingLeft="@dimen/g_note_text_padding_left"
+        android:paddingRight="@dimen/g_note_padding_left"
+        android:gravity="top|center_vertical"
+        android:textColor="@color/color_txt0"
+        android:lineSpacingExtra="@dimen/g_note_line_space"
+        android:background="@drawable/repeat_bg"
+        android:maxLength="5000"
+        android:hint="@string/hint_text"
+        android:minLines="12" 
+        />
+    <!--bottom backgroud-->
+    <View
+        android:id="@+id/note_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/skin_default_head"
+        />
+      </LinearLayout>      
+  </ScrollView>
+        
+    <LinearLayout
+        android:id="@+id/edit_bottom_menu"
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/g_note_bottom_menu_height"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+        <LinearLayout
+            android:id="@+id/chg_skin"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/chgskin"
+            />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/add_button"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/list"
+            />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/cap_photo"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/capture"
+            />
+  
+        </LinearLayout>            
+        <!--android:layout_alignParentEnd="true" android:gravity="center"-->
+        <LinearLayout
+            android:id="@+id/att_picture"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/attach"
+            />
+         </LinearLayout>
+         
+         <LinearLayout
+            android:id="@+id/draw_pad"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/drawpad"
+            />
+         </LinearLayout>
+         
+    </LinearLayout>
+    
+    <!--<LinearLayout
+        android:id="@+id/preview_bottom_menu"
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/g_note_bottom_menu_height"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+        <ImageButton android:id="@+id/delete_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/delete_dr"
+        />
+    </LinearLayout>-->
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     >    
+    
+   <com.android.gnotes.PaintView
+       android:id="@+id/paint_layout"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_above="@+id/paint_bottom_menu"
+       />
+       
+
+    <LinearLayout
+        android:id="@+id/paint_bottom_menu"
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/g_note_bottom_menu_height"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageButton
+                android:id="@+id/pencil_button"  
+                android:layout_width="46dp"
+                android:layout_height="27dp"
+                android:gravity="center"
+                android:background="@color/color_white"
+                android:src="@drawable/pencil" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageButton
+                android:id="@+id/eraser_button"  
+                android:layout_width="46dp"
+                android:layout_height="27dp"           
+                android:gravity="center"
+                android:background="@color/color_white"
+                android:src="@drawable/eraser" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageButton
+                android:id="@+id/undo_button"  
+                android:layout_width="46dp"
+                android:layout_height="27dp"       
+                android:gravity="center"
+                android:background="@color/color_white"
+                android:src="@drawable/undo_selector" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageButton
+                android:id="@+id/redo_button"  
+                android:layout_width="46dp"
+                android:layout_height="27dp"                
+                android:gravity="center"
+                android:background="@color/color_white"
+                android:src="@drawable/redo_selector" />
+         </LinearLayout>
+         
+         <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageButton
+                android:id="@+id/clear_button"  
+                android:layout_width="46dp"
+                android:layout_height="27dp"        
+                android:gravity="center"
+                android:background="@color/color_white"
+                android:src="@drawable/clear_selector" />
+         </LinearLayout>
+         
+    </LinearLayout>    
+    
+</RelativeLayout>

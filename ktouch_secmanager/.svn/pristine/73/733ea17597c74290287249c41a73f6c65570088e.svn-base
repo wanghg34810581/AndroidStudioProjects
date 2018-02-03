@@ -1,0 +1,1222 @@
+package com.guli.secmanager.VirusScan;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.guli.secmanager.Checkup.ScaleScreen;
+import com.guli.secmanager.R;
+import com.guli.secmanager.Utils.AnimUtil;
+import com.guli.secmanager.Utils.ApkInfoUtil;
+import com.guli.secmanager.widget.AgsProgressButton;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import tmsdk.common.module.qscanner.QScanConstants;
+import tmsdk.common.module.qscanner.QScanResultEntity;
+import tmsdk.fg.creator.ManagerCreatorF;
+import tmsdk.fg.module.qscanner.QScanListenerV2;
+import tmsdk.fg.module.qscanner.QScannerManagerV2;
+
+//import android.widget.Toast;
+/**
+ * Created by shenyan on 2016/4/18.
+ */
+public class VirusScanActivity extends AppCompatActivity {
+
+    public static final String TAG = "VirusScanActivity";
+
+    private QScannerManagerV2 mQScannerMananger;
+    private Thread mScanThread;
+
+    private VirusScanAdapter mGroupAdapter = null;
+    private ExpandableListView mVirusScanListView = null;
+    private TextView mScanRecTitleView;
+    private TextView mScanRecResultView;
+    private TextView mScanPercentView;
+    private Button mCompleteButtonView;
+    private AgsProgressButton mProgressbar;
+    private LinearLayout mLayoutInfo, mLayoutActionbar;
+    private ImageButton mActionBarButton;
+
+    private ArrayList<ParentData> mListData = new ArrayList<ParentData>();
+    private ArrayList<QScanResultEntity> mIntentArrayList = new ArrayList<QScanResultEntity>();
+    private ParentViewHolder mParentViewHolder = new ParentViewHolder();
+
+    private boolean mIsContinue;
+    private boolean mScanThreadExit;
+    private boolean mGetIntentFlag;
+    private boolean mStartRotateFlag;
+
+    private int mGetIntentScanCount;
+    private int mProBarCount;
+    private int mScanType = Utils.SOFT_SCAN;
+    
+    private AlphaAnimation mAlpha;
+    private ScaleAnimation mScaleToGreat1;
+    private ScaleAnimation mScaleToGreat2;
+    //wds add start
+    private ImageView background_img_shell;
+    private ImageView background_img_safe;
+    private ImageView background_img_danger;
+    //wds add end
+    
+    private Animation mRotateIconAnim;
+
+    private UninstallPackageReceiver mUninstallReceiver = new UninstallPackageReceiver();
+
+    private class UninstallPackageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            PackageManager pm = context.getPackageManager();
+
+            if (TextUtils.equals(intent.getAction(), Intent.ACTION_PACKAGE_REMOVED)) {
+                String packageName = intent.getData().getSchemeSpecificPart();
+                Log.d(TAG,"UninstallPackageReceivernyan onReceive packageName==" + packageName);
+
+                Message msg = mHandlerMain.obtainMessage();
+                msg.what = Utils.SCAN_DELETE_PACKAGE_MSG;
+                msg.arg1 = 1;
+                msg.obj = packageName;
+                msg.sendToTarget();
+            }
+        }
+    }
+
+    private Handler mHandlerUI = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Log.d(TAG, "handleMessage" + msg);
+            switch (msg.what) {
+                case Utils.UPDATE_PROGRESS_VIEW_MSG:
+                    //update progressbar
+                    mProBarCount = msg.arg1;
+                    Log.v(TAG, "UPDATE_PROGRESS_VIEW_MSG mProBarCount==" + mProBarCount);
+                    if (mIsContinue) {
+                        if (mProBarCount > 0) {
+                            Log.v(TAG, "setProgressText mProBarCount==" + mProBarCount);
+                            mProgressbar.setProgressText(getString(R.string.scan_pause_button), mProBarCount);
+                        }
+
+                        //update percentage
+                        //带小数点的百分比 先去掉
+                        /*
+                        DecimalFormat df = new DecimalFormat("######.0");
+                        String str = df.format(mProBarCount * 1.0 / (Utils.PARENT_MAX - 1)
+                                * (1.0 * Utils.SD_BAR_MAX / Utils.PROG_BAR_MAX));
+                        if (mProBarCount / (Utils.PARENT_MAX - 1) < 1) {
+                            str = "0" + str;
+                        }
+                        */
+                        //不带小数点,整数表示进度
+                        String str = String.valueOf(mProBarCount * Utils.SCAN_COMPLETE_MAX / Utils.PROG_BAR_MAX);
+
+                        if (mProBarCount == Utils.PROG_BAR_MAX) {
+                            str = "100";
+                        }
+
+                        mScanRecTitleView.setText((str));
+                        mScanPercentView.setText("%");
+
+                        //update scan file name
+                        if (msg.obj != null) {
+                            mScanRecResultView.setText((getString(R.string.result_small_is_scanning_info) + (String) msg.obj));
+                        } else {
+                            mScanRecResultView.setText(getString(R.string.result_small_is_scanning_info));
+                        }
+
+                        //update parent result
+                        if( mParentViewHolder.pResultView != null){
+                            int bugCount = mListData.get(mScanType).getParSoftWareCount();
+                            if (mScanType == Utils.BUG_SCAN) {
+                                if(bugCount >= Utils.BUG_SCAN_BASE) {
+                                    mParentViewHolder.pResultView.setText(String.valueOf(bugCount / Utils.BUG_SCAN_BASE)
+                                            + getString(R.string.list_scan_item_count));
+                                }
+                            } else {
+                                mParentViewHolder.pResultView.setText(String.valueOf(bugCount)
+                                        + getString(R.string.list_scan_item_count));
+                            }
+                        }
+                    }
+                    break;
+
+                case Utils.UPDATE_SDCARD_SCAN_PRO_MSG:
+                    Log.v(TAG, "UPDATE_SDCARD_SCAN_PRO_MSG begin");
+                    if (mScanType == Utils.SDCARD_SCAN) {
+                        Log.v(TAG, "scanType == sdcard 100");
+                        Message msgSdcard = mHandlerUI.obtainMessage();
+                        msgSdcard.what = Utils.UPDATE_PROGRESS_VIEW_MSG;
+                        msgSdcard.arg1 = Utils.PROG_BAR_MAX;
+                        msgSdcard.obj = getString(R.string.list_sdcard_soft_title);
+                        Log.i(TAG, "progress == " + msgSdcard.arg1);
+                        msgSdcard.sendToTarget();
+                    }
+                    updateParentImageView(false, mScanType);
+                    mParentViewHolder.pTextView.setTextColor(getResources().getColor(R.color.black));
+                    break;
+
+                case Utils.UPDATE_SDCARD_PATH_INFO_MSG:
+                    Log.v(TAG, "UPDATE_SDCARD_PATH_INFO_MSG begin");
+                    mScanRecResultView.setText(getString(R.string.result_small_is_scanning_info)
+                            + getString(R.string.list_sdcard_soft_title));
+                    break;
+
+                case Utils.UPDATE_PARENT_VIEW_MSG:
+                    Log.v(TAG, "UPDATE_PARENT_VIEW_MSG begin");
+                    updateParentImageView(false, mScanType);
+                    mParentViewHolder.pImageView
+                            .setImageDrawable(getResources().getDrawable(R.drawable.home_icon_intercept));
+                    mParentViewHolder.pTextView.setTextColor(getResources().getColor(R.color.black));
+                    break;
+
+                case Utils.SCAN_START_ROTATE_MSG:
+                    Log.v(TAG, "SCAN_START_ROTATE_MSG begin");
+                    updateParentImageView(true, mScanType);
+                    break;
+
+                case Utils.SCAN_STOP_ROTATE_MSG:
+                    Log.v(TAG, "SCAN_STOP_ROTATE_MSG begin");
+                    updateParentImageView(false, mScanType);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private Handler mHandlerMain = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Log.d(TAG, "handleMessage" + msg);
+            switch (msg.what) {
+                case Utils.SCAN_RESTART_ONE_MSG:
+                    Log.v(TAG, "SCAN_RESTART_ONE_MSG mScanType ==" + mScanType);
+                    if ((mScanThread != null) && (mScanType < Utils.PARENT_MAX - 1)) {
+                        mScanType += 1;
+                        updateParentImageView(true, mScanType);
+                        startScanVirus();
+                        mScanThreadExit = false;
+                    }
+                    break;
+
+                case Utils.SCAN_COMPLETE_ALL_MSG:
+                    Log.v(TAG, "SCAN_COMPLETE_ALL_MSG begin mIsContinue==" + mIsContinue);
+                    if (mIsContinue) {
+                        mIsContinue = false;
+                        updateScanButtonState();
+                        mProBarCount = 0;
+                        mScanRecResultView.startAnimation(mAlpha);
+                        mScanPercentView.setText("");
+
+                        boolean hasParMulware = false;
+                        for (int i = 0; i < Utils.PARENT_MAX; i++) {
+                            if (mListData.get(i).getParMulwareCount() != 0) {
+                                hasParMulware = true;
+                                break;
+                            }
+                        }
+
+                        if (hasParMulware) {
+                            mHandlerMain.sendEmptyMessage(Utils.START_DANGER_INFO_MSG);
+                        } else {
+                            mHandlerMain.sendEmptyMessage(Utils.START_ALL_SAFE_MSG);
+                        }
+                    }
+                    break;
+
+                case Utils.START_DANGER_INFO_MSG:
+                    Log.v(TAG, "START_DANGER_INFO_MSG begin");
+                    //wangdsh add start
+                    mLayoutActionbar.setBackgroundColor(getResources().getColor(R.color.orange));
+                    mLayoutInfo.setBackgroundColor(getResources().getColor(R.color.orange));
+                    setStatusBarColor(false);
+                    updateScanButtonState();
+                    mScanRecTitleView.setText("");
+                    background_img_shell.setVisibility(View.VISIBLE);
+                    background_img_shell.startAnimation(mScaleToGreat1);
+                    mScaleToGreat1.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            background_img_danger.setVisibility(View.VISIBLE);
+                            background_img_danger.startAnimation(mScaleToGreat2);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+                    });
+
+                    mScanRecResultView.setText(getString(R.string.result_small_danger_info));
+                    mScanRecResultView.startAnimation(mAlpha);
+                    //wangdsh add end
+                    createAllChildData();
+                    mGroupAdapter.notifyDataSetChanged();
+                    break;
+
+                case Utils.START_ALL_SAFE_MSG:
+                    Log.v(TAG, "START_ALL_SAFE_MSG begin");
+                    mScanRecTitleView.setText("");
+                    mScanRecResultView.setText(getString(R.string.result_small_complete_info));
+                    //wangdsh add start
+                    background_img_shell.setVisibility(View.VISIBLE);
+                    background_img_shell.startAnimation(mScaleToGreat1);
+                    mScaleToGreat1.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            background_img_safe.setVisibility(View.VISIBLE);
+                            background_img_safe.startAnimation(mScaleToGreat2);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+                    });
+                    //wangdsh add end
+                    mParentViewHolder.pImageView.setImageDrawable(getResources().getDrawable(R.drawable.home_icon_intercept));
+                    for (int i = 0; i < Utils.PARENT_MAX; i++) {
+                        mListData.get(i).setParResult(getString(R.string.result_big_safe_info));
+                    }
+                    mGroupAdapter.notifyDataSetChanged();
+                    break;
+
+                case Utils.SCAN_PAUSE_MSG:
+                    Log.v(TAG, "SCAN_PAUSE_MSG mIsContinue==" + mIsContinue);
+                    if(mIsContinue) {
+                        mIsContinue = false;
+                        mProgressbar.setCurrentText(getString(R.string.scan_continue_button));
+                        mScanRecResultView.setText(getString(R.string.scan_pause_button));
+                        pauseScanVirus();
+                    }
+
+                    break;
+
+                case Utils.SCAN_CONTINUE_MSG:
+                    Log.v(TAG, "SCAN_CONTINUE_MSG mIsContinue == " + mIsContinue);
+                    if(mIsContinue == false) {
+                        mIsContinue = true;
+                        if (mScanThreadExit) {
+                            if (mScanType < Utils.PARENT_MAX - 1) {
+                                Log.d(TAG, "SCAN_CONTINUE_MSG SCAN_RESTART_ONE_MSG");
+                                mHandlerMain.sendEmptyMessage(Utils.SCAN_RESTART_ONE_MSG);
+                            } else {
+                                Log.d(TAG, "SCAN_CONTINUE_MSG SCAN_COMPLETE_ALL_MSG");
+                                mHandlerMain.sendEmptyMessage(Utils.SCAN_COMPLETE_ALL_MSG);
+                            }
+                        }
+                        mProgressbar.setCurrentText(getString(R.string.scan_pause_button));
+                        continueScanVirus();
+                    }
+                    break;
+                case Utils.SCAN_THREAD_EXIT_MSG:
+                    Log.v(TAG, "SCAN_THREAD_EXIT_MSG mIsContinue==" + mIsContinue);
+                    mScanThreadExit = true;
+                    if(mIsContinue) {
+                        Log.v(TAG, "SCAN_THREAD_EXIT_MSG mScanType==" + mScanType);
+                        if(mScanType == Utils.SDCARD_SCAN) {
+                            mHandlerMain.sendEmptyMessage(Utils.SCAN_COMPLETE_ALL_MSG);
+                        }else{
+                            mHandlerMain.sendEmptyMessage(Utils.SCAN_RESTART_ONE_MSG);
+                        }
+                    }
+                    break;
+                case Utils.SCAN_DELETE_PACKAGE_MSG:
+                    boolean hasParMulware = false;
+                    //Log.d(TAG, "package size==" + mSoftScanInsPackageList.size());
+                    if(mScanType == Utils.SOFT_SCAN){
+                        String packageName = msg.obj.toString();
+                        Log.d(TAG, "package==" + packageName);
+                        int index = -1;
+                        for (int i = 0; i < mListData.get(mScanType).getChildSize(); i++) {
+                            if(packageName.equals(mListData.get(mScanType).getParPackageNameList().get(i))) {
+                                index = i;
+                                Log.d(TAG, "package index int==" + index);
+                                break;
+                            }
+                        }
+                        mListData.get(mScanType).removeParResultList(index);
+                        mListData.get(mScanType).removeParAdviceList(index);
+                        mListData.get(mScanType).removeParPackageList(index);
+                        mListData.get(mScanType).removeParPathList(index);
+                        mListData.get(mScanType).removeParChilds(index);
+                        mListData.get(mScanType).setParMulwareCount(mListData.get(mScanType).getParMulwareCount() - 1);
+                        Log.d(TAG, "packageName index==" + index);
+                    }else if(mScanType == Utils.SDCARD_SCAN){
+                        //ags-nothing
+                        String pathName = msg.obj.toString();
+                        Log.d(TAG, "path Name==" + pathName);
+                        int index = -1;
+                        for (int i = 0; i < mListData.get(mScanType).getChildSize(); i++) {
+                            if(pathName.equals(mListData.get(mScanType).getParPathNameList().get(i))) {
+                                index = i;
+                                Log.d(TAG, "package index int==" + index);
+                                break;
+                            }
+                        }
+                        mListData.get(mScanType).removeParResultList(index);
+                        mListData.get(mScanType).removeParAdviceList(index);
+                        mListData.get(mScanType).removeParPackageList(index);
+                        mListData.get(mScanType).removeParPathList(index);
+                        mListData.get(mScanType).removeParChilds(index);
+                        mListData.get(mScanType).setParMulwareCount(mListData.get(mScanType).getParMulwareCount() - 1);
+                        Log.d(TAG, "pathName  index==" + index);
+                    }
+
+                    for (int i = 1; i < Utils.PARENT_MAX; i++) {
+                        if (mListData.get(i).getParMulwareCount()>0) {
+                            hasParMulware = true;
+                            break;
+                        }
+                    }
+                    Log.w(TAG,"hasParMulware = "+hasParMulware);
+                    if (hasParMulware) {
+                        mHandlerMain.sendEmptyMessage(Utils.START_DANGER_INFO_MSG);
+                    } else {
+                        for(int i=0;i<Utils.PARENT_MAX;i++) {
+                            mListData.get(i).setParIcon(Utils.CHECKED_ICON);
+                        }
+                        mLayoutActionbar.setBackgroundColor(getResources().getColor(R.color.green));
+                        mLayoutInfo.setBackgroundColor(getResources().getColor(R.color.green));
+                        setStatusBarColor(true);
+                        mHandlerMain.sendEmptyMessage(Utils.START_ALL_SAFE_MSG);
+                    }
+                default:
+                    break;
+            }
+        }
+    };
+
+    Handler mDelayHandler = new Handler();
+
+    Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mHandlerUI.sendEmptyMessage(Utils.SCAN_START_ROTATE_MSG);
+        }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Log.v(TAG, "VirusScanActivity oncreate() begin");
+        setStatusBarColor(true);
+
+        mQScannerMananger = ManagerCreatorF.getManager(QScannerManagerV2.class);
+        getScanVirusResultIntent();
+        setContentView(R.layout.virus_scan_main);
+        initActionBar();
+
+        mCompleteButtonView = (Button) findViewById(R.id.complete_button);
+        mCompleteButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mScanRecTitleView = (TextView) findViewById(R.id.scan_title_info);
+        mLayoutInfo = (LinearLayout) findViewById(R.id.layout_info);
+        mScanPercentView = (TextView) findViewById(R.id.scan_result_percentage);
+
+        mLayoutActionbar = (LinearLayout) findViewById(R.id.layout_actionbar);
+        mScanRecResultView = (TextView) findViewById(R.id.scan_result);
+        mScanRecResultView.setBackground(null);
+
+        InitAnimation();
+
+        if (mGetIntentFlag) {
+            mLayoutActionbar.setBackgroundColor(getResources().getColor(R.color.orange));
+            mLayoutInfo.setBackgroundColor(getResources().getColor(R.color.orange));
+        } else {
+            mLayoutActionbar.setBackgroundColor(getResources().getColor(R.color.green));
+            mLayoutInfo.setBackgroundColor(getResources().getColor(R.color.green));
+        }
+
+        mProgressbar = (AgsProgressButton) findViewById(R.id.process_button);
+        mProgressbar.setMaxProgress(Utils.PROG_BAR_MAX);
+        mProgressbar.setTextSizeSP(19f);
+        mProgressbar.setButtonRadius(1.60f);
+        mProgressbar.setState(AgsProgressButton.ONGOING);
+        mProgressbar.setProgressText(getString(R.string.scan_pause_button), mProBarCount);
+        mProgressbar.setOnClickListener(ProgressbarListener);
+
+        if (mGetIntentFlag) {
+            iniScanVirusIntentView();
+            initGroupListView();
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                mActionBarButton.setBackgroundResource(R.drawable.actionbar_yellow_btn_on_selector);
+            }
+        } else {
+            initGroupListView();
+            mDelayHandler.postDelayed(mRunnable, 300);
+        }
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addDataScheme("package");
+        this.registerReceiver(mUninstallReceiver, filter);
+
+        Log.v(TAG, "VirusScanActivity oncreate() end");
+    }
+
+    @Override
+    public void onStart() {
+        Log.d(TAG, "onStart() begin.");
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy() begin.");
+        if (mIsContinue) {
+            mIsContinue = false;
+        }
+        stopScanVirus();
+        mQScannerMananger.freeScanner();
+        mListData = null;
+        if(mDelayHandler!= null) {
+            mDelayHandler.removeCallbacks(mRunnable);
+        }
+        if(mUninstallReceiver != null) {
+            this.unregisterReceiver(mUninstallReceiver);
+            mUninstallReceiver = null;
+        }
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() end.");
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    View.OnClickListener ProgressbarListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+
+            String progButtonName = (String) mProgressbar.getCurrentText();
+            Log.d(TAG, "vs mProgressButton Text" + progButtonName);
+
+            if (progButtonName.equals(getString(R.string.scan_pause_button))) {
+                mHandlerMain.sendEmptyMessage(Utils.SCAN_PAUSE_MSG);
+                mHandlerUI.sendEmptyMessage(Utils.SCAN_STOP_ROTATE_MSG);
+
+            } else if (progButtonName.equals(getString(R.string.scan_continue_button))) {
+                mHandlerMain.sendEmptyMessage(Utils.SCAN_CONTINUE_MSG);
+                mHandlerUI.sendEmptyMessage(Utils.SCAN_START_ROTATE_MSG);
+
+            } else if (progButtonName.equals(getString(R.string.scan_complete_button))) {
+                Log.d(TAG, "mProgressButton Text" + mProgressbar.getText());
+                finish();
+            }
+        }
+    };
+
+    private void initActionBar() {
+        mActionBarButton = (ImageButton) findViewById(R.id.actionbar_icon);
+        mActionBarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TypedValue outValue = new TypedValue();
+            getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
+            mActionBarButton.setBackgroundResource(outValue.resourceId);
+        }else{
+            mActionBarButton.setBackgroundResource(R.drawable.actionbar_btn_on_selector);
+        }
+    }
+
+    private void iniAnimParentIcon() {
+        mRotateIconAnim = AnimationUtils.loadAnimation(this, R.anim.virus_scan_rotate);
+        LinearInterpolator lin = new LinearInterpolator();
+        mRotateIconAnim.setInterpolator(lin);
+    }
+
+    public Drawable getApkIcon(Context context, String apkPath) {
+        PackageManager pm = context.getPackageManager();
+        PackageInfo info = pm.getPackageArchiveInfo(apkPath,
+                PackageManager.GET_ACTIVITIES);
+        if (info != null) {
+            ApplicationInfo appInfo = info.applicationInfo;
+            appInfo.sourceDir = apkPath;
+            appInfo.publicSourceDir = apkPath;
+            try {
+                return appInfo.loadIcon(pm);
+            } catch (OutOfMemoryError e) {
+                Log.e("ApkIconLoader", e.toString());
+            }
+        }
+        return null;
+    }
+
+    public String getAPKlabel(Context context, String apkPath){
+        PackageManager pm = context.getPackageManager();
+        PackageInfo info = pm.getPackageArchiveInfo(apkPath,
+                PackageManager.GET_ACTIVITIES);
+        if (info != null) {
+            ApplicationInfo appInfo = info.applicationInfo;
+            appInfo.sourceDir = apkPath;
+            appInfo.publicSourceDir = apkPath;
+            String label = appInfo.loadLabel(pm).toString();
+            return label;
+        }
+        return null;
+    }
+
+    private void initGroupListView() {
+        mVirusScanListView = (ExpandableListView) findViewById(R.id.virus_scan_recover_group_list_view);
+        mGroupAdapter = new VirusScanAdapter(mListData, this, mGetIntentFlag);
+        mVirusScanListView.setAdapter(mGroupAdapter);
+        mVirusScanListView.setGroupIndicator(null);
+        mVirusScanListView.setClickable(false);
+
+        final int groupCount = mVirusScanListView.getCount();
+        for (int i = 0; i < groupCount; i++) {
+            mVirusScanListView.expandGroup(i);
+        }
+        mVirusScanListView.setOnGroupClickListener(
+                new ExpandableListView.OnGroupClickListener() {
+                    @Override
+                    public boolean onGroupClick(ExpandableListView parent, View v,
+                                                int groupPosition, long id) {
+                        // TODO Auto-generated method stub
+                        return true;
+                    }
+                }
+        );
+
+        mVirusScanListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+                Log.w(TAG,"GroupPos = "+groupPosition+" | ChildPos"+childPosition);
+                if (groupPosition == Utils.SOFT_SCAN) {
+                    mScanType = Utils.SOFT_SCAN;
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_DELETE);
+                    String curPackageName = mListData.get(groupPosition).getParPackageNameList().get(childPosition);
+                    String packageName = "package:" + curPackageName;
+                    intent.setData(Uri.parse(packageName));
+                    startActivity(intent);
+                } else if (groupPosition == Utils.SDCARD_SCAN) {
+                    mScanType = Utils.SDCARD_SCAN;
+                    Drawable drawable = null;
+                    final String curPathName = mListData.get(groupPosition).getParPathNameList().get(childPosition);
+                    String displayName = "";
+//                    String curPackageName = mListData.get(groupPosition).getParPackageNameList().get(childPosition);
+//                    PackageManager packageManager = getPackageManager();
+//                    try {
+                        Log.e(TAG, "11111111111111111111111");
+                        drawable = ApkInfoUtil.getApkIcon(VirusScanActivity.this,curPathName);
+                        displayName = ApkInfoUtil.getAPKlabel(VirusScanActivity.this, curPathName);
+                        Log.e(TAG,"displayName="+displayName);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+
+                        new AlertDialog.Builder(VirusScanActivity.this).setTitle(displayName)//设置对话框标题
+                                .setMessage("要删除此应用吗？")//设置显示的内容
+                                .setIcon(drawable)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加确定按钮
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
+                                        File file = new File(curPathName);
+                                        if (file.exists()) { // 判断文件是否存在
+                                            if (file.isFile()) { // 判断是否是文件
+                                                file.delete();
+                                            }
+                                        }
+                                        Message msg = mHandlerMain.obtainMessage();
+                                        msg.what = Utils.SCAN_DELETE_PACKAGE_MSG;
+                                        msg.arg1 = 2;
+                                        msg.obj = curPathName;
+                                        msg.sendToTarget();
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {//添加返回按钮
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {//响应事件
+                                        dialog.dismiss();
+                                        dialog.cancel();
+                                        //finish();
+                                    }
+                                }).show();//在按键响应事件中显示此对话框
+                        Log.e(TAG, "11111111111111111111114");
+
+                    //undo sdcard
+                }
+                return true;
+            }
+        });
+    }
+
+    private void getScanVirusResultIntent() {
+        Intent intent = getIntent();
+        if (intent.getAction() != null && intent.getAction().equals(ScaleScreen.VIRUS_SCAN_START_ACTION)) {
+            mGetIntentFlag = true;
+            Bundle bundle = intent.getBundleExtra(ScaleScreen.VIRUS_INTENT_DATA);
+            if (bundle != null) {
+                mIntentArrayList = (ArrayList<QScanResultEntity>) bundle.getSerializable(ScaleScreen.VIRUS_SCAN_RESULT);
+                mGetIntentScanCount = bundle.getInt(ScaleScreen.VIRUS_SCANED_SOFTWARE_COUNT);
+                Log.d(TAG, "getSerializable size==" + mIntentArrayList.size());
+                Log.d(TAG, "vs mGetIntentScanCount ==" + mGetIntentScanCount);
+            }
+        } else {
+            mScanType = Utils.BUG_SCAN;
+            mIsContinue = true;
+            if (mQScannerMananger.initScanner() == 0) {
+                Log.v(TAG, "initScanner return true");
+            } else {
+                Log.v(TAG, "initScanner return false");
+            }
+            Log.v(TAG, "virus database version:" + mQScannerMananger.getVirusBaseVersion(this));
+            iniAnimParentIcon();
+            createGroupData();
+            startScanVirus();
+        }
+    }
+
+    public void iniScanVirusIntentView() {
+        if (mIntentArrayList.size() > 0) {
+            createGroupData();
+            mListData.get(Utils.SOFT_SCAN).setParScanType(Utils.SOFT_SCAN);
+            mListData.get(Utils.SOFT_SCAN).setParMulwareCount(mIntentArrayList.size());
+
+            ArrayList mulwareList = new ArrayList();
+            ArrayList mulwareAdviceList = new ArrayList();
+            for (QScanResultEntity entity : mIntentArrayList) {
+                mulwareList.add(entity.softName);
+                mulwareAdviceList.add(getString(R.string.advice_install_soft_delete));
+            }
+            mListData.get(Utils.SOFT_SCAN).setParResultList(mulwareList);
+            mListData.get(Utils.SOFT_SCAN).setParAdviceList(mulwareAdviceList);
+
+            mProBarCount = 0;
+            if (mListData.get(Utils.SOFT_SCAN).getParMulwareCount() != 0) {
+                updateUiState();
+                createAllChildData();
+                mListData.get(Utils.SOFT_SCAN).setParResult(String.valueOf(mGetIntentScanCount)
+                        + getString(R.string.list_scan_item_count));
+
+                for (int i = 0; i < Utils.PARENT_MAX; i++) {
+                    mListData.get(i).setParTitleColor(true);
+                    if(i == Utils.SOFT_SCAN){
+                        mListData.get(i).setParIcon(Utils.WARING_ICON);
+                    }else{
+                        mListData.get(i).setParIcon(Utils.CHECKED_ICON);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param flag 根据实际情况，黄色警告就是true，绿色正常状态就是false
+     */
+    private void setStatusBarColor(boolean flag) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int mStatusColor;
+            if(flag) {
+                mStatusColor = this.getResources().getColor(R.color.green);
+            } else {
+                mStatusColor = this.getResources().getColor(R.color.orange);
+            }
+            this.getWindow().setStatusBarColor(mStatusColor);
+        }
+    }
+
+    /**
+     * 发现危险与安全隐患时更新UI的状态
+     */
+    private void updateUiState() {
+        mLayoutActionbar.setBackgroundColor(getResources().getColor(R.color.orange));
+        mLayoutInfo.setBackgroundColor(getResources().getColor(R.color.orange));
+        setStatusBarColor(false);
+        updateScanButtonState();
+        mScanRecTitleView.setText(getString(R.string.result_big_danger_info));
+        mScanRecResultView.setText(getString(R.string.result_small_danger_info));
+        mScanRecResultView.startAnimation(mAlpha);
+    }
+
+    /**
+     * 更新浏览按键的状态
+     */
+    private void updateScanButtonState() {
+        mProgressbar.setProgressText(getString(R.string.scan_complete_button), 0f);
+        mProgressbar.setVisibility(View.GONE);
+        mCompleteButtonView.setText(getString(R.string.scan_complete_button));
+        mCompleteButtonView.setVisibility(View.VISIBLE);
+        updateCompleteButtonBg();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            mActionBarButton.setBackgroundResource(R.drawable.actionbar_yellow_btn_on_selector);
+        }
+    }
+
+    /**
+     * 更新完成按键的背景效果
+     */
+    private void updateCompleteButtonBg() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TypedValue outValue = new TypedValue();
+            getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+            mCompleteButtonView.setBackgroundResource(outValue.resourceId);
+        } else {
+            mCompleteButtonView.setBackgroundResource(R.drawable.complete_btn_on_selector);
+        }
+    }
+
+    private void updateParentImageView(boolean startAnimFlag, int itemId){
+        Log.v(TAG, "vss updateParentImageView begin startAnimFlag==" + startAnimFlag);
+        if(startAnimFlag) {
+            int visiblePosition = mVirusScanListView.getFirstVisiblePosition();
+            if (itemId - visiblePosition >= 0) {
+                View view = mVirusScanListView.getChildAt(itemId - visiblePosition);
+                Log.v(TAG, "vss mParentImageView ==" + mParentViewHolder.pImageView);
+                mParentViewHolder.pImageView = (ImageView) view.findViewById(R.id.parent_item_image_view);
+                mParentViewHolder.pTextView = (TextView) view.findViewById(R.id.parent_item_text);
+                mParentViewHolder.pResultView = (TextView) view.findViewById(R.id.parent_scan_num_text);
+
+                if(mParentViewHolder.pImageView != null && mParentViewHolder.pTextView!= null){
+                    mParentViewHolder.pImageView
+                            .setImageDrawable(getResources().getDrawable(R.drawable.home_icon_intercept_03));
+                }
+                if(!mStartRotateFlag) {
+                    mParentViewHolder.pImageView.startAnimation(mRotateIconAnim);
+                    mStartRotateFlag = true;
+                }
+            }
+        }else{
+            if(mStartRotateFlag) {
+                mParentViewHolder.pImageView.clearAnimation();
+                mStartRotateFlag = false;
+            }
+        }
+    }
+
+
+    /**
+     * 初始化动画
+     */
+    private void InitAnimation(){
+        background_img_shell = (ImageView) findViewById(R.id.background_shell);
+        background_img_danger = (ImageView) findViewById(R.id.background_danger);
+        background_img_safe = (ImageView) findViewById(R.id.background_safe);
+
+        mAlpha = AnimUtil.AlphaAnim(mAlpha);
+        mScaleToGreat1 = AnimUtil.littleToGreatAnim(mScaleToGreat1);
+        mScaleToGreat2 = AnimUtil.littleToGreatAnim(mScaleToGreat2);
+    }
+
+    /**
+     * 初始化父类ExpandableListView的数据
+     */
+    private void createGroupData() {
+        for(int i = 0; i < Utils.PARENT_MAX; i++){
+            ParentData p = new ParentData();
+            if(i == 0){
+                p.setParName(getString(R.string.list_system_bug_title));
+            }else if(i == 1){
+                p.setParName(getString(R.string.list_soft_installed_title));
+            }else if(i == 2){
+                p.setParName(getString(R.string.list_sdcard_soft_title));
+            }
+            p.setParIcon(Utils.UNCHECKED_ICON);
+            p.setParTitleColor(false);
+            p.setChildSize(0);
+            mListData.add(p);
+        }
+    }
+
+    private void createChildData(int scanType, String parentName) {
+        int childSize = mListData.get(scanType).getParResultList().size();
+        mListData.get(scanType).setChildSize(childSize);
+
+        if (mListData.get(scanType).getParName().equals(parentName)) {
+            if(childSize > 0) {
+                ArrayList<ChildData> cLists = new ArrayList<ChildData>();
+                for (int i = 0; i < childSize; i++) {
+                    ChildData cObj = new ChildData();
+                    cObj.setChiName(mListData.get(scanType).getParResultList().get(i));
+                    if(mListData.get(scanType).getParAdviceList().size() > 0) {
+                        cObj.setChiResult(mListData.get(scanType).getParAdviceList().get(i));
+                    }
+                    cLists.add(cObj);
+                }
+                mListData.get(scanType).setParChilds(cLists);
+            }
+        }
+    }
+
+    private void createAllChildData(){
+        Log.d(TAG, "createAllChildData()");
+        String parentName = null;
+        for (int i = 0; i < Utils.PARENT_MAX; i++) {
+            if (i == Utils.SOFT_SCAN) {
+                parentName = getString(R.string.list_soft_installed_title);
+            } else if (i == Utils.SDCARD_SCAN) {
+                parentName = getString(R.string.list_sdcard_soft_title);
+            }else if (i == Utils.BUG_SCAN) {
+                parentName = getString(R.string.list_system_bug_title);
+            }
+            if(mListData.get(i).getParMulwareCount() > 0){
+                int bugCount = mListData.get(i).getParSoftWareCount();
+                mListData.get(i).setParResult(String.valueOf(bugCount)
+                        + getString(R.string.list_scan_item_count));
+                mListData.get(i).setParIcon(Utils.WARING_ICON);
+            }else{
+                mListData.get(i).setParResult(getString(R.string.result_big_safe_info));
+                mListData.get(i).setParIcon(Utils.CHECKED_ICON);
+            }
+
+            createChildData(mListData.get(i).getParScanType(), parentName);
+        }
+    }
+
+    public void startScanVirus() {
+        Log.d(TAG, "startScanVirus() mScanType ==" + mScanType);
+        mListData.get(mScanType).setParScanType(mScanType);
+
+        if (mScanType == Utils.SOFT_SCAN || mScanType == Utils.BUG_SCAN) {
+
+            if (mScanThread == null || !mScanThread.isAlive()) {
+                mScanThread = new Thread() {
+                    @Override
+                    public void run() {
+                        if(mScanType == Utils.SOFT_SCAN || mScanType == Utils.BUG_SCAN){
+                            Log.d(TAG, "vs scanInstalledPackages begin");
+                            //本地扫描:参数false  云扫描:参数 true
+                            //mQScannerMananger.scanInstalledPackages(new MyQScanListener(), false);
+                            mQScannerMananger.scanInstalledPackages(new MyQScanListener(), true);
+                            Log.d(TAG, "vs scanInstalledPackages end");
+                        }
+                        mHandlerMain.sendEmptyMessage(Utils.SCAN_THREAD_EXIT_MSG);
+                    }
+                };
+                mScanThread.start();
+            }
+        }else if(mScanType == Utils.SDCARD_SCAN) {
+
+            Log.d(TAG, "(mScanType == Utils.SDCARD_SCAN"+!mScanThread.isAlive());
+            if (mScanThread == null || !mScanThread.isAlive()) {
+                Log.d(TAG, "mSdcardScan mScanThread == null || !mScanThread.isAlive()");
+
+                mScanThread = new Thread() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "scanUninstalledApks begin");
+                        mHandlerUI.sendEmptyMessage(Utils.UPDATE_SDCARD_PATH_INFO_MSG);
+                        mQScannerMananger.scanUninstalledApks(new MyQScanListener(), true);
+                        Log.d(TAG, "scanUninstalledApks end");
+                        mHandlerMain.sendEmptyMessage(Utils.SCAN_THREAD_EXIT_MSG);
+                    }
+                };
+                mScanThread.start();
+            }
+        }
+    }
+
+    public void stopScanVirus(){
+        Log.d(TAG, "stopScanVirus begin");
+        if (mScanThread != null && mScanThread.isAlive()) {
+            Log.d(TAG, "stopScanVirus cancelScan()");
+            mQScannerMananger.cancelScan();
+            try {
+                mScanThread.stop();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+            mScanThread = null;
+        }
+    }
+
+    public void pauseScanVirus() {
+        Log.v(TAG, "pauseScanVirus begin");
+        if (mScanThread != null && mScanThread.isAlive()) {
+            Log.v(TAG, "pauseScanVirus pauseScan()");
+            mQScannerMananger.pauseScan();
+        }
+    }
+
+    public void continueScanVirus() {
+        Log.v(TAG, "continueScanVirus begin");
+        if (mScanThread != null && mScanThread.isAlive()) {
+            Log.v(TAG, "pauseScanVirus continueScan()");
+            mQScannerMananger.continueScan();
+        }
+    }
+
+    private class MyQScanListener extends QScanListenerV2 {
+
+        @Override
+        public void onScanStarted(int scanType) {
+            android.util.Log.v(TAG, "onScanStarted:[" + scanType + "]");
+        }
+
+        /**
+         * 安装包扫描进度回调
+         *
+         * @param scanType 扫描类型，具体参考{@link QScanConstants#SCAN_INSTALLEDPKGS} ~
+         *                 {@link QScanConstants#SCAN_SPECIALS}
+         * @param progress 扫描进度 像未安装apk扫描，progress无法计算，这里会返回-1的值，标识未知
+         * @param result   扫描项信息
+         */
+        @Override
+        public void onScanProgress(int scanType, int progress,
+                                   QScanResultEntity result) {
+            Log.v(TAG, "onScanProgress:" + progress);
+            if(mIsContinue) {
+                updateProgressTip(result, progress);
+            }
+        }
+
+        /**
+         * 搜索到不扫描的文件的回调
+         */
+        @Override
+        public void onFoundElseFile(int scanType, File file) {
+
+            Log.v(TAG, "onFoundElseFile:[" + scanType + "]" + "file==" + file);
+        }
+
+        /**
+         * 云扫描出现网络错误
+         *
+         * @param scanType 扫描类型，具体参考{@link QScanConstants#SCAN_INSTALLEDPKGS} ~
+         *                 {@link QScanConstants#SCAN_SPECIALS}
+         * @param errCode  错误码
+         */
+        @Override
+        public void onScanError(int scanType, int errCode) {
+            android.util.Log.v(TAG, "onScanError--scanType[" + scanType + "]errCode[" + errCode + "]");
+
+            //updateTip("查杀出错，出错码：" + errCode + " " + "查杀类型-" + getScanTypeString(scanType), 0);
+            //mHandle2.sendEmptyMessage(MSG_RESET_PAUSE);
+        }
+
+        /**
+         * 扫描被暂停时回调
+         */
+        @Override
+        public void onScanPaused(int scanType) {
+            android.util.Log.v(TAG, "onScanPaused--scanType[" + scanType + "]");
+        }
+
+        /**
+         * 扫描继续时回调
+         */
+        @Override
+        public void onScanContinue(int scanType) {
+            android.util.Log.v(TAG, "onScanContinue--scanType[" + scanType + "]");
+        }
+
+        /**
+         * 扫描被取消时回调
+         */
+        @Override
+        public void onScanCanceled(int scanType) {
+            android.util.Log.v(TAG, "onScanCanceled--scanType[" + scanType + "]");
+            mScanThread = null;
+        }
+
+        /**
+         * 扫描结束
+         *
+         * @param scanType 扫描类型，具体参考{@link QScanConstants#SCAN_INSTALLEDPKGS} ~
+         *                 {@link QScanConstants#SCAN_SPECIALS}
+         * @param results  扫描的所有结果
+         */
+        @Override
+        public void onScanFinished(int scanType, List<QScanResultEntity> results) {
+            android.util.Log.v(TAG, "onScanFinished--scanType[" + scanType + "]results.size()[" +
+                    results.size() + "]");
+
+            for (QScanResultEntity entity : results) {
+                Log.v(TAG, "[onScanFinished]" +
+                        "softName[" + entity.softName +
+                        "]packageName[" + entity.packageName +
+                        "]path[" + entity.path +
+                        "]name[" + entity.name + "]");
+
+                Log.v(TAG, "[onScanFinished]" +
+                        "discription[" + entity.discription +
+                        "]url[" + entity.url);
+            }
+
+            updateViewTip();
+            if(mScanType == Utils.BUG_SCAN){
+                mListData.get(mScanType).setParMulwareCount(0);
+            }else{
+                mListData.get(mScanType).setParMulwareCount(results.size());
+                if (results != null) {
+                    updateMulwareTip(results);
+                }
+            }
+        }
+    }
+
+    private void updateViewTip() {
+        if (mScanType == Utils.SDCARD_SCAN) {
+            mHandlerUI.sendEmptyMessage(Utils.UPDATE_SDCARD_SCAN_PRO_MSG);
+        }else {
+            mHandlerUI.sendEmptyMessage(Utils.UPDATE_PARENT_VIEW_MSG);
+        }
+    }
+
+    private void updateMulwareTip(List<QScanResultEntity> results) {
+        ArrayList mulwareNameList = new ArrayList();
+        ArrayList mulwareAdviceList = new ArrayList();
+        ArrayList mulwarePackageNameList = new ArrayList();
+        ArrayList mulwarePathNameList = new ArrayList();
+
+        for (QScanResultEntity entity : results) {
+            mulwareNameList.add(entity.softName);
+            mulwarePackageNameList.add(entity.packageName);
+            mulwarePathNameList.add(entity.path);
+            if (mScanType == Utils.SOFT_SCAN) {
+                mulwareAdviceList.add(getString(R.string.advice_install_soft_delete));
+            }else{
+                mulwareAdviceList.add(getString(R.string.advice_sdcard_soft_delete));
+            }
+        }
+
+        mListData.get(mScanType).setParResultList(mulwareNameList);
+        mListData.get(mScanType).setParAdviceList(mulwareAdviceList);
+        mListData.get(mScanType).setParPackageNameList(mulwarePackageNameList);
+        mListData.get(mScanType).setParPathNameList(mulwarePathNameList);
+    }
+
+    private void updateProgressTip(QScanResultEntity result, int progress) {
+        String softName = result.softName;
+
+        if (result.softName == null || result.softName.length() == 0) {
+            softName = result.path;
+        }
+
+        getEntityDes(result);  //software count
+
+        Message msg = mHandlerUI.obtainMessage();
+        msg.what = Utils.UPDATE_PROGRESS_VIEW_MSG;
+        msg.obj = softName.toString();
+        if (mScanType  == 0) {
+            msg.arg1 = progress;
+        }else if(progress > -1) {
+            msg.arg1 = progress + mScanType * Utils.SCAN_COMPLETE_MAX;
+        }else if(progress == -1){
+            msg.arg1 = mScanType * Utils.SCAN_COMPLETE_MAX;
+        }
+        Log.i(TAG, "progressbar == " + progress + " msg.arg1 == " + msg.arg1);
+        Log.i(TAG, "result == " + result);
+        msg.sendToTarget();
+    }
+
+    //software safe state and bug count
+    private String getEntityDes(QScanResultEntity result) {
+        StringBuilder content = new StringBuilder();
+        String message = result.softName;
+        if (message == null || message.length() == 0) {
+            message = result.path;
+        }
+        message = message + "[" + result.discription + "]";
+
+        switch (result.type) {
+            case QScanConstants.TYPE_OK:
+                content.append(getString(R.string.virus_type_normal));
+                mListData.get(mScanType).setParMulwareCount(mListData.get(mScanType).getParMulwareCount() + 1);
+                break;
+
+            case QScanConstants.TYPE_RISK:
+                Log.v(TAG, result.softName + " is TYPE_RISK ");
+                content.append(getString(R.string.virus_type_danger));
+                mListData.get(mScanType).setParMulwareCount(mListData.get(mScanType).getParMulwareCount() + 1);
+                mListData.get(mScanType).setParSoftWareCount(mListData.get(mScanType).getParSoftWareCount() + 1);
+                break;
+
+            case QScanConstants.TYPE_VIRUS:
+                android.util.Log.v(TAG, result.packageName + " is TYPE_VIRUS ");
+                content.append(getString(R.string.virus_type_virus));
+                mListData.get(mScanType).setParMulwareCount(mListData.get(mScanType).getParMulwareCount() + 1);
+                mListData.get(mScanType).setParSoftWareCount(mListData.get(mScanType).getParSoftWareCount() + 1);
+                break;
+
+            case QScanConstants.TYPE_SYSTEM_FLAW:
+                android.util.Log.v(TAG, result.packageName + " is TYPE_SYSTEM_FLAW ");
+                content.append(getString(R.string.virus_type_sysbug));
+                mListData.get(mScanType).setParMulwareCount(mListData.get(mScanType).getParMulwareCount() + 1);
+                mListData.get(mScanType).setParSoftWareCount(mListData.get(mScanType).getParSoftWareCount() + 1);
+                break;
+
+            case QScanConstants.TYPE_TROJAN:
+                android.util.Log.v(TAG, result.packageName + " is TYPE_TROJAN ");
+                content.append(getString(R.string.virus_type_malware));
+                mListData.get(mScanType).setParMulwareCount(mListData.get(mScanType).getParMulwareCount() + 1);
+                mListData.get(mScanType).setParSoftWareCount(mListData.get(mScanType).getParSoftWareCount() + 1);
+                break;
+
+            case QScanConstants.TYPE_UNKNOWN:
+                content.append(getString(R.string.virus_type_unknown));
+                mListData.get(mScanType).setParSoftWareCount(mListData.get(mScanType).getParSoftWareCount() + 1);
+                break;
+
+            default:
+                android.util.Log.v(TAG, result.softName + " is others! ");
+                content.append(getString(R.string.virus_type_unknown));
+                break;
+        }
+        return content.toString();
+    }
+
+    private class ParentViewHolder {
+        TextView pTextView;
+        ImageView pImageView;
+        TextView pResultView;
+    }
+}

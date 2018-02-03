@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--TYRD: weina 20150624 add -->
+<vector xmlns:android ="http://schemas.android.com/apk/res/android"
+    android:width="24dip"
+    android:height="24dip"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0"
+    android:autoMirrored="true"
+    android:tint="#ffffffff"
+    >
+    <path 
+        android:pathData ="M6,12L14,4L13.2,3.2L5,12L13.2,20.8L14,20L6,12z"
+        android:fillColor="@android:color/white"/>
+</vector>

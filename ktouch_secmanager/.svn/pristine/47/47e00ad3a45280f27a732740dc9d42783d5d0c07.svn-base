@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="divgray">#f2f2f2</color>
+    <color name="checkupgreen">#51bb24</color>
+    <color name="checkupMainInfo">#ffb8e7a4</color>
+    <color name="checkupSubInfo">#ffd3eec8</color>
+    <color name="checkuptext">#6bc545</color>
+    <color name="checkupPressed">#cef4bd</color>
+    <color name="menuText">#2e2e2e</color>
+    
+    <!--shenyan add color start-->
+    <color name="transparent">#00000000</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="orange">#F08D18</color>
+    <color name="green">#51bb24</color>
+    <color name="red">#FF3A31</color>
+    <color name="ltgray">#787878</color>
+    <color name="greenprogress">#DDEED6</color>
+    <color name="greydivider">#DFDFDF</color>
+    <color name="greybutdiv">#D7D6D9</color>
+    <color name="greybg">#F8F8F8</color>
+    <color name="cyan">#00FFFF</color>
+    <color name="dkgray">#444444</color>
+    <color name="gray_def">#EDEDF0</color>
+    <drawable name="titlegray">#CCCCCC</drawable>
+    <drawable name="buttonbg">#F8F8F8</drawable>
+    <drawable name="buttonpressbg">#1C000000</drawable>
+    <drawable name="green_bt_bg">#51bb24</drawable>
+    <drawable name="orange_bt_bg">#F08D18</drawable>
+    <!--shenyan add color end-->
+    <!--zouchl add color start-->
+    <color name="word_color">#000000</color>
+    <color name="list_right_word_color">#787878</color>
+    <color name="list_line_color">#dfdfdf</color>
+    <color name="flow_monitor_bg_color">#45b6fd</color>
+    <color name="flow_gray_color">#ededf0</color>
+    <color name="statusbar_color">#40000000</color>
+    <!--zouchl add color end-->
+</resources>

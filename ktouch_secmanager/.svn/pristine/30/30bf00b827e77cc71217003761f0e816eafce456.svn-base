@@ -1,0 +1,82 @@
+package com.guli.secmanager.Checkup;
+
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
+
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import com.guli.secmanager.R;
+
+import java.util.ArrayList;
+
+/**
+ * Created by yujie on 16-4-10.
+ */
+public class CheckResultAdapter extends ArrayAdapter<CheckupResultItem> {
+    public static final String TAG = "CheckResultAdapter";
+    private Context mContext;
+    private int mLayoutResId;
+    private ArrayList<CheckupResultItem> mData;
+
+    public CheckResultAdapter(Context c, int resId, ArrayList<CheckupResultItem> data){
+        super(c, resId, data);
+        mContext = c;
+        mLayoutResId = resId;
+        mData = data;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View row = convertView;
+        OwnerHolder holder = null;
+        if (row == null){
+            Log.i(TAG, "getView... call getLayoutInflater().inflate()");
+            row = ((Activity)mContext).getLayoutInflater().inflate(mLayoutResId, parent, false);
+            holder = new OwnerHolder();
+            holder.name = (TextView) row.findViewById(R.id.tv_item_name);
+            holder.state = (TextView) row.findViewById(R.id.tv_item_state);
+            holder.type = (ImageButton) row.findViewById(R.id.ib_item_icon);
+            holder.background = (TextView) row.findViewById(R.id.tv_background);
+
+            row.setTag(holder);
+        }
+        CheckupResultItem cri = mData.get(position);
+
+        if (cri != null) {
+            Log.i(TAG, "cri object is: " + cri.toString());
+        }
+        holder = (OwnerHolder)row.getTag();
+        holder.name.setText(cri.getName());
+        holder.state.setText(cri.getState());
+        if (cri.getType() == CheckupResultItem.ItemType.RISK) {
+            holder.type.setImageDrawable(mContext.getResources().getDrawable(R.drawable.home_icon_intercept_02));
+            //holder.background.setVisibility(View.VISIBLE);
+            //holder.name.setTextColor(mContext.getResources().getColor(R.color.white));
+            //holder.state.setTextColor(mContext.getResources().getColor(R.color.white));
+        } else {
+            holder.type.setImageDrawable(mContext.getResources().getDrawable(R.drawable.home_icon_intercept));
+        }
+
+        return row;
+    }
+
+    @Override
+    public int getCount() {
+        //Log.i(TAG, "getCount Enter... mDate.size = " + mData.size());
+        return mData.size();
+    }
+
+    static class OwnerHolder {
+        TextView name;
+        TextView state;
+        ImageButton type;
+        TextView background;
+    }
+}

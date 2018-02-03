@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/goodnote_bg" >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
+    </android.support.v7.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/search_cover"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </ImageView>
+
+    <LinearLayout
+        android:id="@+id/search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/goodnote_bg"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/search_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@color/white_bg"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:paddingLeft="5dp"
+            android:paddingRight="15dp">
+
+            <ImageView
+                android:id="@+id/search_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/search_back" />
+
+            <EditText
+                android:id="@+id/search_text"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/search_text_corners_bg"
+                android:drawableRight="@drawable/search_delete"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black_bg"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

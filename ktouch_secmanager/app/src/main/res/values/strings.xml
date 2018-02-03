@@ -1,0 +1,197 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Security Center</string>
+    <string name="unit">min</string>
+    <string name="checkup_in_progress">checking up</string>
+    <string name="optimize_one_key">optimize in one key</string>
+    <string name="garbage_clean">garbage clean</string>
+    <string name="virus_scan">virus scan</string>
+    <string name="flow_monitor">flow monitor</string>
+    <string name="permission_manager">permission manager</string>
+    <string name="wifi_security">WiFi detection</string>
+    <string name="power_save">power management</string>
+    <string name="firewall">harassment interception</string>
+    <string name="find_garbage">find garbage</string>
+    <string name="find_virus_software">find virus software</string>
+    <string name="optimize_complete">complete</string>
+    <string name="checkup_canceled">checkup canceled</string>
+    <string name="exit_prompt">press again to exit</string>
+    <string name="checkup_again">re checkup</string>
+    <string name="scan_in_process">scanning</string>
+    <string name="phone_storage_status">phone storage status</string>
+    <string name="phone_storage_enough">phone storage enough</string>
+    <string name="phone_storage_not_enough">phone storage not enough</string>
+    <string name="flow_switch">flow monitor</string>
+    <string name="flow_switch_open">open</string>
+    <string name="flow_switch_close">close</string>
+    <string name="firewall_switch">harassment interception</string>
+    <string name="firewall_switch_open">open</string>
+    <string name="firewall_switch_close">close</string>
+    <string name="rubbish_cleaned">garbage clean</string>
+    <string name="virus_status">virus scan</string>
+    <string name="virus_not_found">safe</string>
+    <string name="virus_has_found"> virus has found</string>
+    <string name="InterceptedMms">intercepted messages</string>
+    <string name="MmsUnit">item</string>
+    <string name="InterceptedCall">intercepted phone</string>
+    <string name="CallUnit">item</string>
+    <string name="BatteryRemain">Battery life time</string>
+    <string name="PermissionSafe">safe</string>
+    <string name="PermissionRisk">risk</string>
+    <!--wangdsh add string start-->
+    <string name="garbageclean">garbage clean</string>
+    <string name="scanning">scanning</string>
+    <string name="scanned">scan complete</string>
+    <string name="process_button">Button with progress bar</string>
+    <string name="download">download</string>
+    <string name="title">title</string>
+    <string name="content">content</string>
+    <string name="childtitle">child title</string>
+    <string name="GarbageFile">Garbage files</string>
+    <string name="InstallPackage">Installation package</string>
+    <string name="SoftwareCache">Software cache</string>
+    <string name="selected">Selected</string>
+    <string name="start_scan">start scanning</string>
+    <string name="stop_scan">stop scanning</string>
+    <string name="akeycleanup">A key to clean up garbage</string>
+    <string name="zero_value">0</string>
+    <string name="MB">MB</string>
+    <string name="B">B</string>
+    <string name="system_garbagefile">system garbage files</string>
+    <string name="sft_residual">Software residual uninstall</string>
+    <string name="cleanning">Being cleaned</string>
+    <string name="stopclean">Stop cleaning</string>
+    <string name="rescan">re scan</string>
+    <string name="clean_complete">clean up</string>
+    <!--wangdsh add string  end -->
+
+    <!--shenyan add string start-->
+    <string name="virus_scan_name">Virus scan</string>
+    <string name="list_soft_installed_title">Installed software</string>
+    <string name="list_sdcard_soft_title">Not installed software</string>
+    <string name="list_cloud_scan_title">Cloud scanning</string>
+    <string name="list_system_bug_title">System bug</string>
+    <string name="list_scan_item_count"> scanned</string>
+    <string name="list_scan_item_completed">scanned</string>
+    <string name="list_scan_item_incomplete">Not scan</string>
+    <string name="result_big_safe_info">safe</string>
+    <string name="result_big_danger_info">danger</string>
+    <string name="result_small_is_scanning_info">Being scanned</string>
+    <string name="result_small_complete_info">Complete scanning</string>
+    <string name="result_small_danger_info">Hidden danger</string>
+    <string name="scan_pause_button">Pause scan</string>
+    <string name="scan_continue_button">Continue scanning</string>
+    <string name="scan_complete_button">complete</string>
+    <string name="advice_sdcard_soft_delete">Recommended deletion</string>
+    <string name="advice_install_soft_delete">Recommended to uninstall</string>
+    <string name="virus_type_normal">normal</string>
+    <string name="virus_type_danger">danger</string>
+    <string name="virus_type_virus">virus</string>
+    <string name="virus_type_sysbug">system bug</string>
+    <string name="virus_type_malware">Trojan</string>
+    <string name="virus_type_unknown">unknown</string>
+    <!--shenyan add string end-->
+
+    <!-- wangqch add string start -->
+    <string name="flowmonitor_title">flow monitor set</string>
+    <string name="operator_title">Operator information</string>
+    <string name="province">province</string>
+    <string name="city">city</string>
+    <string name="operator">operator</string>
+    <string name="accounting_date">date</string>
+    <string name="save">save</string>
+    <string name="brand">brand</string>
+    <string name="mounth_account">Monthly balance sheet date</string>
+    <string name="operator_mobile">China Mobile</string>
+    <string name="operator_telecom">China Telecom</string>
+    <string name="operator_unicon">China Unicom</string>
+    <string name="correct_finish">Calibration success</string>
+    <string name="correct_failed">Calibration fail</string>
+    <string name="flow_correcting">In calibration...</string>
+    <string name="flow_auto_correct">A key to automatic calibration</string>
+    <string name="input_province">Please choose your province</string>
+    <!-- wangqch add string end -->
+
+    <!--zouchl add string start-->
+    <string name="flow_monitor_name">flow monitor</string>
+    <string name="flow_manually_set">Manually fill in traffic packages</string>
+    <string name="month_common_total">standard package total</string>
+    <string name="month_common_used">standard package used</string>
+    <string name="free_flow_total">free time package total</string>
+    <string name="free_flow_used">free time package used</string>
+    <string name="free_time_title">The time period of free time package</string>
+    <string name="free_time_value">23:00-07:00</string>
+    <string name="flow_to"> to </string>
+    <string name="ok">ok</string>
+    <string name="cancel">cancel</string>
+    <string name="flow_4G_total">4G package total</string>
+    <string name="flow_4G_used">4G package used</string>
+    <string name="set_time">Please select the time</string>
+    <string name="settings">setting</string>
+    <string name="detail">View details</string>
+    <string name="flow_common">The remaining standard flow</string>
+    <string name="left_free_flow">The remaining free time flow</string>
+    <string name="left_4G_flow">The remaining 4G flow</string>
+    <string name="left_month">The month remaining flow</string>
+    <string name="break_flow_toast">The data flow is over, please disconnect the data connection.</string>
+    <string name="set_flow_total">Please set the total package</string>
+    <string name="webpage">Online browse</string>
+    <string name="music">Online music</string>
+    <string name="video">Online video</string>
+    <string name="chat">Online chat</string>
+    <string name="total_flow">total flow</string>
+    <string name="free_flow">Remaining idle flow</string>
+    <string name="hour">hour</string>
+    <string name="strTraffic_ranking">Flow ranking</string>
+    <string name="strNetwork_manager">Network management</string>
+    <string name="left_flow">Remaining</string>
+    <!--zouchl add string end-->
+
+    <!--wanghg add string start-->
+    <string name="tab_garbage_clean">clean</string>
+    <string name="tab_virus_scan">virus</string>
+    <string name="tab_flow_monitor">flow</string>
+    <string name="garbage_clean_scan_total">total：<xliff:g id="total">%s</xliff:g><xliff:g id="unit">%s</xliff:g></string>
+    <string name="garbage_clean_scan_size"><xliff:g id="total">%s</xliff:g><xliff:g id="unit">%s</xliff:g></string>
+    <string name="akey_garbage_scan">A key scan</string>
+    <string name="virus_scan_info1">Virus killing, fast to scan</string>
+    <string name="virus_scan_info2">found<xliff:g id="total">%s</xliff:g> problems</string>
+    <string name="virus_scan_info3">Your mobile phone is very safe.</string>
+    <string name="virus_scan_info4">The current virus library for the latest version, the fast scan</string>
+    <string name="virus_scan_info5">Last scan: <xliff:g id="day">%s</xliff:g> days ago</string>
+    <string name="pay">pay</string>
+    <string name="private_str">Privacy</string>
+    <string name="ill_software">malware</string>
+    <string name="protect">In protection</string>
+    <string name="total">total</string>
+    <string name="scanning2">Scanning...</string>
+    <string name="zero_size">0MB</string>
+    <string name="suggest_clean">Recommended cleaning</string>
+    <string name="percent">%</string>
+    <string name="virus_scanning">Scanning malware...</string>
+    <string name="item">item</string>
+    <string name="zero_item">0 item</string>
+    <string name="soft_installed_title">installed</string>
+    <string name="sdcard_soft_title">Not installed</string>
+    <string name="repair">repair</string>
+    <string name="all_repair">full repair</string>
+    <string name="flow_click_correct">Point I calibrate</string>
+    <string name="scan">scanning</string>
+    <string name="garbage_clean_info1">found garbage</string>
+    <string name="garbage_clean_info2">Has accumulated to clean up <xliff:g id="total">%s</xliff:g> garbage！</string>
+    <string name="garbage_cleaned">Cleaned up</string>
+    <string name="disk_memory">storage space</string>
+    <string name="no_found_danger">No risk found</string>
+    <string name="more">more</string>
+    <string name="manual_break_flow_toast">You have set the flow over the package flow!</string>
+    <string name="try_later">The network calibration failed, please try again later!</string>
+    <string name="update_finish">Security center database has been upgraded to the latest!</string>
+    <string name="select_operator">Please select your operator</string>
+    <string name="improve_operator">Please complete the operator information</string>
+
+    <string name="permission">权限(permission)</string>
+    <string name="no_permissions">应用需要必要的运行权限</string>
+    <string name="help">帮助</string>
+    <string name="string_help_text">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。\n\n最后点击两次后退按钮，即可返回。</string>
+    <string name="quit">退出</string>
+    <!--wanghg add string end-->
+</resources>

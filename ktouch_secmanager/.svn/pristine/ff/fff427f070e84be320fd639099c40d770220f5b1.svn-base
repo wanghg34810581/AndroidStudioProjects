@@ -1,0 +1,269 @@
+package com.guli.secmanager.Checkup;
+
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+import com.guli.secmanager.Utils.State;
+import com.guli.secmanager.Utils.StateMachine;
+
+import java.util.ArrayList;
+
+/**
+ * Created by yujie on 16-4-24.
+ */
+public class UIStateMachine extends StateMachine {
+    public static final String TAG = "UiStateMachine";
+
+    // Action/Message define for UIStateMachine
+    static final int SCAN = 1;
+    static final int CANCEL = 2;
+    static final int RESCAN = 3;
+    static final int FINISH = 4;
+    static final int OPTIMIZE = 5;
+    static final int GOTOSUBMODULE = 6;
+
+    private Init mInit; // (optimized state is Init state also)
+    private Scanning mScanning;
+    private Stop mStop;
+    private ScanComplete mScanComplete;
+    private Optimized mOptimized;
+    private StopByEnterSubModule mStopByEnterSubModule;
+
+    private Context mContext;
+    private CheckupFragment mCheckup;
+    private Handler mUIHandler;
+
+    private String M2S(int what) {
+        switch (what) {
+            case SCAN:
+                return "SCAN";
+            case CANCEL:
+                return "CANCEL";
+            case RESCAN:
+                return "RESCAN";
+            case FINISH:
+                return "FINISH";
+            case OPTIMIZE:
+                return "OPTIMIZE";
+            case GOTOSUBMODULE:
+                return "GOTOSUBMODULE";
+        }
+        return "UNKNOWN MSG";
+    }
+
+    public void Quit() {
+        Log.d(TAG, "--->>> call Quit, call super.quitNow().");
+        quitNow();
+    }
+
+    private UIStateMachine(Context context, Handler uiHandler) {
+        super(TAG);
+
+        mContext = context;
+        mUIHandler = uiHandler;
+        /*
+        FragmentManager fm = ((Activity)mContext).getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        mCheckup = (CheckupFragment)fm.findFragmentByTag(CheckupFragment.TAG);
+        if (mCheckup == null) {
+            Log.e(TAG, "--->>> UIStateMachine: mCheckup is null");
+        }
+        */
+        mInit = new Init();
+        mScanning = new Scanning();
+        mStop = new Stop();
+        mScanComplete = new ScanComplete();
+        mOptimized = new Optimized();
+        mStopByEnterSubModule = new StopByEnterSubModule();
+
+        addState(mInit);
+        addState(mScanning);
+        addState(mStop);
+        addState(mScanComplete);
+        addState(mOptimized);
+        addState(mStopByEnterSubModule);
+
+        setInitialState(mInit);
+    }
+
+    // external interface for this module, alway call this static method for construction
+    static UIStateMachine make(Context context, Handler h) {
+        Log.d(TAG, "--->>> call make.");
+        UIStateMachine uism = new UIStateMachine(context, h);
+        uism.start();
+        return uism;
+    }
+
+    private class Init extends State {
+        @Override
+        public void enter() {
+            Log.i(TAG, "Enter Init state: " + M2S(getCurrentMessage().what));
+            mUIHandler.sendMessage(obtainMessage(mCheckup.INIT)); // 通知checkup显示相关状态界面
+        }
+
+        @Override
+        public void exit() {
+            Log.i(TAG, "Exit Init state: " + M2S(getCurrentMessage().what));
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            Log.i(TAG, "Init process message: " + M2S(msg.what));
+            boolean retValue = HANDLED;
+            switch (msg.what) {
+                case SCAN:
+                    transitionTo(mScanning);
+                    break;
+                default:
+                    break;
+            }
+            return retValue;
+        }
+    }
+
+    private class Scanning extends State {
+        @Override
+        public void enter() {
+            Log.i(TAG, "Enter Scanning state: " + M2S(getCurrentMessage().what));
+            mUIHandler.sendMessage(obtainMessage(mCheckup.SCANNING)); // 通知checkup显示相关状态界面
+        }
+
+        @Override
+        public void exit() {
+            Log.i(TAG, "Exit Scanning state: " + M2S(getCurrentMessage().what));
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            Log.i(TAG, "Scanning process message: " + M2S(msg.what));
+            boolean retValue = HANDLED;
+            switch (msg.what) {
+                case CANCEL:
+                    transitionTo(mStop);
+                    break;
+                case FINISH:
+                    transitionTo(mScanComplete);
+                default:
+                    break;
+            }
+            return retValue;
+        }
+    }
+
+    private class Stop extends State {
+        @Override
+        public void enter() {
+            Log.i(TAG, "Enter Stop state: " + M2S(getCurrentMessage().what));
+            mUIHandler.sendMessage(obtainMessage(mCheckup.STOP)); // 通知checkup显示相关状态界面
+        }
+
+        @Override
+        public void exit() {
+            Log.i(TAG, "Exit Stop state: " + M2S(getCurrentMessage().what));
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            Log.i(TAG, "Stop process message: " + M2S(msg.what));
+            boolean retValue = HANDLED;
+            switch (msg.what) {
+                case RESCAN:
+                    transitionTo(mScanning);
+                    break;
+                default:
+                    break;
+            }
+            return retValue;
+        }
+    }
+
+    private class ScanComplete extends State {
+        @Override
+        public void enter() {
+            Log.i(TAG, "Enter ScanComplete state: " + M2S(getCurrentMessage().what));
+            mUIHandler.sendMessage(obtainMessage(mCheckup.SCANCOMPLETE)); // 通知checkup显示相关状态界面
+        }
+
+        @Override
+        public void exit() {
+            Log.i(TAG, "Exit ScanComplete state: " + M2S(getCurrentMessage().what));
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            Log.i(TAG, "ScanComplete process message: " + M2S(msg.what));
+            boolean retValue = HANDLED;
+            switch (msg.what) {
+                case OPTIMIZE:
+                    transitionTo(mOptimized);
+                    break;
+                case GOTOSUBMODULE:
+                    transitionTo(mStopByEnterSubModule);
+                default:
+                    break;
+            }
+            return retValue;
+        }
+    }
+
+    private class Optimized extends State {
+        @Override
+        public void enter() {
+            Log.i(TAG, "Enter Optimized state: " + M2S(getCurrentMessage().what));
+            mUIHandler.sendMessage(obtainMessage(mCheckup.OPTIMIZED)); // 通知checkup显示相关状态界面
+        }
+
+        @Override
+        public void exit() {
+            Log.i(TAG, "Exit Optimized state: " + M2S(getCurrentMessage().what));
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            Log.i(TAG, "Optimized process message: " + M2S(msg.what));
+            boolean retValue = HANDLED;
+            switch (msg.what) {
+                case RESCAN:
+                    transitionTo(mScanning);
+                    break;
+                default:
+                    break;
+            }
+            return retValue;
+        }
+    }
+
+    private class StopByEnterSubModule extends State {
+        @Override
+        public void enter() {
+            Log.i(TAG, "Enter StopByEnterSubModule state: " + M2S(getCurrentMessage().what));
+            mUIHandler.sendMessage(obtainMessage(mCheckup.STOPBYENTERSUBMODULE)); // 通知checkup显示相关状态界面
+        }
+
+        @Override
+        public void exit() {
+            Log.i(TAG, "Exit StopByEnterSubModule state: " + M2S(getCurrentMessage().what));
+        }
+
+        @Override
+        public boolean processMessage(Message msg) {
+            Log.i(TAG, "Stop process message: " + M2S(msg.what));
+            boolean retValue = HANDLED;
+            switch (msg.what) {
+                case RESCAN:
+                    transitionTo(mScanning);
+                    break;
+                default:
+                    break;
+            }
+            return retValue;
+        }
+    }
+
+}

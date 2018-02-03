@@ -1,0 +1,39 @@
+---- ZipAsyncTask Matches (29 in 3 files) ----
+FileExtractActivity.java (src\com\guli\fileexplorer):            new ZipAsyncTask(zipProgressListener, ZipAsyncTask.OPERATIONTYPE_EXTRACT, fileInfo.filePath, directory).execute(new String[] {fileInfo.filePath, directory});
+FileExtractActivity.java (src\com\guli\fileexplorer):    private ZipAsyncTask.IZipOperationProgressListener zipProgressListener = new ZipAsyncTask.IZipOperationProgressListener() {
+FileExtractActivity.java (src\com\guli\fileexplorer):        public void onPreExecute(ZipAsyncTask.ZipMateData data) {
+FileExtractActivity.java (src\com\guli\fileexplorer):            if (data.mOperationType == ZipAsyncTask.OPERATIONTYPE_COMPRESS) {
+FileExtractActivity.java (src\com\guli\fileexplorer):        public void onPostExecute(Integer integer, ZipAsyncTask.ZipMateData data) {
+FileExtractActivity.java (src\com\guli\fileexplorer):                int resId = data.mOperationType == ZipAsyncTask.OPERATIONTYPE_COMPRESS ? R.string.operation_compress_error : R.string.operation_extract_error;
+FileExtractActivity.java (src\com\guli\fileexplorer):        public void onProgressUpdate(Integer integer, ZipAsyncTask.ZipMateData data) {
+FileExtractActivity.java (src\com\guli\fileexplorer):            if (data.mOperationType == ZipAsyncTask.OPERATIONTYPE_COMPRESS) {
+FileExtractActivity.java (src\com\guli\fileexplorer):        public void onCancelled(Integer integer, ZipAsyncTask.ZipMateData data) {
+FileExtractActivity.java (src\com\guli\fileexplorer):        public void onCancelled(ZipAsyncTask.ZipMateData data) {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):    private ZipAsyncTask zipAsyncTask;
+FileViewInteractionHub.java (src\com\guli\fileexplorer):    private ZipAsyncTask.IZipOperationProgressListener zipProgressListener = new ZipAsyncTask.IZipOperationProgressListener() {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):        public void onPreExecute(ZipAsyncTask.ZipMateData data) {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):            if (data.mOperationType == ZipAsyncTask.OPERATIONTYPE_COMPRESS) {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):        public void onPostExecute(Integer integer, ZipAsyncTask.ZipMateData data) {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):                int resId = data.mOperationType == ZipAsyncTask.OPERATIONTYPE_COMPRESS ? R.string.operation_compress_error : R.string.operation_extract_error;
+FileViewInteractionHub.java (src\com\guli\fileexplorer):        public void onProgressUpdate(Integer integer, ZipAsyncTask.ZipMateData data) {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):            if (data.mOperationType == ZipAsyncTask.OPERATIONTYPE_COMPRESS) {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):        public void onCancelled(Integer integer, ZipAsyncTask.ZipMateData data) {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):        public void onCancelled(ZipAsyncTask.ZipMateData data) {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):            zipAsyncTask = new ZipAsyncTask(zipProgressListener, ZipAsyncTask.OPERATIONTYPE_EXTRACT, fileInfo.filePath, path);
+FileViewInteractionHub.java (src\com\guli\fileexplorer):                    zipAsyncTask = new ZipAsyncTask(zipProgressListener, ZipAsyncTask.OPERATIONTYPE_COMPRESS, finfo.filePath, dstName);
+ZipAsyncTask.java (src\com\guli\fileexplorer):public class ZipAsyncTask extends AsyncTask<String, Integer, Integer> {
+ZipAsyncTask.java (src\com\guli\fileexplorer):    public ZipAsyncTask(IZipOperationProgressListener listener, int type, String srcFile, String dstFile) {
+---- asyncDelete Matches (4 in 1 files) ----
+FileViewInteractionHub.java (src\com\guli\fileexplorer):                asyncDelete(info);
+FileViewInteractionHub.java (src\com\guli\fileexplorer):            asyncDelete(info);
+FileViewInteractionHub.java (src\com\guli\fileexplorer):            asyncDelete(info);
+FileViewInteractionHub.java (src\com\guli\fileexplorer):    public void asyncDelete(final FileInfo info) {
+---- Observable Matches (12 in 4 files) ----
+FileCategoryActivity.java (src\com\guli\fileexplorer):import rx.Observable;
+FileCategoryActivity.java (src\com\guli\fileexplorer):        msubscribe = Observable.create(new Observable.OnSubscribe<String>() {
+FileOperationHelper.java (src\com\guli\fileexplorer):import rx.Observable;
+FileOperationHelper.java (src\com\guli\fileexplorer):        Subscription subscribe = Observable.create(new Observable.OnSubscribe<String>() {
+FileViewInteractionHub.java (src\com\guli\fileexplorer):import rx.Observable;
+FileViewInteractionHub.java (src\com\guli\fileexplorer):                 Observable.create(new Observable.OnSubscribe<String>() {
+InformationDialog.java (src\com\guli\fileexplorer):import rx.Observable;
+InformationDialog.java (src\com\guli\fileexplorer):                Subscription subscribe = Observable.create(new Observable.OnSubscribe<Long>() {

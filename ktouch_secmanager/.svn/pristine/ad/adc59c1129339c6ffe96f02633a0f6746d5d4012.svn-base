@@ -1,0 +1,103 @@
+package com.guli.secmanager.Checkup;
+
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.util.Log;
+
+import java.util.ArrayList;
+
+/**
+ * Created by yujie on 16-4-7.
+ */
+
+public class HealthScaner<T> extends HandlerThread {
+    public static final String TAG = "HealthScaner";
+    private static final int MESSAGE_START_SCAN = 0;
+    private static final int MESSAGE_STOP_SCAN = 1;
+    private static final int MESSAGE_PROCESS_RESULT = 10;
+
+    Handler mHandler;
+    //Handler mResponseHandler;
+
+    private void doTask(T token, int index) {
+        ArrayList<BaseTask> taskList = (ArrayList<BaseTask>) token;
+        BaseTask task = taskList.get(index);
+        task.init();
+        task.execute();
+    }
+
+    private void stopTask(T token, int index) {
+        ArrayList<BaseTask> taskList = (ArrayList<BaseTask>) token;
+        BaseTask task = taskList.get(index);
+        task.cancel();
+    }
+
+    private void processResult(T token, int index) {
+        ArrayList<BaseTask> taskList = (ArrayList<BaseTask>) token;
+        BaseTask task = taskList.get(index);
+        task.process();
+    }
+
+    @SuppressWarnings("HandlerLeak")
+    @Override
+    protected void onLooperPrepared() {
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case MESSAGE_START_SCAN: {
+                        @SuppressWarnings("unchecked")
+                        T token = (T) msg.obj;
+                        Log.i(TAG, "receive message [MESSAGE_START_SCAN]");
+                        doTask(token, msg.arg1);
+                    }
+                    break;
+                    case MESSAGE_STOP_SCAN: {
+                        T token = (T) msg.obj;
+                        Log.i(TAG, "receive message [MESSAGE_STOP_SCAN]");
+                        stopTask(token, msg.arg1);
+                    }
+                    break;
+                    case MESSAGE_PROCESS_RESULT: {
+                        T token = (T) msg.obj;
+                        Log.i(TAG, "receive message [MESSAGE_PROCESS_RESULT]");
+                        processResult(token, msg.arg1);
+                    }
+                    break;
+                }
+            }
+        };
+    }
+
+    public HealthScaner(Handler respinseHandler) {
+        super(TAG);
+        //mResponseHandler = respinseHandler;
+    }
+
+    private void sendMsg(int msg, T token, int arg, int delay) {
+        if (mHandler != null) {
+            Message message = mHandler.obtainMessage();
+            message.what = msg;
+            message.arg1 = arg;
+            message.obj = token;
+            mHandler.sendMessageDelayed(message, delay);
+        }
+    }
+
+    public void processResult(T token, int index, int delay) {
+        Log.i(TAG, "Enter processResult ...");
+        sendMsg(MESSAGE_PROCESS_RESULT, token, index, delay);
+    }
+
+    public void startScan(T token, int index, int delay) {
+        Log.i(TAG, "Enter startScan ...");
+        sendMsg(MESSAGE_START_SCAN, token, index, delay);
+    }
+
+    public void stopScan(T token, int index, int delay) {
+        Log.i(TAG, "Enter stopScan ...");
+        mHandler.removeMessages(MESSAGE_START_SCAN);
+        sendMsg(MESSAGE_STOP_SCAN, token, index, delay);
+    }
+}

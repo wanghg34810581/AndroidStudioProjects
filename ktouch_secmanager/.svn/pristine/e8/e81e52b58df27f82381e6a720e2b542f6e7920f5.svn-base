@@ -1,0 +1,399 @@
+package com.guli.secmanager.widget;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
+
+import com.guli.secmanager.R;
+import com.guli.secmanager.Utils.UnitConverter;
+
+/**
+ * Created by zouchl on 16/5/24.
+ */
+public class WaveRoundProgress extends View implements Runnable {
+    private final static String TAG = "flow-WaveRoundProgress";
+    private final boolean DEBUG = false;
+
+    private static final int DEFAULT_OUTER_COLOR = 0Xffa1da88; // 外圈默认颜色
+    private static final int DEFAULT_CIRCLE_COLOR = 0Xffd3eec8; // 进度条默认颜色
+    private static final int DEFAULT_CIRCLE_BACKGROUND_COLOR = 0Xff6bc545; // 进度条背景默认颜色
+    private static final int DEFAULT_SHADOW_COLOR = 0Xff389a0e; // 阴影内圈默认颜色
+
+    private int mOutsideCircleRadius = UnitConverter.dp2px(this, 96);
+    private int mOutsideCircleColor = DEFAULT_OUTER_COLOR;
+    private int mOutsideCirclePaintWidth = UnitConverter.dp2px(this, 1);
+    private int mInsideCircleRadius = UnitConverter.dp2px(this, 87);
+    private int mInsideCircleColor = DEFAULT_CIRCLE_COLOR;
+    private int mWaveCircleRadius = UnitConverter.dp2px(this, 81);
+    private int mWaveCircleColor = DEFAULT_SHADOW_COLOR;
+    private int mWaveSpeedColor = DEFAULT_SHADOW_COLOR;
+
+    private static final int PEROID = 16;// 绘制周期
+    private static final int X_STEP = 15;// X轴的量化步长-越小曲线月平滑，但是计算量越大
+
+    private Paint mOutsideCirclePaint;
+    private final Paint mInsideCirclePaint;
+    private final Paint mWaveCirclePaint, mWaveSpeedPaint;//波浪背景
+    private Paint mTextPaint;
+
+    private float moveWave = 0.0f;// 波形移动
+    private float omega;// 波形的周期
+    private float waveHeight;// 波形的幅度
+    private float moveSpeed;// 波形的移动速度
+    private float heightOffset = 0;
+
+    private Canvas mCanvas;
+    private Bitmap mBitmap;
+    private int y;
+    private int x;
+
+    private PorterDuffXfermode mSRCInMode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
+    private PorterDuffXfermode mDstOverMode = new PorterDuffXfermode(PorterDuff.Mode.DST_OVER);
+    private PorterDuffXfermode mSrcOverMode = new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER);
+    private Bitmap bgBitmap;
+    private Path mPath;
+    private boolean isLeft;
+//    private int y;
+    private int mWidth;
+    private int mHeight;
+    private int mPercent;
+
+    //private int heightWaveCircle;
+    //private int widthWaveCircle;
+    private boolean isOnDraw = true;
+
+    public WaveRoundProgress(Context context) {
+        this(context, null);
+    }
+
+    public WaveRoundProgress(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+        init(context, attrs);
+    }
+
+    public WaveRoundProgress(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+
+        init(context, attrs);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.WaveRoundProgress);
+        mOutsideCircleRadius = (int) ta.getDimension(R.styleable.WaveRoundProgress_outside_circle_radius, mOutsideCircleRadius);
+        mOutsideCircleColor = (int) ta.getColor(R.styleable.WaveRoundProgress_outside_circle_color, mOutsideCircleColor);
+        mOutsideCirclePaintWidth = (int) ta.getDimension(R.styleable.WaveRoundProgress_outside_circle_height, mOutsideCirclePaintWidth);
+        mInsideCircleRadius = (int) ta.getDimension(R.styleable.WaveRoundProgress_inside_circle_radius, mInsideCircleRadius);
+        mInsideCircleColor = (int) ta.getColor(R.styleable.WaveRoundProgress_inside_circle_color, mInsideCircleColor);
+        mWaveCircleRadius = (int) ta.getDimension(R.styleable.WaveRoundProgress_wave_circle_radius, mWaveCircleRadius);
+        mWaveCircleColor = (int) ta.getColor(R.styleable.WaveRoundProgress_wave_circle_color, mInsideCircleColor);
+        mWaveSpeedColor = (int) ta.getColor(R.styleable.WaveRoundProgress_wave_speed_color, mWaveSpeedColor);
+
+        ta.recycle();
+
+        // 设置画笔相关属性
+        mWaveSpeedPaint = new Paint();
+        //mWavePaint.setStrokeWidth(10);
+        mWaveSpeedPaint.setAntiAlias(true);
+        mWaveSpeedPaint.setColor(mWaveCircleColor);
+
+        mWaveCirclePaint = new Paint();
+        mWaveCirclePaint.setAntiAlias(true);
+        mWaveCirclePaint.setColor(mInsideCircleColor);
+
+        mInsideCirclePaint = new Paint();
+        mInsideCirclePaint.setAntiAlias(true);
+        mInsideCirclePaint.setColor(mInsideCircleColor);
+
+        mOutsideCirclePaint = new Paint();
+        mOutsideCirclePaint.setAntiAlias(true);
+        mOutsideCirclePaint.setColor(mOutsideCircleColor);
+        mOutsideCirclePaint.setStrokeWidth(mOutsideCirclePaintWidth);
+        mOutsideCirclePaint.setStyle(Paint.Style.STROKE);
+
+        mTextPaint = new Paint();
+        mTextPaint.setAntiAlias(true);
+
+        if(DEBUG) {
+            Log.d(TAG, "mOutsideCircleRadius=" + mOutsideCircleRadius + ",mOutsideCirclePaintWidth=" + mOutsideCirclePaintWidth);
+        }
+        mBitmap = Bitmap.createBitmap((mOutsideCircleRadius)*2
+                ,(mOutsideCircleRadius)*2
+                ,Bitmap.Config.ARGB_8888);
+        mCanvas = new Canvas(mBitmap);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if(DEBUG) {
+            Log.d(TAG, "widthMeasureSpec=" + widthMeasureSpec + ",heightMeasureSpec=" + heightMeasureSpec);
+        }
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        if (widthMode == MeasureSpec.EXACTLY) {
+            mWidth = widthSize;
+        }
+
+        if (heightMode == MeasureSpec.EXACTLY) {
+            mHeight = heightSize;
+        }
+
+        y = mHeight;
+
+        setMeasuredDimension(mWidth, mHeight);
+        if(DEBUG) {
+            Log.d(TAG, "mWidth=" + mWidth + ",mHeight=" + mHeight);
+        }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+/*
+//        if (y > -50) {
+//            y--;
+//        }
+        if (x > 150) {
+            isLeft = true;
+        } else if (x < 0) {
+            isLeft = false;
+        }
+
+        if (isLeft) {
+            x = x - 1;
+        } else {
+            x = x + 1;
+        }
+        mPath = new Path();
+
+        Log.d(TAG, "WaveRoundProgress mWaveCircleRadius=" + mWaveCircleRadius + ",y=" + y + ",x=" + x);
+
+        int StartX = mWidth/2 - mWaveCircleRadius;
+        int heigh = mHeight/2 + mWaveCircleRadius;
+        int width = mWidth/2 + mWaveCircleRadius;
+
+        Log.e(TAG, "WaveRoundProgress heigh=" + heigh + ",width=" + width + ",StartX=" + StartX);
+
+        y = (int) ((1-mPercent /100f)*(heigh));
+
+        mPath.moveTo(StartX, y);
+        //mPath.cubicTo(100 + x * 2, 50 + y, 100 + x * 2, y - 50, width, y);
+
+
+
+        for (float x = 0; x <= width; x += X_STEP) {
+            float y = (float) (waveHeight * Math.sin(omega * x + moveWave) + waveHeight)
+                    + heightOffset;
+            mPath.lineTo(x, y);
+        }
+        mPath.lineTo(width, heigh);
+        mPath.lineTo(StartX, heigh);
+        mPath.close();*/
+
+//        getWavePath();
+
+        //清除掉图像 不然path会重叠,透明
+        //mBitmap.eraseColor(Color.parseColor("#00000000"));
+        //dst
+//        mCanvas.drawBitmap(bgBitmap,0,0,null);
+
+//        mWaveCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+
+        //Log.d(TAG, "WaveRoundProgress y=" + y + ",x=" + x);
+
+        mCanvas.drawCircle(mWidth / 2, mHeight / 2, mWaveCircleRadius, mWaveCirclePaint);
+
+        mWaveSpeedPaint.setXfermode(mSRCInMode);
+        mCanvas.drawPath(getWavePath(), mWaveSpeedPaint);
+        mWaveSpeedPaint.setXfermode(null);
+       /* mWaveSpeedPaint.setXfermode(mLightenMode);
+        mCanvas.drawPath(mPath, mWaveSpeedPaint);
+        mWaveSpeedPaint.setXfermode(null);*/
+
+        canvas.drawCircle(mWidth / 2, mHeight / 2, mInsideCircleRadius, mInsideCirclePaint);
+
+        canvas.drawBitmap(mBitmap, 0, 0, null);
+
+        /*String str = mPercent+"";
+
+        mTextPaint.setTextSize(80);
+        float txtLength = mTextPaint.measureText(str);
+
+        canvas.drawText(str, mWidth / 2 - txtLength / 2, mHeight / 2 + 15, mTextPaint);
+
+        mTextPaint.setTextSize(40);
+        canvas.drawText("%", mWidth / 2 + 50, mHeight / 2 - 20, mTextPaint);*/
+        //canvas.drawColor(Color.TRANSPARENT);
+
+        canvas.drawArc(new RectF(2, 2, mOutsideCircleRadius * 2 + 2, mOutsideCircleRadius * 2 +2), -90, 360, false, mOutsideCirclePaint);
+
+        postInvalidateDelayed(10);
+
+    }
+
+    /**
+     * 获取自定义View的设置
+     *
+     * @param context
+     * @param attrs
+     */
+    private void init(Context context, AttributeSet attrs) {
+        new Thread(this).start();// 启动绘制线程
+    }
+
+    @Override
+    public void run() {
+        while (isOnDraw) {
+            long startTime = System.currentTimeMillis();
+            moveWave += moveSpeed;
+            //Log.v(TAG, "moveSpeed="+moveSpeed+",moveWave="+moveSpeed);
+            postInvalidate();
+            long time = System.currentTimeMillis() - startTime;
+            if (time < PEROID) {
+                try {
+                    Thread.sleep(PEROID - time);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        initWaveParam();
+        super.onWindowFocusChanged(hasWindowFocus);
+    }
+
+    private void initWaveParam() {
+
+        //waveHeight = mHeitht / 30;
+        //omega = (float) (3.5f * Math.PI / widthWaveCircle);
+        //moveSpeed = 0.15f;
+        setOmegaByProgress(36);
+        setWaveHeightByProgress(2);
+        setMoveSpeedByProgress(5);
+        setHeightOffsetByProgress(mPercent);
+        if(DEBUG) {
+            Log.v(TAG, "mWidth=" + mWidth + ",mHeight=" + mHeight
+                + ",waveHeight=" + waveHeight + ",omega=" + omega + ",moveSpeed" + moveSpeed);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        isOnDraw = false;
+        super.onDetachedFromWindow();
+    }
+
+
+    public void setPercent(int percent){
+        mPercent = percent;
+    }
+
+
+    /**
+     * 使用路径描绘绘制的区域
+     *
+     * @return
+     */
+    private Path getWavePath() {
+
+        int startX = mWidth/2 - mWaveCircleRadius;
+        int startY = startX;
+        int endY = mHeight/2 + mWaveCircleRadius;
+
+        //Log.d(TAG, "WaveRoundProgress mHeight=" + mHeight + ",widthWaveCircle="
+                //+ widthWaveCircle + ",StartX=" + StartX+",mWaveCircleRadius="+mWaveCircleRadius);
+
+        // 绘制区域1的路径
+        if (mPath == null) {
+            mPath = new Path();
+        }
+        mPath.reset();
+        mPath.moveTo(startX, endY);// 移动到左下角的点
+        for (float x = 0; x <= mWidth; x += X_STEP) {
+            float y = (float) (waveHeight * Math.sin(omega * x + moveWave)
+                    + heightOffset + startY - waveHeight);
+            mPath.lineTo(x, y);
+        }
+
+        mPath.lineTo(mWidth, startY);
+        mPath.lineTo(mWidth , endY);
+
+        return mPath;
+    }
+
+
+    /**
+     * 参考值63
+     *
+     * @param progress
+     */
+    public void setMoveSpeedByProgress(int progress) {
+        if(DEBUG) {
+            Log.v(TAG, "setMoveSpeedByProgress progress="+progress);
+        }
+        if (progress >= 0 && progress <= 100) {
+            moveSpeed = progress * 0.003f;
+            if(DEBUG) {
+                Log.v(TAG, "moveSpeed=" + moveSpeed);
+            }
+        }
+    }
+
+    /**
+     * 参考值18
+     *
+     * @param progress
+     */
+    public void setOmegaByProgress(int progress) {
+        if(DEBUG) {
+            Log.v(TAG, "setOmegaByProgress progress=" + progress);
+        }
+        if (progress >= 0 && progress <= 100) {
+            omega = progress * (float) (0.1f * Math.PI / mWidth);
+            if(DEBUG) {
+                Log.v(TAG, "omega=" + omega);
+            }
+        }
+    }
+
+    /**
+     * 参考范围0-10
+     *
+     * @param progress
+     */
+    public void setWaveHeightByProgress(int progress) {
+        if(DEBUG) {
+            Log.v(TAG, "setWaveHeightByProgress progress=" + progress);
+        }
+        if (progress >= 0 && progress <= 100) {
+            waveHeight = progress * mHeight * 0.005f;
+            if(DEBUG) {
+                Log.v(TAG, "waveHeight=" + waveHeight);
+            }
+        }
+    }
+
+    public void setHeightOffsetByProgress(int progress) {
+        if(DEBUG) {
+            Log.v(TAG, "setHeightOffsetByProgress progress=" + progress + ",mHeight" + mHeight);
+        }
+        if (progress >= 0 && progress <= 100) {
+            //heightOffset = progress * mHeight * 0.01f;
+
+            heightOffset = (1 - progress/100f) * (mWaveCircleRadius*2 + waveHeight*2);
+            if(DEBUG) {
+                Log.v(TAG, "heightOffset=" + heightOffset);
+            }
+        }
+    }
+}

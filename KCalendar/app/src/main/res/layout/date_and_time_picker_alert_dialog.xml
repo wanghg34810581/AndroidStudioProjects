@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lLayout_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_bg"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height">
+        <TextView
+            android:id="@+id/date_title"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="@dimen/normal_height"
+            android:textColor="@color/primary_text_black_color"
+            android:textSize="@dimen/middle_text_size" />
+        <ImageView
+            android:layout_width="@dimen/normal_gap"
+            android:layout_height="@dimen/normal_height" />
+        <TextView
+            android:id="@+id/time_title"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="@dimen/normal_height"
+            android:textColor="@color/primary_text_black_color"
+            android:textSize="@dimen/middle_text_size" />
+
+    </LinearLayout>
+
+
+
+    <include layout="@layout/edit_event_divider"/>
+
+    <LinearLayout
+        android:id="@+id/dialog_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <include layout="@layout/edit_event_divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_neg"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_left_btn_select"
+            android:gravity="center"
+            android:textColor="@color/primary_text_black_color"
+            android:textSize="@dimen/middle_text_size" />
+
+        <ImageView
+            android:id="@+id/vertical_divider"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/mini_gap"
+            android:background="@color/divider_color" />
+
+        <Button
+            android:id="@+id/btn_pos"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_right_btn_select"
+            android:gravity="center"
+            android:textColor="@color/primary_text_black_color"
+            android:textSize="@dimen/middle_text_size" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,144 @@
+package com.guli.secmanager;
+
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Toast;
+
+import com.guli.secmanager.Checkup.CheckupFragment;
+import com.guli.secmanager.Checkup.ScaleScreen;
+import com.guli.secmanager.Checkup.TransitionFragment;
+import com.guli.secmanager.R;
+import com.guli.secmanager.UpdateCenter.UpdateService;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements CheckupFragment.Callbacks, TransitionFragment.Callbacks, ScaleScreen.Callbacks {
+    public static final String TAG = "MainActivity";
+
+    private long mExitTime;
+    private int mCheckupScore;
+    private ArrayList<Object> mScanResults; // 增加了扫描病毒过程中已扫描的所有软件个数
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
+        }
+        setContentView(R.layout.activity_fragment);
+
+        mExitTime = 0;
+        mCheckupScore = 100;
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.fragmentConntainer);
+        if (fragment == null)
+        {
+            fragment = new CheckupFragment();
+            fm.beginTransaction().add(R.id.fragmentConntainer, fragment, CheckupFragment.TAG).commit();
+        }
+        // start updateService
+        if (!UpdateService.isServiceAlarmOn(this)) {
+            Log.i(TAG, "--->>> Start UpdateService Timer!");
+            UpdateService.setServiceAlarm(this, true);
+        }
+    }
+
+
+    @Override
+    public void onHealthScanComplete(int value, ArrayList<Object> results) {
+        Log.i(TAG, "onHealthScanComplete enter...");
+        mCheckupScore = value;
+        mScanResults = results;
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        Fragment oldDetail = fm.findFragmentByTag(CheckupFragment.TAG);
+        ft.hide(oldDetail);
+        Fragment newDetail = TransitionFragment.newInstance(mCheckupScore);
+        if (oldDetail != null) {
+            ft.remove(oldDetail);
+        }
+        ft.add(R.id.fragmentConntainer, newDetail, TransitionFragment.TAG);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    @Override
+    public void onScaleComplete(int score) {
+        Log.i(TAG, "onScaleComplete enter...");
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        Fragment oldDetail = fm.findFragmentByTag(TransitionFragment.TAG);
+        Fragment newDetail = ScaleScreen.newInstance(mCheckupScore, mScanResults);
+        if (oldDetail != null) {
+            ft.remove(oldDetail);
+        }
+        ft.setCustomAnimations(0, 0, 0, R.animator.slide_out_down);
+        ft.add(R.id.fragmentConntainer, newDetail, ScaleScreen.TAG);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    private boolean popAllBackStackItem() {
+        int stackSize = getFragmentManager().getBackStackEntryCount();
+        if (stackSize == 0) {
+            return false;
+        }
+        for (int i = 0; i < stackSize; i++) {
+            getFragmentManager().popBackStack();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i(TAG, "onKeyDown Enter... ");
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (popAllBackStackItem()) {
+                return true;
+            }
+            Log.i(TAG, "--->>> mExitTime = " + mExitTime);
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                Log.i(TAG, "--->>> mExitTime = " + mExitTime);
+                Toast.makeText(this, getString(R.string.exit_prompt), Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                Fragment fragment = fm.findFragmentByTag(CheckupFragment.TAG);
+
+                if (fragment != null) {
+                    CheckupFragment cf = (CheckupFragment) fragment;
+                    cf.stopScanTask();
+                }
+            } else {
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onOptimizeComplete(int score) {
+        Log.i(TAG, "onOptimizeComplete Enter... ");
+        popAllBackStackItem();
+    }
+}

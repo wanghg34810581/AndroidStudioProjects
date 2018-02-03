@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.guli.secmanager">
+
+    <!-- 必填权限 -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.REAL_GET_TASKS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <!-- 拦截引擎所需权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"  />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.READ_MMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+
+    <!-- 省电管理所需权限 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- IP拨号所需权限 -->
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" >
+    </uses-permission>
+
+    <!-- 流量校正所需权限 -->
+    <uses-permission android:name="android.permission.SEND_SMS" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+
+    <!-- 流量监控所需权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!-- 数据更新所需权限 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+    <!-- 系统优化 -->
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE" />
+
+    <!-- 防火墙 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+
+    <!-- 防盗  -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:name=".SecApplication">
+
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:label="@string/garbage_clean"
+            android:name=".GarbageClean.GarbageCleanActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
+	    
+	    <activity android:name=".VirusScan.VirusScanActivity"
+            android:label="@string/virus_scan_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop">
+        </activity>
+
+        <activity
+            android:name=".flowmonitor.FlowMonitorActivity"
+            android:label="@string/flow_monitor_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+
+        <activity android:name=".flowmonitor.FlowSettingActivity"
+            android:label="@string/flowmonitor_title"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:parentActivityName=".flowmonitor.FlowMonitorActivity">
+        </activity>
+
+        <activity android:name=".flowmonitor.OperatorActivity"
+            android:label="@string/operator_title"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:parentActivityName=".flowmonitor.FlowSettingActivity">
+        </activity>
+        <activity android:name=".flowmonitor.OperatorSelectActivity"
+            android:configChanges="orientation|keyboard|mcc|mnc|locale|keyboardHidden|uiMode|fontScale"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/dialog_style">
+
+        </activity>
+        <activity android:name=".flowmonitor.ProvinceSelectActivity"
+            android:label="@string/operator_title"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:parentActivityName=".flowmonitor.OperatorActivity">
+            </activity>
+        <activity android:name=".flowmonitor.CitySelectActivity"
+            android:label="@string/operator_title"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:parentActivityName=".flowmonitor.OperatorActivity">
+        </activity>
+
+        <activity
+            android:name=".flowmonitor.FlowManuallySetings"
+            android:label="@string/flow_manually_set"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".flowmonitor.TimePickerActivity"
+            android:label="@string/set_time"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/SampleTheme.NoActionBar">
+        </activity>
+
+        <activity android:name=".flowmonitor.BrandSelectActivity"
+            android:configChanges="orientation|keyboard|mcc|mnc|locale|keyboardHidden|uiMode|fontScale"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/dialog_style">
+        </activity>
+
+        <!-- 检查并升级tmsdk相关库的service -->
+        <service  android:name=".UpdateCenter.UpdateService" />
+
+        <!-- 必须定义一个继承自TMSService的Service -->
+        <service  android:name=".SecSecureService" />
+
+        <!-- wangdsh添加：垃圾清理服务 -->
+        <service android:name=".GarbageClean.GarbageCleanService"
+            android:enabled="true"/>
+        <!-- 必须定义一个继承自TMSBootReceiver的BroadcastReceiver，并定义捕获开机事件 -->
+        <receiver android:name=".SecTMSBootReceiver">
+            <intent-filter android:priority="2147483647" >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+	<receiver android:name=".Checkup.PermissionReceiver" android:exported="true">
+            <intent-filter android:priority="-999">
+                <action
+                    android:name="com.guli.secmanager.Checkup.QUERY_PERMISSION_STATE"/>
+            </intent-filter>
+        </receiver>
+        <activity
+            android:name=".flowmonitor.AlertDialog"
+            android:theme="@android:style/Theme.Holo.Light.Dialog">
+        </activity>
+
+        <!--uses-permission android:name="android.permission.MODIFY_PHONE_STATE" /-->
+
+        <service
+            android:name=".flowmonitor.FlowMonitorService">
+            <intent-filter>
+                <action android:name="intent.action.AUTO_BREAK_FLOW" />
+                <action android:name="android.intent.action.DATE_CHANGED"/>
+            </intent-filter>
+        </service>
+        <service android:name=".flowmonitor.FlowAutoCorrectService" />
+        <receiver android:name=".flowmonitor.SmsReceiver">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

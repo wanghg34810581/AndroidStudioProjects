@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:id="@+id/layout_actionbar"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/flow_monitor_bg_color">
+        <ImageButton
+            android:id="@+id/actionbar_icon"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/sec_actionbar_back"
+            android:background="@color/transparent"
+            android:onClick="true"/>
+        <TextView
+            android:id="@+id/actionbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/flow_manually_set"
+            android:textSize="17sp"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/layout_actionbar">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+                android:text="@string/month_common_total"
+                android:textSize="17sp"
+                android:textColor="#000000"/>
+
+            <EditText
+                android:id="@+id/month_total_input"
+                android:layout_height="@dimen/edittext_height"
+                android:layout_width="@dimen/edittext_width"
+                android:gravity="center"
+                android:layout_toLeftOf="@+id/month_total_MB"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:text="0"
+                android:layout_centerVertical="true"
+                android:background="@drawable/input"
+                android:numeric="integer"
+                android:maxLength="5"
+                android:selectAllOnFocus="true"/>
+
+            <TextView
+                android:id="@+id/month_total_MB"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="MB"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:background="@color/list_line_color"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+                android:text="@string/month_common_used"
+                android:textSize="17sp"
+                android:textColor="@color/word_color"/>
+
+            <EditText
+                android:id="@+id/month_used__input"
+                android:layout_height="@dimen/edittext_height"
+                android:layout_width="@dimen/edittext_width"
+                android:gravity="center"
+                android:text="0"
+                android:layout_toLeftOf="@+id/month_used_MB"
+                android:layout_centerVertical="true"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:background="@drawable/input"
+                android:numeric="integer"
+                android:maxLength="5"
+                android:selectAllOnFocus="true"/>
+
+            <TextView
+                android:id="@+id/month_used_MB"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="MB"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:background="@color/list_line_color"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+                android:text="@string/free_flow_total"
+                android:textSize="17sp"
+                android:textColor="@color/word_color"/>
+
+            <EditText
+                android:id="@+id/free_total_input"
+                android:layout_height="@dimen/edittext_height"
+                android:layout_width="@dimen/edittext_width"
+                android:gravity="center"
+                android:text="0"
+                android:layout_toLeftOf="@+id/free_total_MB"
+                android:layout_centerVertical="true"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:background="@drawable/input"
+                android:numeric="integer"
+                android:maxLength="5"
+                android:selectAllOnFocus="true"/>
+
+            <TextView
+                android:id="@+id/free_total_MB"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="MB"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:background="@color/list_line_color"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+                android:text="@string/free_flow_used"
+                android:textSize="17sp"
+                android:textColor="@color/word_color"/>
+
+            <EditText
+                android:id="@+id/free_used_input"
+                android:layout_height="@dimen/edittext_height"
+                android:layout_width="@dimen/edittext_width"
+                android:gravity="center"
+                android:text="0"
+                android:layout_toLeftOf="@+id/free_used_MB"
+                android:layout_centerVertical="true"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:background="@drawable/input"
+                android:numeric="integer"
+                android:maxLength="5"
+                android:selectAllOnFocus="true"/>
+
+            <TextView
+                android:id="@+id/free_used_MB"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="MB"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:background="@color/list_line_color"/>
+
+        <RelativeLayout
+            android:id="@+id/time_picker"
+            android:layout_height="56dp"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:focusable="true">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+                android:layout_centerVertical="true"
+                android:textSize="17sp"
+                android:textColor="@color/word_color"
+                android:text="@string/free_time_title"/>
+            <TextView
+                android:id="@+id/free_time"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+                android:layout_centerVertical="true"
+                android:text="@string/free_time_value"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:layout_gravity="right"
+                />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:background="@color/list_line_color"/>
+
+        <!--RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+                android:text="@string/flow_4G_total"
+                android:textSize="17sp"
+                android:textColor="@color/word_color"/>
+
+            <EditText
+                android:id="@+id/total_4G_input"
+                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:gravity="right"
+                android:text="0"
+                android:layout_toLeftOf="@+id/total_4G_MB"
+                android:layout_centerVertical="true"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                style="?android:attr/textViewStyle"
+                android:background="@null"
+                android:numeric="integer"
+                android:maxLength="10"/>
+
+            <TextView
+                android:id="@+id/total_4G_MB"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="MB"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:background="@color/list_line_color"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+                android:text="@string/flow_4G_used"
+                android:textSize="17sp"
+                android:textColor="@color/word_color"/>
+
+            <EditText
+                android:id="@+id/used_4G_input"
+                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:gravity="right"
+                android:text="0"
+                android:layout_toLeftOf="@+id/used_4G_MB"
+                android:layout_centerVertical="true"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                style="?android:attr/textViewStyle"
+                android:background="@null"
+                android:numeric="integer"
+                android:maxLength="10"/>
+
+            <TextView
+                android:id="@+id/used_4G_MB"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="MB"
+                android:textSize="17sp"
+                android:textColor="@color/list_right_word_color"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout-->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:background="@color/list_line_color"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/actionbar_shadow"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/actionbar_shadow"
+        android:layout_below="@+id/layout_actionbar"/>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:layout_alignParentBottom="true"
+        android:textSize="17sp"
+        android:textColor="#000000"
+        android:text="保存"
+        android:background="@color/transparent"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#d7d6d9"
+        android:layout_above="@+id/save"/>
+</RelativeLayout>

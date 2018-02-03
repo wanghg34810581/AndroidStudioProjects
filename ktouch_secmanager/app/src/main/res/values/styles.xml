@@ -1,0 +1,83 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="vpiTabPageIndicatorStyle">@style/TabPageIndicator</item>
+    </style>
+
+    <style name="MenuButtonLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:addStatesFromChildren">true</item>
+        <item name="android:background">@drawable/menu_layout_selector</item>
+    </style>
+    <style name="MenuButton_tos">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:background">#00000000</item>
+    </style>
+    <style name="MenuButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:background">#00000000</item>
+    </style>
+    <style name="MenuButtonDescribe">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">6dp</item>
+    </style>
+
+    <style name="dialog_style" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/dkgray</item>
+    </style>
+
+    <style name ="SecManagerActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:homeAsUpIndicator">@drawable/sec_actionbar_back</item>
+        <item name ="@android:attr/actionBarSize">40dp</item>
+        <item name= "android:actionBarStyle">@style/my_actionbar_style</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    <style name="my_actionbar_style" parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/AcBar_titleStyle</item>
+    </style>
+    <style name="AcBar_titleStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name ="SecManagerBlackActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black</item>
+        <item name ="@android:attr/actionBarSize">40dp</item>
+        <item name= "android:actionBarStyle">@style/my_actionbar_style</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="Widget">
+    </style>
+
+    <style name="TabPageIndicator" parent="Widget">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/custom_tab_indicator</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:dividerPadding">10dp</item>
+        <item name="android:showDividers">middle</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:fadingEdge">horizontal</item>
+        <item name="android:fadingEdgeLength">8dp</item>
+        <item name="android:maxLines">1</item>
+    </style>
+</resources>

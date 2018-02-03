@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:weightSum="1">
+    <RelativeLayout
+        android:id="@+id/layout_actionbar"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/flow_monitor_bg_color">
+        <ImageButton
+            android:id="@+id/actionbar_icon"
+            android:layout_width="44dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/sec_actionbar_back"
+            android:background="@color/transparent"
+            android:onClick="true"/>
+        <TextView
+            android:id="@+id/actionbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@+id/actionbar_icon"
+            android:text="@string/flow_monitor_name"
+            android:textSize="17sp"
+            android:textColor="@color/white"/>
+        <ImageButton
+            android:id="@+id/actionbar_settings"
+            android:layout_width="44dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/tab_icon_setting"
+            android:background="@color/transparent"
+            android:onClick="true"
+            />
+    </RelativeLayout>
+    <!--RelativeLayout
+        android:id="@+id/layout_actionbar"
+        android:layout_width="fill_parent"
+        android:layout_height="65dp"
+        android:background="#45b6fd"
+        >
+        <RelativeLayout
+            android:id="@+id/actionbar_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="25dp"
+            >
+            <ImageButton
+                android:id="@+id/actionbar_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="15dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/sec_actionbar_back"
+                android:background="#45b6fd"
+                android:onClick="true"
+                />
+            <TextView
+                android:id="@+id/actionbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/actionbar_icon"
+                android:layout_marginLeft="15dp"
+                android:layout_centerInParent="true"
+                android:text="@string/flow_monitor_name"
+                android:textSize="17sp"
+                android:textColor="@color/white"
+                />
+            <ImageButton
+                android:id="@+id/actionbar_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/tab_icon_setting"
+                android:background="#45b6fd"
+                android:onClick="true"
+                />
+        </RelativeLayout>
+    </RelativeLayout-->
+
+    <include
+        android:id="@+id/flow_left"
+        android:layout_width="match_parent"
+        android:layout_height="288dp"
+        android:layout_below="@+id/layout_actionbar"
+        layout="@layout/flow_left_wave"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+        android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+        android:background="@color/list_line_color"
+        android:layout_below="@+id/flow_left" />
+
+    <!--SeekBar
+        android:id="@+id/seek_bar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/flow_left"
+        android:max="100"
+        android:progress="0" />
+    <SeekBar
+        android:id="@+id/seek_bar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seek_bar1"
+        android:max="100"
+        android:progress="0" />
+    <SeekBar
+        android:id="@+id/seek_bar3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seek_bar2"
+        android:max="100"
+        android:progress="0" />
+    <SeekBar
+        android:id="@+id/seek_bar4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seek_bar3"
+        android:max="100"
+        android:progress="0" /-->
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/flow_left"
+    android:layout_above="@+id/autocalibration"
+    android:id="@+id/detail_time">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/webpage_layout"
+        android:layout_height="@dimen/listview_height"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/flow_left">
+        <TextView
+            android:id="@+id/webpage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:textSize="17sp"
+            android:textColor="@color/word_color"
+            android:layout_centerVertical="true"
+            android:text="@string/webpage"/>
+
+        <TextView
+            android:id="@+id/webpage_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:textSize="17sp"
+            android:textColor="@color/list_right_word_color"
+            android:layout_centerVertical="true"
+            android:text="300M"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+        android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+        android:background="@color/list_line_color"
+        android:layout_below="@+id/webpage_layout" />
+
+    <RelativeLayout
+        android:id="@+id/music_layout"
+        android:layout_height="@dimen/listview_height"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/webpage_layout">
+        <TextView
+            android:id="@+id/music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:textSize="17sp"
+            android:textColor="@color/word_color"
+            android:layout_centerVertical="true"
+            android:text="@string/music"/>
+
+        <TextView
+            android:id="@+id/music_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:textSize="17sp"
+            android:textColor="@color/list_right_word_color"
+            android:layout_centerVertical="true"
+            android:text="300M"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+        android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+        android:background="@color/list_line_color"
+        android:layout_below="@+id/music_layout" />
+
+    <RelativeLayout
+        android:id="@+id/video_layout"
+        android:layout_height="@dimen/listview_height"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/music_layout">
+        <TextView
+            android:id="@+id/video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:textSize="17sp"
+            android:textColor="@color/word_color"
+            android:layout_centerVertical="true"
+            android:text="@string/video"/>
+
+        <TextView
+            android:id="@+id/video_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:textSize="17sp"
+            android:textColor="@color/list_right_word_color"
+            android:layout_centerVertical="true"
+            android:text="300M"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+        android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+        android:background="@color/list_line_color"
+        android:layout_below="@+id/video_layout" />
+
+    <RelativeLayout
+        android:id="@+id/chat_layout"
+        android:layout_height="@dimen/listview_height"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/video_layout">
+        <TextView
+            android:id="@+id/chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+            android:textSize="17sp"
+            android:textColor="@color/word_color"
+            android:layout_centerVertical="true"
+            android:text="@string/chat"/>
+
+        <TextView
+            android:id="@+id/chat_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+            android:textSize="17sp"
+            android:textColor="@color/list_right_word_color"
+            android:layout_centerVertical="true"
+            android:text="300M"/>
+    </RelativeLayout>
+</LinearLayout>
+</ScrollView>
+    <Button
+        android:id="@+id/autocalibration"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:textSize="17sp"
+        android:textColor="#000000"
+        android:text="一键自动校准"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#d7d6d9"
+        android:layout_above="@+id/autocalibration"/>
+</RelativeLayout>

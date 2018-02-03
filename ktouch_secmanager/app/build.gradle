@@ -1,0 +1,63 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        applicationId "com.guli.secmanager"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "2003"
+    }
+    signingConfigs {
+        myConfig {
+            storeFile file("ktouch-keystore")
+            storePassword "123456"
+            keyAlias "ktouchkey"
+            keyPassword "123456"
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.myConfig
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.myConfig
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+}
+dependencies {
+    compile files('libs/tms.jar')
+}
+
+dependencies {
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+}
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("CN"))
+}
+
+android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+        def outputFile = output.outputFile
+        if (outputFile != null && outputFile.name.endsWith('.apk')) {
+            //这里修改apk文件名
+            //def fileName = outputFile.name.replace("app","${android.defaultConfig.applicationId }_${android.defaultConfig.versionName}_${releaseTime() }")
+            def fileName = outputFile.name.replace("app-release","guli_secmanager_${android.defaultConfig.versionName}")
+            output.outputFile = new File(outputFile.parent, fileName)
+        }
+    }
+}

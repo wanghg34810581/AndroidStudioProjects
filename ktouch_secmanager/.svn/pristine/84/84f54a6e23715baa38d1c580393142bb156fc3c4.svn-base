@@ -1,0 +1,79 @@
+package com.guli.secmanager.Checkup;
+
+import android.os.Handler;
+import android.util.Log;
+
+/**
+ * Created by yujie on 16-4-19.
+ */
+public class FlowMonTask extends BaseTask {
+    public static final String TAG = "FlowMonTask";
+
+    Handler mResponseHandler; // UI线程对应Handler
+    public TaskInterface mTaskListener;
+    private int mProgressOffset;
+    private boolean mIsCancel;
+    public int getProgressOffset() {
+        return mProgressOffset;
+    }
+    public void setProgressOffset(int progressOffset) {
+        this.mProgressOffset = progressOffset;
+    }
+
+
+    public FlowMonTask(TaskInterface taskListener, Handler ui) {
+        this.mTaskListener = taskListener;
+        this.mResponseHandler = ui;
+        this.mProgressOffset = 0;
+        this.mIsCancel = false;
+    }
+
+    @Override
+    public boolean init() {
+        mIsCancel = false;
+        return true;
+    }
+
+    @Override
+    public void execute() {
+        if (mTaskListener == null || mResponseHandler == null) {
+            return;
+        }
+
+        try {
+            mResponseHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mIsCancel) {
+                        mTaskListener.onProgressUpdate(mProgressOffset + 20);
+                    }
+                }
+            });
+
+            mResponseHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mIsCancel) {
+                        mTaskListener.onFinished((Object) FlowMonTask.this);
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            Log.e(TAG, "--->>> Error post onProgressUpdate message to ui thread.", ex);
+        }
+    }
+
+    public void process() {
+
+    }
+
+    @Override
+    public void cancel() {
+        mIsCancel = true;
+    }
+
+    @Override
+    public void free() {
+
+    }
+}

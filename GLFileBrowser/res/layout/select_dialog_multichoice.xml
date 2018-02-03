@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--TYRD: weina 20150624 add -->
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent"
+    android:orientation="vertical">"
+    <RelativeLayout android:layout_width="match_parent" 
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:paddingStart ="?android:attr/listPreferredItemPaddingStart" 
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:layout_gravity ="center_vertical"
+        android:gravity="center_vertical">
+        <TextView style ="@style/TextAppearance.Material.Medium.TY" 
+            android:singleLine ="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity ="center_vertical"
+            android:text="@string/ringtone_1"/>
+        <CheckBox android:layout_width="wrap_content" 
+            android:layout_height="match_parent" 
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true" 
+            android:id="@+id/ringtone_bell_1"/>"
+    </RelativeLayout>
+    <View android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@drawable/ty_material_list_padding_divider"/>
+    <RelativeLayout android:layout_width="match_parent" 
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:paddingStart ="?android:attr/listPreferredItemPaddingStart" 
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:layout_gravity ="center_vertical"
+        android:gravity="center_vertical">
+        <TextView style ="@style/TextAppearance.Material.Medium.TY" 
+            android:singleLine ="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity ="center_vertical"
+            android:text="@string/ringtone_2"/>
+        <CheckBox android:layout_width="wrap_content" 
+            android:layout_height="match_parent" 
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true" 
+            android:id="@+id/ringtone_bell_2"/>"
+    </RelativeLayout>
+    <View android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@drawable/ty_material_list_padding_divider"/>
+    <RelativeLayout android:layout_width="match_parent" 
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:paddingStart ="?android:attr/listPreferredItemPaddingStart" 
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:layout_gravity ="center_vertical"
+        android:gravity="center_vertical">
+        <TextView style ="@style/TextAppearance.Material.Medium.TY" 
+            android:singleLine ="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity ="center_vertical"
+            android:text="@string/notification"/>
+        <CheckBox android:layout_width="wrap_content" 
+            android:layout_height="match_parent" 
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true" 
+            android:id="@+id/notification_bell"/>"
+    </RelativeLayout> 
+</LinearLayout>

@@ -1,0 +1,12 @@
+package com.guli.secmanager.Checkup;
+
+/**
+ * Created by yujie on 16-4-19.
+ */
+public interface TaskInterface {
+    public void onStart();
+    public void onFinished(Object o);
+    public void onCancel();
+    public void onProgressUpdate(int progress);
+    public void onError(String errorInfo);
+}

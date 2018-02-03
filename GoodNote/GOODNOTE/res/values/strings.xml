@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="app_name">GOODNOTE</string>
+    <string name="no_note">No Note</string>
+    <string name="delete_confirm">Are you sure to delete the selected note?</string>
+    <string name="delete_confirm_title">Delete note(s)?</string>
+    <string name="delete_file_success">Delete file successfully</string>
+    <string name="delete_confirm_cancel">Cancel</string>
+    <string name="delete_confirm_ok">OK</string>    
+    <string name="editor_full">You can input 5000 characters at most</string>
+    <!--<string name="sdcard_full" product="tablet">The device storage does not have enough space. Please release some storage.</string>-->
+    <string name="sdcard_full" product="default">The phone storage does not have enough space. Please release some storage.</string>
+    <string name="save_none">Empty note is not created</string>
+    <string name="empty_note">Empty note</string>
+    <string name="delete_progress">Deleting</string>
+    <string name="title_loading">Loading...</string>
+	<string name="edit">Edit</string>
+	<string name="delete">Delete</string>
+	<string name="new_note">New</string>	
+	<string name="save">Save</string>
+	<string name="hint_text">input text here</string>
+	<string name="toast_edit_title_max_length">You can input 30 characters at most</string>
+	<string name="date_yesterday">yesterday</string>
+	<string name="search">search</string>
+	
+	<string name="paint">Paint</string>
+	<string name="pencil">Pencil</string>
+	<string name="eraser">Eraser</string>		
+	<string name="undo">Undo</string>
+	<string name="redo">Redo</string>
+	<string name="clear">Clear</string>
+	<string name="clear_title">Clear all?</string>
+	<string name="clear_confirm">Are you sure to clear all?</string>
+    <string name="clear_confirm_cancel">Cancel</string>
+    <string name="clear_confirm_ok">OK</string>
+    <string name="template">Skin</string>
+    <string name="apply_now">Apply Now</string>
+    <string name="skin_name0">Letter</string>
+    <string name="skin_name1">Geometrics</string>
+    <string name="skin_name2">Journey</string>
+    <string name="skin_name3">Lyphard</string>
+    <string name="skin_name4">Blue Memory</string>
+    <string name="skin_name5">Innocent Years</string>       
+    <!--duhuan 20160713 add begin-->
+	<string name="share">share</string>
+	<string name="shareimagecreaate">Creating image,please wait.</string>
+	<!--duhuan 20160713 add end-->   
+	<!-- TY zhencc add begin -->
+	<string name="default_title">[ picture ]</string>
+	<string name="note_introduction">Welcome to use GOODNOTE</string>
+	<!-- TY zhencc add end -->
+    <string name="show_picture">Display Image</string>
+    <string name="download">download</string>
+    <string name="download_image_to">Save image to </string>
+    <!-- TY zhencc 20160825 add for PROD104174124 begin -->
+    <string name="applyed">Applyed</string>
+    <!-- TY zhencc 20160825 add for PROD104174124 end -->
+    <!-- TY zhencc 20160830 modify for PROD104179943 begin -->
+    <string name="save_confirm">Save?</string>
+    <string name="save_confirm_cancel">Not save</string>
+    <string name="save_confirm_ok">Save</string>
+    <!-- TY zhencc 20160830 modify for PROD104179943 end -->
+    <!-- TY zhencc 20160902 add for PROD104179658 begin -->
+    <string name="sure">OK</string>
+    <string name="cancel">Cancle</string>
+    <!-- TY zhencc 20160902 add for PROD104179658 end -->
+    <string name="image_full">You can add 20 images at most</string>
+    <!--yuhf 20161219 add for new edit note screen-->   
+    <string name="list">List</string>
+    <string name="sure_del">Delete</string>
+    <string name="del_confirm">Delete this Note?</string>    
+</resources>

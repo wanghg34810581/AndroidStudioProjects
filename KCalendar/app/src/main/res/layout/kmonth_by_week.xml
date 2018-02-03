@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/month"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:paddingTop="1dip"
+    android:background="@null">
+
+    <TextView android:id="@+id/month_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dip"
+        android:visibility="gone"
+        style="@style/MonthView_MiniMonthLabel" />
+
+    <!--<include android:id="@+id/day_names" layout="@layout/full_month_header" />-->
+
+    <!--<View
+        android:background="@color/calendar_grid_line_inner_vertical_color"
+        android:layout_height="1px"
+        android:layout_width="match_parent" />-->
+
+    <LinearLayout
+        android:id="@+id/month_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/agenda_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+</LinearLayout>

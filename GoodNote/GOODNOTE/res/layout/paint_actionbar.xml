@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"
+    android:gravity="center_vertical" >
+  
+    <Button  
+        android:id="@+id/to_edit"
+        android:layout_width="71dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:gravity="center_vertical"
+        android:background="@drawable/tolist"
+        android:paddingLeft="28dp"
+        android:textColor="@color/color_white"
+        android:textSize="13sp"
+        android:textAllCaps="false"
+        android:text="@string/edit" />
+
+    <TextView
+        android:id="@+id/paint_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/color_white"
+        android:textSize="18sp"
+        android:text="@string/paint" />
+        
+    <ImageButton
+        android:id="@+id/save"  
+        android:layout_width="66dp"  
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:background="@drawable/actionbar_button"
+        android:src="@drawable/save_dr" />
+  
+</RelativeLayout>  

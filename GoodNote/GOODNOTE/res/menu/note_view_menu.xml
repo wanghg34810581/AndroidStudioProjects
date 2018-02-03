@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">  
+    <!--duhuan 20160713 add for share begin-->
+    <item android:id="@+id/menu_share"
+          android:icon="@drawable/share"
+          android:title="@string/share"
+          android:showAsAction="ifRoom" />
+    <!--duhuan 20160713 add for share end-->
+         
+    <item android:id="@+id/menu_save"
+          android:icon="@drawable/save_dr"
+          android:title="@string/save"
+          android:showAsAction="ifRoom" />
+</menu>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- TY zhencc -->
+     <declare-styleable name="roundImageAttrs">
+        <attr name="borderRadius" format="dimension" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--TYRD: weina 20150624 add -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:inset="@*android:dimen/control_inset_material">
+    <ripple android:color="@color/ty_material_edit_text_background_color">
+        <item>
+            <selector>
+                <item android:state_enabled="false">
+                    <nine-patch android:src="@drawable/ty_material_edittext_default_alpha"
+                        android:tint="@color/ty_material_edit_text_background_color"/>
+                </item>
+                <item >
+                    <nine-patch android:src="@drawable/ty_material_edittext_default_alpha"
+                        android:tint="@color/ty_material_edit_text_background_color"/>
+                </item>
+            </selector>
+        </item>
+        <item android:id="@+id/mask" android:drawable="@drawable/ty_material_edittext_default_alpha"/>
+    </ripple>
+</inset>

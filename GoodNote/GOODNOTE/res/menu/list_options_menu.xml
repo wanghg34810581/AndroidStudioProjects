@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+	    android:id="@+id/menu_change_note"
+	    android:icon="@drawable/menu_grid"
+	    android:showAsAction="always"
+	    android:title="@string/app_name"
+		android:visible="false"/>
+
+	<!-- TY zhencc add for new version -->
+	<item
+		android:id="@+id/menu_create_note"
+		android:icon="@drawable/float_imagebutton"
+		android:showAsAction="always"
+		android:title="@string/app_name"/>
+
+</menu>
+ 

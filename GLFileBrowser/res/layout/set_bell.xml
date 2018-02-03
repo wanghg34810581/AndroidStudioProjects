@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--TYRD: weina 20150624 add -->
+<TableLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:stretchColumns="1">
+    <TableRow android:paddingTop ="5dip">
+        <TextView style ="@style/TextAppearance.Material.Medium.TY" android:singleLine ="true"
+            android:layout_column="1" android:text="@string/ringtone"
+            android:layout_marginLeft="20dp"/>
+        <CheckBox android:layout_width="match_parent" 
+            android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true" android:gravity ="center_vertical"
+            android:layout_marginRight="20dp"
+            android:id="@+id/ringtone_bell"/>"
+    </TableRow>
+    <TableRow android:paddingBottom ="5dip">
+        <TextView style ="@style/TextAppearance.Material.Medium.TY" android:singleLine ="true"
+            android:layout_column="1" android:text="@string/notification"
+            android:layout_marginLeft="20dp"/>
+        <CheckBox android:layout_width="match_parent" 
+            android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true" android:gravity ="center_vertical"
+            android:layout_marginRight="20dp"
+            android:id="@+id/notification_bell"/>
+    </TableRow>    
+</TableLayout>

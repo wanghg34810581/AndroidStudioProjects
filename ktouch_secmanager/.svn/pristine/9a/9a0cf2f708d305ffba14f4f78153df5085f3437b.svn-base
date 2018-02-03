@@ -1,0 +1,50 @@
+package com.guli.secmanager.Checkup;
+
+import android.app.Fragment;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+
+import com.guli.secmanager.GarbageClean.GarbageCleanActivity;
+import com.guli.secmanager.R;
+
+/**
+ * Created by yujie on 16-4-6.
+ */
+public class MenuFragment extends Fragment {
+    public static final String TAG = "MenuFragment";
+
+    private ImageButton mGarbageClean;
+    private ImageButton mVirusScan;
+    private ImageButton mFlowMonitor;
+    private ImageButton mPermissionManager;
+    private ImageButton mPowerSave;
+    private ImageButton mFirewall;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.menu_fragment, container, false);
+        mGarbageClean = (ImageButton) v.findViewById(R.id.iv_garbage_clean);
+        mGarbageClean.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //wangdsh add start
+                //Toast.makeText(getActivity(), "Go to Garbage Clean function.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), GarbageCleanActivity.class));
+                //wangdsh add  end
+            }
+        });
+        mVirusScan = (ImageButton) v.findViewById(R.id.iv_virus_scan);
+        mFlowMonitor = (ImageButton) v.findViewById(R.id.iv_flow_monitor);
+        mPermissionManager = (ImageButton) v.findViewById(R.id.iv_permission_manager);
+        //mPowerSave = (ImageButton) v.findViewById(R.id.iv_power_save);
+        //mFirewall = (ImageButton) v.findViewById(R.id.iv_firewall);
+        return v;
+    }
+
+}

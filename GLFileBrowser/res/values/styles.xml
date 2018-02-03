@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="ShadowStyle">
+        <item name="android:shadowColor">#6e6e6e</item>
+        <item name="android:shadowDx">0.5</item>
+        <item name="android:shadowDy">0.5</item>
+        <item name="android:shadowRadius">0.5</item>
+    </style>
+
+    <style name="DeepStyle">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">-0.5</item>
+        <item name="android:shadowDy">-0.5</item>
+        <item name="android:shadowRadius">0.5</item>
+    </style>
+    <style name="OrangeStyle">
+        <item name="android:shadowColor">#742061</item>
+        <item name="android:shadowDx">-0.5</item>
+        <item name="android:shadowDy">-0.5</item>
+        <item name="android:shadowRadius">0.5</item>
+    </style>
+
+    <style name="Dialog_Fullscreen">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <style name="GreenStyle">
+        <item name="android:shadowColor">#003300</item>
+        <item name="android:shadowDx">-0.5</item>
+        <item name="android:shadowDy">-0.5</item>
+        <item name="android:shadowRadius">0.5</item>
+    </style>
+
+    <style name="HomeButtonStytle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20dip</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">10dip</item>
+    </style>
+
+    <style name="FileViewToolbarButtonStytle">
+        <item name="android:padding">10dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16dip</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="FileViewOperationButtonStytle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14dip</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/operation_button_background</item>
+    </style>
+
+    <style name="FileViewOperationMoveButtonStytle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18dip</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginLeft">5dip</item>
+        <item name="android:layout_marginRight">5dip</item>
+        <item name="android:background">@drawable/remote_button_bg</item>
+    </style>
+
+    <style name="CategoryButtonStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+    <style name="CategoryButtonIconStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginBottom">3px</item>
+    </style>
+    <!--TYRD: weina 20150624 add <item name="android:paddingTop">10dp</item>
+    change  <item name="android:textSize">14sp</item> to <item name="android:textSize">16sp</item>-->
+    <style name="CategoryButtonTextStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#ff323232</item>
+    </style>
+    <!--TYRD: weina 20150624 add <item name="android:paddingTop">5dp</item>-->
+    <style name="CategoryButtonCountTextStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="InformationItemTitleStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">60dip</item>
+        <item name="android:gravity">right</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">14dip</item>
+    </style>
+
+    <style name="InformationItemContentStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">left</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">14dip</item>
+        <item name="android:layout_marginLeft">5dip</item>
+    </style>
+    <style name="InformationItemStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:paddingLeft">5dip</item>
+        <item name="android:layout_marginBottom">5dip</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <!--TYRD: weina 20150623 change <item name="android:textColor">#222222</item>
+        <item name="android:textSize">12dip</item> to <item name="android:textColor">#323232</item>
+        <item name="android:textSize">14sp</item>-->
+    <style name="InformationTextStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">#323232</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:drawablePadding">5dip</item>
+    </style>
+    <!--TYRD: weina 20150624 change <item name="android:textColor">#222222</item>
+        <item name="android:textSize">12dip</item> to <item name="android:textColor">#9d9d9d</item>
+        <item name="android:textSize">14sp</item>-->
+    <style name="CategoryLegendStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dip</item>       
+        <item name="android:gravity">left</item>
+        <item name="android:drawablePadding">5px</item>
+        <item name="android:textColor">#9d9d9d</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginLeft">2dip</item>
+    </style>
+    <style name="CategoryLegendStyleLand">
+        <item name="android:layout_height">0dip</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">left</item>
+        <item name="android:drawablePadding">5px</item>
+        <item name="android:textColor">#222222</item>
+        <item name="android:textSize">10dip</item>
+        <item name="android:layout_marginLeft">2dip</item>
+    </style>
+    <style name="InformationDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/popup_bg</item>
+    </style>
+    <style name="ActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.ActionButton</item>
+    </style>
+
+    <style name="TextAppearance" parent="android:TextAppearance">
+    </style>
+
+    <style name="TextAppearance.ActionButton">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="BottomButton" >
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
+        <item name="android:textColor">#cc000000</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:shadowColor">#80ffffff</item>
+        <item name="android:shadowRadius">0.2</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/btn_bottom</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="BottomButton.Left">
+    </style>
+
+    <style name="BottomButton.Right">
+        <!--<item name="android:background">@drawable/btn_bottom_last</item>-->
+    </style>
+    <!--TYRD: weina 20150624 delteted <item name="android:textSize">17sp</item>
+        <item name="android:background">@drawable/bottom_button_bar</item>-->
+    <style name="BottomButtonBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:gravity">center</item>
+        <!--<item name="android:textSize">17sp</item>
+        <item name="android:background">@drawable/bottom_button_bar</item>-->
+    </style>
+        <!--TYRD: weina 20150624 delteted <item name="android:buttonStyle">@null</item>-->
+    <style name="FileTabActivityStyle" parent="@android:style/Theme.Material.Light">
+        <item name="android:statusBarColor">@color/tab_item_bg_normal</item>
+        <item name="android:actionBarStyle">@style/MyActionBarStyle</item>
+        <item name="android:windowBackground">@color/background</item> 
+        <item name="android:actionBarTabStyle">@style/MyActionBarTabStyle</item> 
+        <item name="android:actionBarTabTextStyle">@style/TabTextColor</item> 
+        <item name="android:actionBarDivider">@null</item>
+        <!--<item name="android:buttonStyle">@null</item>-->
+        <!--<item name="android:colorButtonNormal">@drawable/clear_button_bg</item> -->
+        
+    </style>
+
+    <style name="actionBar_textStyle">
+        <item name="android:textColor">#00ffffff</item>
+    </style>
+
+    <style name="MyActionBarStyle" parent="@android:style/Widget.Material.ActionBar">  
+        <item name="android:background">@drawable/actionbar_tab_bg</item>
+        <item name="android:titleTextStyle">@style/actionBar_textStyle</item>
+    </style>  
+    
+    <style name="MyActionBarTabStyle" parent="@android:style/Widget.ActionBar.TabView">  
+        <item name="android:background">@drawable/actionbar_tab_bg</item>
+    </style>  
+    <style name="TabTextColor" parent="@android:style/Widget.ActionBar.TabText">  
+        <item name="android:textColor">@drawable/actionbar_tab_text_color</item>  
+        <item name="android:textSize">15sp</item>  
+    </style>
+    <!--TYRD: weina 20150624 add begin--> 
+    <attr name ="tyMaterialStyle" format ="boolean"/>
+    <attr name ="listItemTwoLinesHeight" format ="dimension"/>
+    <attr name ="listItemTthreeLinesHeight" format ="dimension"/>
+    <attr name ="listDividerLeftPadding" format ="dimension"/>
+    <attr name ="listDividerRightPadding" format ="dimension"/>
+    <attr name ="tabLayout" format ="reference"/>
+    <attr name ="layout" format ="reference"/>
+    
+    <style name="Theme.Material.Light.TY" parent="@android:style/Theme.Material.Light">  
+        <item name="android:colorBackground">@color/ty_material_background_color</item>  
+        <item name="tyMaterialStyle">true</item>  
+        <item name="android:windowBackground">@color/ty_material_actionbar_background</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.Material.Medium.TY</item> 
+        <item name="android:textAppearanceSmall">@style/TextAppearance.Material.Small.TY</item> 
+        <item name="android:listChoiceIndicatorMultiple">@drawable/ty_material_check_anim</item>
+        <!--color palette-->
+        <item name="android:colorControlNormal">@color/ty_material_color_control_normal</item> 
+        <item name="android:colorControlActivated">@color/ty_material_color_control_activated</item>
+        <!--<item name="android:textColorPrimary">@color/ty_material_primary_text_color</item> 
+        <item name="android:textColorSecondary">@color/ty_material_secondary_text_color</item> -->
+        
+        <item name="android:buttonBarButtonStyle">@style/Widget.Material.Light.Button.ButtonBar.AlertDialog.TY</item> 
+        <item name="android:buttonBarStyle">@style/Widget.Material.Light.ButtonBar.TY</item>
+        <!--actionbar attr-->
+        <!--<item name="android:actionBarTheme">@style/ThemeOverlay.Material.ActionBar.TY</item> -->
+        <item name="android:statusBarColor">@color/ty_material_tab_background_color</item>
+        <item name="android:actionModeStyle">@style/Widget.Material.Light.ActionMode.TY</item>
+        <item name="android:actionBarStyle">@style/Widget.Material.ActionBar.Solid.TY</item>
+        <item name="android:actionBarSize">@dimen/ty_material_action_bar_default_height</item>
+        <item name="android:actionBarTabStyle">@style/Widget.Material.Light.ActionBar.TabView.TY</item> 
+        <item name="android:actionBarTabTextStyle">@style/Widget.Material.ActionBar.TabText.TY</item>
+        <item name="android:actionBarDivider">@null</item>
+        <item name="android:actionMenuTextColor">@color/ty_material_actionbar_menu_text_color</item>
+        <item name="android:homeAsUpIndicator">@drawable/ty_material_ic_ab_back</item>
+        <item name="*android:actionModeCloseDrawable">@drawable/ty_material_ic_ab_back</item>
+        <item name="*android:actionModeCloseButtonStyle">@style/Widget.Material.ActionButton.CloseMode.TY</item>
+        <item name="*android:actionModePopupWindowStyle">@style/PopupWindow_ActionMode_TY</item>
+        <!--list-->
+        <item name="android:listDivider">@drawable/ty_material_list_divider</item>
+        <item name="android:listPreferredItemPaddingLeft">20dp</item> 
+        <item name="android:listPreferredItemPaddingRight">20dp</item> 
+        <item name="android:listPreferredItemPaddingStart">20dp</item> 
+        <item name="android:listPreferredItemPaddingEnd">20dp</item> 
+        <item name="android:listPreferredItemHeight">56dp</item> 
+        <item name="listItemTwoLinesHeight">66dp</item> 
+        <item name="listItemTthreeLinesHeight">86dp</item> 
+        <item name="*android:listViewStyle">@style/Widget.Material.ListView.TY</item> 
+        <!--<item name="android:textAppearanceListItem">@style/TextAppearance.Material.Subhead.TY</item>
+        <item name="android:textAppearanceListItemSmall">@style/TextAppearance.Material.Subhead.TY</item>
+        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.Material.Small.TY</item>-->
+        <item name="listDividerLeftPadding">@dimen/ty_material_listview_divider_padding</item> 
+        <item name="listDividerRightPadding">@dimen/ty_material_listview_divider_padding</item>
+        <!--preference attr-->
+        <item name="*android:preferenceActivityStyle">@style/PreferenceActivity.Material.TY</item>
+        <item name="*android:preferenceCategoryStyle">@style/Preference.Material.Category.TY</item>
+        <!--<item name="*android:preferenceFragmentListStyle">@style/Widget.Material.ListView.TY</item>
+        <item name="*android:preferenceLayoutChild">@layout/ty_material_preference_child</item>
+        <item name="*android:preferenceStyle">@style/Preference.Material.TY</item>
+        <item name="*android:preferenceListStyle">@style/Widget.Material.ListView.TY</item
+        <item name="*android:checkBoxPreferenceStyle">@style/Preference.Material.CheckBoxPreference.TY</item>
+        <item name="*android:preferenceScreenStyle">@style/Preference.Material.PreferenceScreen.TY</item>
+        <item name="*android:editTextPreferenceStyle">@style/Preference.Material.DialogPreference.EditTextPreference.TY</item>
+        <item name="*android:preferenceInformationStyle">@style/Preference.Material.Information.TY</item>
+        <item name="*android:dialogPreferenceStyle">@style/Preference.Material.DialogPreference.TY</item>-->
+        <!---->
+        <item name="*android:editTextStyle">@style/Widget.Material.Light.EditText.TY</item>
+        <item name="*android:editTextBackground">@drawable/ty_material_edit_text_background</item> 
+        <!--pannel attr-->
+        <item name="*android:panelMenuListTheme">@style/Theme.Material.Light.CompactMenu.TY</item>
+        <item name="*android:panelBackground">@color/ty_material_background_color</item>
+        <item name="*android:panelFullBackground">@color/ty_material_background_color</item>
+        <item name="*android:dialogTheme">@style/Theme.Material.Light.Dialog.TY</item>
+        <!--<item name="*android:alertDialogTheme">@style/Theme.Material.Light.AlertDialog.TY</item>-->
+        <item name="*android:alertDialogIcon">@null</item>
+        <item name="*android:tabWidgetStyle">@style/Widget.Material.Light.TabWidget.TY</item>
+        
+    </style> 
+
+    <style name="Widget.Material.ActionBar.Solid.TY" parent="@android:style/Widget.Material.Light.ActionBar.Solid">
+        <item name="android:titleTextStyle">@style/TextAppearance.Material.Widget.ActionMode.Title.TY</item>
+        <item name="android:subtitleTextStyle">@style/TextAppearance.Material.Widget.ActionMode.Subtitle.TY</item>
+        <item name="android:background">@color/ty_material_actionbar_background</item>
+        <item name="android:backgroundStacked">@color/ty_material_actionbar_background</item>
+        <item name="android:backgroundSplit">@color/ty_material_actionbar_background</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:contentInsetStart">@dimen/ty_material_actionbar_title_left_padding</item>
+        <item name="android:contentInsetLeft">@dimen/ty_material_actionbar_title_left_padding</item>
+        <item name="android:windowBackground">@color/ty_material_actionbar_background</item> 
+    </style>
+   
+    <style name="Widget.Material.ToolBar.TY" parent="@*android:style/Widget.Material.Toolbar">
+        <item name="*android:navigationButtonStyle">@style/Widget.Material.Toolbar.Button.Navigation.TY</item>
+        <item name="android:contentInsetStart">@dimen/ty_material_actionbar_title_left_padding</item>
+        <item name="android:contentInsetLeft">@dimen/ty_material_actionbar_title_left_padding</item>
+        <item name="*android:titleMargins">0dp</item>
+    </style> 
+    <style name="Widget.Material.Toolbar.Button.Navigation.TY" parent="@*android:style/Widget.Material.Toolbar.Button.Navigation">
+       <item name="android:minWidth">44dp</item>
+    </style>     
+    <style name="Widget.Material.ActionBar.TabText.TY" parent="@*android:style/Widget.Material.ActionBar.TabText">
+        <item name="android:textColor">@color/ty_material_tab_text_material_dark</item>
+        <item name="android:textSize">@dimen/ty_material_tab_text_default_size</item>
+        <item name="android:textStyle">normal</item>
+        
+    </style>     
+    <!--<style name="ThemeOverlay.Material.ActionBar.TY" parent="@android:style/ThemeOverlay.Material.ActionBar">
+        <item name="android:searchViewStyle">@style/Widget.Material.Light.SearchView.TY</item>
+    </style>
+    
+    <style name="Widget.Material.Light.SearchView.TY" parent="@android:style/Widget.Material.Light.SearchView">
+        <item name="android:layout">@layout/ty_material_search_view</item>
+        <item name="android:queryBackground">@drawable/ty_material_search_query_bg</item>
+        <item name="android:closeIcon">@drawable/ty_material_searchview_delete_icon</item>
+        <item name="android:searchIcon">@drawable/ty_material_searchview_search_icon</item>
+        <item name="android:suggestionRowLayout">@layout/ty_material_search_dropdown_icons_2line</item>
+    </style>-->
+
+    <style name="Widget.Material.Light.ActionBar.TabView.TY" parent="@android:style/Widget.Material.Light.ActionBar.TabView">
+        <item name="android:layout_weight">0</item>
+        <item name="android:minWidth">40dip</item>
+        <item name="android:background">@color/ty_material_actionbar_background</item>
+        
+        <item name="android:paddingStart">0dip</item>
+        <item name="android:paddingEnd">0dip</item>
+        <item name="android:paddingLeft">0dip</item>
+        <item name="android:paddingRight">0dip</item>
+    </style>
+    
+    <style name="Widget.Material.ListView.TY" parent="@android:style/Widget.Material.Light.ListView">
+        <item name="android:divider">@drawable/ty_material_list_padding_divider</item>
+    </style>
+    <style name="TextAppearance.Material.Medium.TY" parent="@android:style/TextAppearance.Material.Medium">
+        <item name="android:textSize">@dimen/ty_material_primary_text_default_size</item> 
+        <item name="android:textColor">@color/ty_material_primary_text_default_color</item>
+    </style>
+    <style name="TextAppearance.Material.Small.TY" parent="@android:style/TextAppearance.Material.Small">
+        <item name="android:textSize">@dimen/ty_material_small_text_default_size</item> 
+        <item name="android:textColor">@color/ty_material_secondary_text_default_color</item>
+    </style>
+    <style name="Widget.Material.Light.ButtonBar.TY" parent="@android:style/Widget.Material.Light.ButtonBar">  
+        <item name="android:background">@drawable/ty_material_buttonbar_background</item> 
+        <item name="android:divider">@drawable/ty_material_buttonbar_divider</item> 
+        <item name="android:showDividers">middle</item> 
+        <item name="android:paddingTop">0dip</item> 
+        <item name="android:paddingStart">0dip</item> 
+        <item name="android:paddingEnd">0dip</item> 
+        <item name="android:paddingBottom">0dip</item> 
+        <item name="android:dividerPadding">8dip</item> 
+        <item name="android:layout_height">52dip</item> 
+        <item name="android:minHeight">52dip</item> 
+    </style>
+    <style name="Widget.Material.Light.Button.ButtonBar.AlertDialog.TY" parent="@android:style/Widget.Material.Button.Borderless.Colored">  
+        <item name="android:background">@drawable/ty_material_btn_borderless</item>  
+        <item name="android:textSize">@dimen/ty_material_primary_text_default_size</item>  
+        <item name="android:textColor">@color/ty_material_primary_text_color</item>  
+        <item name="android:minHeight">48dip</item> 
+        <item name="android:minWidth">64dip</item> 
+        <item name="android:maxLines">2</item> 
+    </style>    
+    <style name="Widget.Material.Light.ActionMode.TY" parent="@android:style/Widget.Material.Light.ActionMode">  
+        <item name="android:background">@color/ty_material_actionbar_background</item>  
+        <item name="android:height">@dimen/ty_material_action_bar_default_height</item>  
+        <item name="android:titleTextStyle">@style/TextAppearance.Material.Widget.ActionMode.Title.TY</item>  
+        <item name="android:subtitleTextStyle">@style/TextAppearance.Material.Widget.ActionMode.Subtitle.TY</item>
+        <item name="android:contentInsetStart">@dimen/ty_material_action_bar_title_left_padding</item>  
+        <item name="android:contentInsetLeft">@dimen/ty_material_action_bar_title_left_padding</item>  
+        <item name="*android:closeItemLayout">@layout/ty_material_action_mode_close_item</item>       
+    </style>
+    
+    <style name="Widget.Material.ActionButton.CloseMode.TY" parent="@android:style/Widget.Material.ActionButton.CloseMode">
+        <item name="android:minWidth">42dp</item>  
+        <item name="android:minHeight">40dp</item>
+        <item name="android:gravity">center</item>  
+        <item name="android:scaleType">center</item>
+        <item name="android:paddingStart">0dp</item>  
+        <item name="android:paddingEnd">0dp</item>
+    </style>
+    <style name="TextAppearance.Material.Widget.ActionMode.Title.TY" parent="@android:style/TextAppearance.Material.Widget.ActionMode.Title">
+        <item name="android:textSize">@dimen/ty_material_ab_double_title_text_size</item>  
+        <item name="android:textColor">@color/ty_material_ab_title_text_color</item>
+    </style>
+    <style name="TextAppearance.Material.Widget.ActionMode.Subtitle.TY" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Subtitle">
+        <item name="android:textSize">@dimen/ty_material_ab_double_subtitle_text_size</item>  
+        <item name="android:textColor">@color/ty_material_ab_subtitle_text_color</item>
+    </style>  
+    <style name="TextAppearance.Material.Subhead.TY" parent="@android:style/TextAppearance.Material.Subhead">
+        <item name="android:textSize">@dimen/ty_material_primary_text_default_size</item>  
+        <item name="android:textColor">@color/ty_material_primary_text_color</item>
+    </style> 
+    <style name="TextAppearance.Material.Body1.TY" parent="@android:style/TextAppearance.Material.Body1">
+        <item name="android:textSize">@dimen/ty_material_small_text_default_size</item> 
+        <item name="android:textColor">@color/ty_material_secondary_text_default_color</item>
+    </style>
+    
+    <style name="Theme.Material.Light.NoActionBar.TY" parent="@style/Theme.Material.Light.TY">
+        <item name="tyMaterialStyle">true</item>  
+        <item name="android:windowActionBar">false</item>   
+        <item name="android:windowNoTitle">true</item> 
+    </style>  
+    <style name="PreferenceActivity.Material.TY" parent="@*android:style/PreferenceActivity.Material">
+        <item name="*android:layout">@layout/ty_material_preference_list_content</item>  
+    </style> 
+    <style name="Preference.Material.Category.TY" parent="@*android:style/Preference.Material.Category">
+        <item name="android:layout">@layout/ty_material_preference_category</item>  
+    </style>
+    <style name="Preference.Material.CheckBoxPreference.TY" parent="@*android:style/Preference.Material.CheckBoxPreference">
+        <item name="android:layout">@layout/ty_material_preference_child</item>  
+    </style>
+    <style name="Preference.Material.PreferenceScreen.TY" parent="@*android:style/Preference.Material.PreferenceScreen">
+        <item name="android:layout">@layout/ty_material_preference_child</item>  
+    </style>
+    <style name="Preference.Material.DialogPreference.EditTextPreference.TY" parent="@*android:style/Preference.Material.DialogPreference.EditTextPreference">
+        <item name="android:layout">@layout/ty_material_preference_child</item>  
+    </style>
+    <style name="Preference.Material.TY" parent="@*android:style/Preference.Material">
+        <item name="android:layout">@layout/ty_material_preference</item>  
+    </style>
+    <style name="Preference.Material.Information.TY" parent="@*android:style/Preference.Material.Information">
+        <item name="android:layout">@layout/ty_material_preference_information</item>  
+    </style>
+    <style name="Preference.Material.DialogPreference.TY" parent="@*android:style/Preference.Material.DialogPreference">
+        <item name="android:layout">@layout/ty_material_preference_child</item>  
+    </style>
+    <style name="Widget.Material.Light.EditText.TY" parent="@*android:style/Widget.Material.Light.EditText">
+        <item name="*android:textAppearance">@style/TextAppearance.Material.Medium.TY</item>  
+    </style>
+    <style name="Theme.Material.Light.CompactMenu.TY" parent="@*android:style/Theme.Material.Light.CompactMenu">
+        <item name="*android:windowElevation">0dp</item>  
+        <item name="*android:itemTextAppearance">@style/TextAppearance.Material.Medium.TY</item> 
+        <item name="*android:listViewStyle">@style/Widget.Material.ListView.TY</item>
+        <item name="android:listPreferredItemPaddingLeft">20dp</item> 
+        <item name="android:listPreferredItemPaddingRight">20dp</item> 
+        <item name="android:listPreferredItemPaddingStart">20dp</item> 
+        <item name="android:listPreferredItemPaddingEnd">20dp</item> 
+    </style>
+
+    <style name="Theme.Material.Light.Dialog.TY" parent="@*android:style/Theme.Material.Light.Dialog">
+        <item name="tyMaterialStyle">true</item>  
+        <item name="android:windowBackground">@null</item> 
+        <item name="*android:alertDialogIcon">@null</item> 
+        <item name="*android:alertDialogStyle">@style/AlertDialog.Material.TY</item>
+        <!--edittext attr-->
+        <item name="*android:editTextStyle">@style/Widget.Material.Light.EditText.TY</item>
+        <item name="*android:editTextBackground">@drawable/ty_material_edit_text_background</item> 
+        <!--list attr-->
+        <item name="android:listDivider">@drawable/ty_material_list_divider</item>
+        <item name="android:listPreferredItemPaddingLeft">20dp</item> 
+        <item name="android:listPreferredItemPaddingRight">20dp</item> 
+        <item name="android:listPreferredItemPaddingStart">20dp</item> 
+        <item name="android:listPreferredItemPaddingEnd">20dp</item> 
+        <item name="android:listPreferredItemHeight">56dp</item> 
+        <item name="listItemTwoLinesHeight">66dp</item> 
+        <item name="listItemTthreeLinesHeight">86dp</item> 
+        <item name="listDividerLeftPadding">@dimen/ty_material_listview_divider_padding</item> 
+        <item name="listDividerRightPadding">@dimen/ty_material_listview_divider_padding</item>
+        <!--button-->
+        <!--<item name="*android:buttonBarButtonStyle">@style/Widget.Material.Light.Button.ButtonBar.AlertDialog.TY</item>-->
+        <item name="*android:buttonBarStyle">@style/Widget.Material.Light.ButtonBar.TY</item>
+        <!--widget-->
+        <item name="*android:listViewStyle">@style/Widget.Material.ListView.TY</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/ty_material_check_anim</item>
+    </style>
+    <style name="Theme.Material.Light.AlertDialog.TY" parent="style/Theme.Material.Light.Dialog.TY">
+        <!--<item name="tyMaterialStyle">true</item> --> 
+        <item name="*android:alertDialogIcon">@null</item> 
+    </style>
+    <style name="AlertDialog.Material.TY" parent="@*android:style/AlertDialog.Material">
+        
+        <!--<item name="*android:layout">@layout/ty_material_alert</item>-->
+        <item name="*android:listLayout">@layout/ty_material_select_dialog_material</item>
+        <item name="*android:listItemLayout">@layout/ty_material_select_dialog_item</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/ty_material_check_anim</item>
+    </style>
+    <style name="Widget.Material.Light.TabWidget.TY" parent="@*android:style/Widget.Material.Light.TabWidget">
+        <item name="*android:divider">@null</item>
+        <item name="tabLayout">@layout/ty_material_tab_indicator</item>
+    </style>
+    <style name="Widget.Material.Tab.TY" parent="@*android:style/Widget.Material.Tab">
+        <item name="android:background">@color/ty_material_actionbar_background</item>
+        <item name="*android:layout_width">wrap_content</item>
+        <item name="*android:layout_weight">0</item>
+        <item name="*android:paddingStart">0dp</item>
+        <item name="*android:paddingEnd">0dp</item>
+        <item name="*android:minWidth">30dp</item>
+    </style>    
+    <style name="Widget.Material.TabText.TY" parent="@*android:style/Widget.Material.TabText">
+        <item name="*android:ellipsize">end</item>
+        <item name="*android:singleLine">true</item>
+        <item name="*android:textStyle">normal</item>
+        <item name="*android:textColor">@color/ty_material_tab_text_material_dark</item>
+        <item name="*android:textSize">@dimen/ty_material_tab_text_default_size</item>
+    </style>  
+
+    <!--<style name="Animation_PopupWindow_ActionMode_TY" >
+        <item name="*android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="*android:windowExitAnimation">@anim/fade_out</item>
+    </style> -->
+    <style name="PopupWindow_ActionMode_TY" >
+        <item name="*android:popupBackground">@color/ty_material_actionbar_background</item>
+        <item name="*android:popupElevation">16dp</item>
+        <!--<item name="*android:popupAnimationStyle">@style/Animation_PopupWindow_ActionMode_TY</item>-->
+    </style> 
+    <!--TYRD: weina 20150624 add begin-->  
+    
+</resources>

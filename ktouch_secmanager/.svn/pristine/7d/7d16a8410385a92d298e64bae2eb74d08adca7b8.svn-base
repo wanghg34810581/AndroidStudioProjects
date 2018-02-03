@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:AgsProgressButtonAttr="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/layout_actionbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/actionbar_icon"
+            android:layout_width="44dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:onClick="true"
+            android:src="@drawable/sec_actionbar_back" />
+
+        <TextView
+            android:id="@+id/actionbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/garbage_clean"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/tx_data"
+        android:layout_below="@id/layout_actionbar"
+        android:layout_width="fill_parent"
+        android:layout_height="221dp"
+        android:background="@color/checkupgreen"
+        >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_gravity="center"
+            android:layout_height="221dp">
+            <ImageView
+                android:id="@+id/background_img1"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:layout_width="@dimen/background_anim"
+                android:layout_height="@dimen/background_anim"
+                android:background="@drawable/background_img1" />
+            <ImageView
+                android:id="@+id/background_img2"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:layout_width="@dimen/background_anim"
+                android:layout_height="@dimen/background_anim"
+                android:background="@drawable/background_img2" />
+            <ImageView
+                android:id="@+id/background_img3"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:layout_width="@dimen/background_anim"
+                android:layout_height="@dimen/background_anim"
+                android:background="@drawable/background_img3" />
+            <ImageView
+                android:id="@+id/background_img4"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:layout_width="@dimen/background_anim"
+                android:layout_height="@dimen/background_anim"
+                android:background="@drawable/background_img2" />
+            <ImageView
+                android:id="@+id/background_img5"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:layout_width="@dimen/background_anim"
+                android:layout_height="@dimen/background_anim"
+                android:background="@drawable/background_img3" />
+            <ImageView
+                android:id="@+id/background_img6"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:layout_width="@dimen/background_anim"
+                android:layout_height="@dimen/background_anim"
+                android:background="@drawable/background_img2" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="221dp"
+            android:background="@color/transparent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/scan_ongoing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="78dp"
+                android:ellipsize="end"
+                android:gravity="end|bottom"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="55sp" />
+
+            <TextView
+                android:id="@+id/unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/scan_ongoing"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/scan_ongoing"
+                android:text="@string/MB"
+                android:textColor="@color/white"
+                android:textSize="@dimen/cmn_font_size" />
+
+            <TextView
+                android:id="@+id/scan_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/scan_ongoing"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="19dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/scanning"
+                android:textColor="@color/white"
+                android:textSize="@dimen/cmn_font_size" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="221dp"
+            android:background="@color/transparent"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/background_img_over1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/background_over1"/>
+            <ImageView
+                android:id="@+id/background_img_over2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/background_over2"/>
+
+        </RelativeLayout>
+    </FrameLayout>
+    <ExpandableListView
+        android:id="@+id/expendlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tx_data"
+        android:layout_marginBottom="60dp"
+        android:divider="@null"
+        android:transcriptMode="disabled" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.guli.secmanager.widget.AgsProgressButton
+            android:id="@+id/processbtn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text=""
+            android:textSize="@dimen/cmn_font_size"
+            AgsProgressButtonAttr:progressbtn_backgroud_color="#ddeed6"
+            AgsProgressButtonAttr:progressbtn_backgroud_second_color="#f8f8f8"
+            AgsProgressButtonAttr:progressbtn_border_color="#d7d6d9"
+            AgsProgressButtonAttr:progressbtn_text_color="@color/black"
+            AgsProgressButtonAttr:progressbtn_text_covercolor="@color/black" />
+
+        <Button
+            android:id="@+id/complete_button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:textSize="@dimen/cmn_font_size"
+            android:text=""
+            android:gravity="center"
+            android:visibility="visible" />
+    </RelativeLayout>
+</RelativeLayout>

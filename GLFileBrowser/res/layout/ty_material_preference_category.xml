@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--TYRD: weina 20150624 add -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="@null"
+    android:orientation="vertical">
+    
+    <View android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/ty_material_list_padding_divider"/>
+    <TextView android:id="@*android:id/title"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:textAppearance="@style/TextAppearance.Material.Small.TY"
+        android:textColor="@color/ty_material_secondary_text_default_color"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:gravity="bottom"
+        android:paddingBottom="12dp"/>
+    <!-- <View android:layout_width="match_parent"
+        android:layout_height="1px" 
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/ty_material_list_padding_divider" />-->
+    
+    
+</LinearLayout>

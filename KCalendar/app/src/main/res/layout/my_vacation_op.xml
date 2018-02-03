@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vacation_total_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include android:id="@+id/vacation_toolbar"
+        layout="@layout/my_vacation_toolbar"/>
+
+    <include
+        android:id="@+id/vacation_op_bottom_bar"
+        layout="@layout/kcalendar_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/vacation_bottom_bar"
+        android:layout_below="@id/vacation_toolbar"
+        android:background="@color/main_pane_color"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/month_pane"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="2" />
+
+        <include android:id="@+id/vacation_state"
+            layout="@layout/vacation_state"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,225 @@
+package com.guli.secmanager.Checkup;
+
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.app.Fragment;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.SubscriptSpan;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.guli.secmanager.R;
+import com.guli.secmanager.widget.RoundProgressBarWidthNumber;
+import com.guli.secmanager.Utils.UnitConverter;
+
+/**
+ * Created by yujie on 16-4-11.
+ */
+public class TransitionFragment extends Fragment {
+    public static final String TAG = "TransitionFragment";
+    private static final String SCORE_VALUE = "com.guli.secmanager.Checkup.score_value";
+
+    private RelativeLayout mLayout;
+    private RoundProgressBarWidthNumber mRoundProgressBar;
+    private TextView mScore;
+    private TextView mScoreUnit;
+    private TextView mCurtain;
+    private Handler mHandler;
+    private int mScreenHeight;
+    private int mScoreValue;
+    private boolean mTosApkInstalled;
+
+
+    public interface Callbacks {
+        void onScaleComplete(int score);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTosApkInstalled = UnitConverter.isTosApkInstalled(getActivity());
+        mScoreValue = getArguments().getInt(SCORE_VALUE);
+        mHandler = new Handler();
+    }
+
+    private void pullCurtain(final View view) {
+        if (isVisible()) {
+            mCurtain.setPivotX(0);
+            mCurtain.setPivotY(0);
+
+            ObjectAnimator anim1 = ObjectAnimator.ofFloat(mCurtain, "scaleY", 1f, 400f);
+            anim1.addListener(new Animator.AnimatorListener() {
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    Log.i(TAG, "onAnimationStart");
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    Log.i(TAG, "onAnimationEnd enter...");
+                    performAnimate(mRoundProgressBar);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    Log.i(TAG, "onAnimationCancel");
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                    Log.i(TAG, "onAnimationRepeat");
+                }
+            });
+
+            ViewWrapper wrapper = new ViewWrapper(mLayout);
+            int currentHeightByDp = 350; // 初始高度，350个dp
+            int currentHeightByPx = UnitConverter.dp2px(mLayout, currentHeightByDp);
+
+            ObjectAnimator anim2 = ObjectAnimator.ofInt(wrapper, "height", currentHeightByPx, (int) (mScreenHeight * 1.5f));
+            AnimatorSet animSet = new AnimatorSet();
+            animSet.setDuration(500);
+            animSet.setInterpolator(new LinearInterpolator());
+            animSet.playTogether(anim1, anim2);
+            animSet.start();
+        }
+    }
+
+    private void performAnimate(final View view) {
+        Log.i(TAG, "ScreenHeight = " + mScreenHeight);
+
+        /*
+        ViewWrapper wrapper = new ViewWrapper(mLayout);
+        int currentHeightByDp = 440; // 初始高度，440个dp
+        int currentHeightByPx = UnitConverter.dp2px(mLayout, currentHeightByDp);
+
+        ObjectAnimator anim1 = ObjectAnimator.ofInt(wrapper, "height", currentHeightByPx, (int)(mScreenHeight*1.5f));
+        */
+        if (isVisible())
+        {
+            ObjectAnimator anim2 = ObjectAnimator//
+                    .ofFloat(view, "anything", 1.0F, 5.0F);
+
+            anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float cVal = (Float) animation.getAnimatedValue();
+                    view.setScaleX(cVal);
+                    view.setScaleY(cVal);
+                }
+            });
+
+            anim2.addListener(new Animator.AnimatorListener() {
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    Log.i(TAG, "onAnimationStart");
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    Log.i(TAG, "onAnimationEnd enter...");
+
+                    if (getActivity() instanceof Callbacks) {
+                        ((Callbacks) getActivity()).onScaleComplete(mScoreValue);
+                    }
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    Log.i(TAG, "onAnimationCancel");
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                    Log.i(TAG, "onAnimationRepeat");
+                }
+            });
+
+            AnimatorSet animSet = new AnimatorSet();
+            animSet.setDuration(500);
+            animSet.setInterpolator(new LinearInterpolator());
+            //两个动画同时执行
+            animSet.playTogether(anim2);
+
+            animSet.start(); // 开始播放动画
+        }
+    }
+
+    public static TransitionFragment newInstance(int score){
+        Bundle args = new Bundle();
+        args.putInt(SCORE_VALUE, score);
+
+        TransitionFragment fragment = new TransitionFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView");
+        View v;
+        if (mTosApkInstalled) {
+            v = inflater.inflate(R.layout.transition_fragment_tos, container, false);
+        } else {
+            v = inflater.inflate(R.layout.transition_fragment, container, false);
+        }
+        //View v = inflater.inflate(R.layout.transition_fragment, container, false);
+        mLayout = (RelativeLayout) v.findViewById(R.id.round_progress_layout_t);
+        mScore = (TextView) v.findViewById(R.id.tv_score_value_t);
+        mScoreUnit = (TextView) v.findViewById(R.id.tv_score_unit_t);
+        mCurtain = (TextView) v.findViewById(R.id.tv_curtain);
+        mRoundProgressBar = (RoundProgressBarWidthNumber) v.findViewById(R.id.round_progress_bar_t);
+        String temp = String.valueOf(mScoreValue);
+        /*
+        int len = temp.length();
+        SpannableString score = new SpannableString(mScoreValue + getString(R.string.unit));
+        score.setSpan(new AbsoluteSizeSpan(80,true), 0, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        score.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.checkupSubInfo)), 0, len, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        score.setSpan(new AbsoluteSizeSpan(15, true), len, len+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        score.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.checkupMainInfo)), len, len+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        score.setSpan(new SubscriptSpan(), len, len+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mScore.setText(score);
+        */
+        mScore.setText(temp);
+
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+        mScreenHeight = outMetrics.heightPixels;
+        //mLayout.getLayoutParams().height = mScreenHeight;
+        //mLayout.requestLayout();
+
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                //performAnimate(mRoundProgressBar);
+                pullCurtain(mCurtain);
+            }
+        });
+
+        return v;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // TODO:处理动画cancle
+    }
+}

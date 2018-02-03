@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HorizontalProgressBarWithNumber">
+        <attr name="progress_unreached_color" format="color" />
+        <attr name="progress_reached_color" format="color" />
+        <attr name="progress_reached_bar_height" format="dimension" />
+        <attr name="progress_unreached_bar_height" format="dimension" />
+        <attr name="progress_text_size" format="dimension" />
+        <attr name="progress_text_color" format="color" />
+        <attr name="progress_text_offset" format="dimension" />
+        <attr name="progress_text_visibility" format="enum">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="1" />
+        </attr>
+    </declare-styleable>
+    
+    <declare-styleable name="RoundProgressBarWidthNumber">
+        <attr name="outer_circle_radius" format="dimension"/>
+        <attr name="outer_circle_radius_color" format="color"/>
+        <attr name="outer_circle_height" format="dimension"/>
+        <attr name="radius" format="dimension" />
+        <attr name="radius_color" format="color" />
+        <attr name="radius_background_color" format="color"/>
+        <attr name="radius_height" format="dimension"/>
+        <attr name="shadow_radius" format="dimension"/>
+        <attr name="shadow_color" format="color"/>
+        <attr name="shadow_height" format="dimension"/>
+        <attr name="circle_radius" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="WaveRoundProgress">
+        <attr name="outside_circle_radius" format="dimension"/>
+        <attr name="outside_circle_color" format="color"/>
+        <attr name="outside_circle_height" format="dimension"/>
+        <attr name="inside_circle_radius" format="dimension" />
+        <attr name="inside_circle_color" format="color" />
+        <attr name="wave_circle_radius" format="dimension"/>
+        <attr name="wave_circle_color" format="color"/>
+        <attr name="wave_speed_color" format="color"/>
+    </declare-styleable>
+
+</resources>

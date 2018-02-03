@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="46dp">
+    <TextView
+        android:id="@+id/children_item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="60dp"
+        android:textColor="@color/black"
+        android:textSize="17sp"/>
+
+    <CheckBox
+        android:id="@+id/chkbox"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/checkbox_selector"
+        android:button="@null"
+        android:checked="true"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/child_scan_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/chkbox"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:textSize="17sp"
+        android:textColor="@color/red"/>
+
+    <View
+        android:id="@+id/child_divider"
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:background="@color/greydivider"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:visibility="gone"/>
+</RelativeLayout >

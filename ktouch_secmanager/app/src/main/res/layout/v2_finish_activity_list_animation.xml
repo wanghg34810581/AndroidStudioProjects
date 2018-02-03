@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidUnknownAttribute -->
+<view xmlns:tools="http://schemas.android.com/tools"
+    class="com.guli.secmanager.widget.ImageAndListWidget"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_image_and_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/ok_animation_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/finish_activity_icon_round"
+            android:layout_centerInParent="true"
+            tools:ignore="ContentDescription" />
+        <!--<TextView
+            android:id="@+id/tv_garbage_clean"
+            style="@style/MenuButtonDescribe"
+            android:layout_centerInParent="true"
+            android:text="完成"
+            android:textSize="13sp"
+            android:textColor="@color/green"
+            />
+        <com.guli.secmanager.widget.V2RoundProgressBarWidthNumber
+            android:id="@+id/round_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progress="100"
+            android:layout_centerInParent="true"
+            secmanager:radius="89dp"
+            secmanager:radius_color="@color/green"
+            secmanager:radius_background_color="#ffc0c0c0"
+            secmanager:radius_height="20dp"
+            secmanager:outer_circle_radius="99dp"
+            secmanager:outer_circle_radius_color="#ffffffff"
+            />
+
+        <RelativeLayout
+            android:id="@+id/round_progress_inner_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/round_progress_inner_shadow"
+                android:layout_centerInParent="true"
+                />
+            <ImageButton
+                android:id="@+id/iv_garbage_clean"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_do_finish"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="6dp"
+                android:background="#00000000"
+                />
+            <TextView
+                android:id="@+id/tv_garbage_clean"
+                style="@style/MenuButtonDescribe"
+                android:layout_below="@id/iv_garbage_clean"
+                android:text="完成"
+                android:textSize="13sp"
+                android:textColor="@color/green"
+                />
+        </RelativeLayout>-->
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/result_message_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_below="@+id/ok_animation_layout"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        >
+        <TextView
+            android:id="@+id/tv_result_title"
+            style="@style/MenuButtonDescribe"
+            android:text="@string/result_big_safe_info"
+            android:textSize="40sp"
+            android:textColor="@color/green"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/tv_result_description"
+            style="@style/MenuButtonDescribe"
+            android:text="@string/no_found_danger"
+            android:textSize="17sp"
+            android:textColor="@color/green"
+            android:layout_below="@+id/tv_result_title"
+            android:layout_marginTop="0dp"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/arrow_animation_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:layout_below="@+id/result_message_layout"
+        android:layout_centerHorizontal="true"
+        >
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/finish_activity_icon_more"
+            android:layout_centerHorizontal="true"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/more"
+            android:textSize="12sp"
+            android:textColor="@color/green"
+            android:layout_below="@+id/iv_arrow"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="30dp"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+</view>

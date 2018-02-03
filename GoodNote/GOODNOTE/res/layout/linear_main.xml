@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/main_bg">
+
+    <!--<android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp" />-->
+
+    <com.android.swipeListView.SwipeListView xmlns:swipe="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/recycler"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:listSelector="#00000000"
+        swipe:onlyOneOpenedWhenSwipe="true"
+        swipe:swipeBackView="@+id/back"
+        swipe:swipeCloseAllItemsWhenMoveList="true"
+        swipe:swipeOpenOnLongPress="false"
+        swipe:swipeFrontView="@+id/front"
+        swipe:swipeMode="right"
+        swipe:swipeOffsetRight="100dp" />
+
+    <ImageView
+        android:id="@+id/search_cover"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <!--<LinearLayout
+        android:id="@+id/search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/goodnote_bg"
+        android:orientation="horizontal">-->
+
+        <LinearLayout
+            android:id="@+id/search_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@drawable/actionbar_background"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/search_text"
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:background="@drawable/search_bg"
+                android:drawableLeft="@drawable/search1"
+                android:drawablePadding="5dp"
+                android:drawableRight="@drawable/search_cancle"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:singleLine="true"
+                android:textColor="@color/color_title_txt"
+                android:layout_weight="1"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/search_back"
+                android:layout_width="66dp"
+                android:layout_height="48dp"
+                android:background="@drawable/actionbar_button"
+                android:textColor="@color/color_white"
+                android:textSize="13sp"
+                android:text="@string/cancel"/>
+        </LinearLayout>
+    <!--</LinearLayout>-->
+</RelativeLayout>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">G笔记</string>
+	<string name="no_note">没有任何便签</string>
+	<string name="delete_confirm">是否要删除这条笔记？</string>
+	<string name="delete_confirm_title">删除</string>
+	<string name="delete_file_success">删除成功</string>
+	<string name="delete_confirm_cancel">取消</string>
+	<string name="delete_confirm_ok">确定</string>
+	<string name="editor_full">已达到最大长度5000个字</string>
+	<!--<string name="sdcard_full" product="tablet">设备储存已满，请释放部分空间</string>-->
+	<string name="sdcard_full" product="default">手机储存已满，请释放部分空间</string>
+	<string name="save_none">笔记内容为空，无笔记创建</string>
+	<string name="empty_note">笔记内容为空</string>
+	<string name="delete_progress">正在删除</string>
+	<string name="title_loading">正在加载...</string>
+	<string name="edit">编辑</string>
+	<string name="delete">删除</string>
+	<string name="new_note">新建笔记</string>	
+	<string name="save">保存</string>
+	<string name="hint_text">在此输入正文</string>
+	<string name="toast_edit_title_max_length">标题最大长度为30个字符</string>
+	<string name="date_yesterday">昨天</string>
+	<string name="search">搜索</string>
+
+    <string name="paint">画图</string>
+    <string name="pencil">铅笔</string>
+    <string name="eraser">橡皮</string>		
+    <string name="undo">撤销</string>
+    <string name="redo">恢复</string>
+    <string name="clear">清除</string>
+    <string name="clear_title">确认清除？</string>
+    <string name="clear_confirm">确认要清除所有吗？</string>
+    <string name="clear_confirm_cancel">取消</string>
+    <string name="clear_confirm_ok">确认</string>
+    <string name="template">皮肤</string>    
+    <string name="apply_now">立即使用</string>
+    <string name="skin_name0">信纸</string>
+    <string name="skin_name1">几何格调</string>
+    <string name="skin_name2">旅行</string>
+    <string name="skin_name3">星空</string>
+    <string name="skin_name4">蓝色印象</string>
+    <string name="skin_name5">纯真年代</string>                    
+    <!--duhuan 20160713 add  for share begin-->
+	<string name="share">分享</string>
+	<string name="shareimagecreaate">正在生成图片。</string>
+	<!--duhuan 20160713 add  for share  end-->
+	<!-- TY zhencc add begin -->
+	<string name="default_title">[ 图片 ]</string>
+	<string name="note_introduction">欢迎使用G笔记</string>
+	<!-- TY zhencc add end -->
+    <string name="show_picture">显示图片</string>
+    <string name="download">下载</string>
+    <string name="download_image_to">保存图片到</string>
+    <!-- TY zhencc 20160825 add for PROD104174124 begin -->
+    <string name="applyed">已使用</string>
+    <!-- TY zhencc 20160825 add for PROD104174124 end -->
+    <!-- TY zhencc 20160830 modify for PROD104179943 begin -->
+    <string name="save_confirm">是否保存？</string>
+    <string name="save_confirm_cancel">不保存</string>
+    <string name="save_confirm_ok">保存</string>
+    <!-- TY zhencc 20160830 modify for PROD104179943 end -->
+    <!-- TY zhencc 20160902 add for PROD104179658 begin -->
+    <string name="sure">确认</string>
+    <string name="cancel">取消</string>
+    <!-- TY zhencc 20160902 add for PROD104179658 end -->
+    <string name="image_full">已达到最多20张图片</string>
+    <!--yuhf 20161219 add for new edit note screen-->   
+    <string name="list">列表</string>
+    <string name="sure_del">确认删除</string>
+    <string name="del_confirm">确认要删除此条笔记？</string>     
+</resources>

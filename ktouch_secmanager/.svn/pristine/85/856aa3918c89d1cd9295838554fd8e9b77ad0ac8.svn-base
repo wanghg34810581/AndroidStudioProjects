@@ -1,0 +1,700 @@
+package com.guli.secmanager.Checkup;
+
+
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TextView;
+
+import com.guli.secmanager.GarbageClean.GarbageCleanActivity;
+import com.guli.secmanager.R;
+import com.guli.secmanager.Utils.FileSizeFormatter;
+import com.guli.secmanager.Utils.ShareUtil;
+import com.guli.secmanager.Utils.UnitConverter;
+import com.guli.secmanager.VirusScan.VirusScanActivity;
+import com.guli.secmanager.flowmonitor.FlowMonitorActivity;
+import com.guli.secmanager.widget.RoundProgressBarWidthNumber;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import tmsdk.common.module.qscanner.QScanResultEntity;
+import tmsdk.fg.module.deepclean.RubbishEntity;
+
+
+/**
+ * Created by yujie on 16-4-6.
+ */
+public class CheckupFragment extends Fragment implements TaskInterface {
+    public static final String TAG = "CheckupFragment";
+
+    public static final String QUERY_PERMISSION_STATE = "com.guli.secmanager.Checkup.QUERY_PERMISSION_STATE";
+
+    // Rubbish scan->100, Virus scan->100, check Flow monitor switch state->20, check firewall switch state->20
+    private int MAX_PROGRESS = 220;
+
+    // 和UIStateMachine 的几个状态一一对应
+    public static final int INIT = 0;
+    public static final int SCANNING = 1;
+    public static final int STOP = 3;
+    public static final int SCANCOMPLETE = 4;
+    public static final int OPTIMIZED = 5;
+    public static final int STOPBYENTERSUBMODULE = 6;
+
+    private TextView mInfo;
+    private TextView mInfoMainTitle;
+    private TextView mInfoSubTitle;
+    private TextView mScoreValue;
+    private TextView mScoreUnit;
+    private RoundProgressBarWidthNumber mRoundBar;
+    private TextView mOptimize;
+
+    private TextView mCheckupAgain;
+
+    private UIStateMachine mUIStateMachine;
+    private Handler mHandler;
+    private boolean mCheckupIsRuning;
+    private boolean mFirstRunFlag;
+    private boolean mOptimizeStart;
+    private TableLayout mMenusLayout;
+    private ImageButton mGarbageClean;
+    private ImageButton mVirusScan;
+    private ImageButton mFlowMonitor;
+    //private ImageButton mWifiManager;
+    // for tos
+    private ImageButton mPermissionManager;
+    private ImageButton mPowerSave;
+    private ImageButton mFirewall;
+
+    private ArrayList<BaseTask> mTaskList;
+    private ArrayList<Object> mScanResults;
+    private int mCurrTaskIndex;
+    private boolean mCheckupComplete; // 是否已完成体检
+    private int mCheckupScore; // 体检得分
+    private boolean mTosApkInstalled;
+
+    HealthScaner<ArrayList<BaseTask>> mHealthScaner;
+
+    private enum ResultType {
+        RUBBISH,
+        VIRUS,
+        FLOWMON,
+        FIREWALL,
+        PERMISSION,
+    }
+
+    // 安全评分策略，暂定方案
+    private int getDeductScore(ResultType resultType, Object result) {
+        int retValue = 0;
+        switch (resultType) {
+            case RUBBISH:
+                List<RubbishEntity> resultList = (List<RubbishEntity>)result;
+                int rubbishNum = resultList.size();
+                if (rubbishNum > 0 && rubbishNum <= 5) {
+                    retValue = (int)(rubbishNum * 1.5);
+                } else if (rubbishNum > 5 && rubbishNum <= 10) {
+                    retValue = 7 + (int)((rubbishNum - 5)*1);
+                } else if (rubbishNum > 10) {
+                    retValue = 13 + (int)((rubbishNum - 10)*0.2);
+                } else if (rubbishNum > 40) {
+                    retValue = 19;
+                }
+                break;
+            case VIRUS:
+                List<QScanResultEntity> results = (List<QScanResultEntity>)result;
+                int virusNum = results.size();
+                if (virusNum > 0 && virusNum <= 5) {
+                    retValue = virusNum * 2;
+                } else if (virusNum > 5 && virusNum <= 10) {
+                    retValue = 10 + (int)((virusNum - 5)*1.5);
+                } else if (virusNum > 10) {
+                    retValue = 17 + (int)((virusNum - 10)*0.2);
+                } else if (virusNum > 30) {
+                    retValue = 21;
+                }
+                break;
+            case FLOWMON:
+                boolean flowMonSwitch = (boolean)result;
+                if (!flowMonSwitch) {
+                    retValue = 2;
+                }
+                break;
+            case FIREWALL:
+                int firewallSwitch = (int)result;
+                if (firewallSwitch == 1) {
+                    retValue = 2;
+                }
+            case PERMISSION:
+                int permissionFlag = (int)result;
+                if (permissionFlag == 1) {
+                    retValue = 2;
+                }
+        }
+        return -retValue;
+    }
+
+    @Override
+    public void onFinished(final Object o) {
+        Log.i(TAG, "--->>> onFinished()");
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (isVisible()) {
+
+                    if (o instanceof DeepCleanTask) {
+                        DeepCleanTask deepTask = (DeepCleanTask)mTaskList.get(0);
+                        long rubbishSize = 0;
+                        if (deepTask.getResult() != null) {
+                            //mScanResults.add(deepTask.getResult());
+                            rubbishSize = deepTask.getAllRubbishSize();
+                            List<RubbishEntity> resultList = (List<RubbishEntity>)deepTask.getResult();
+                            mCheckupScore += getDeductScore(ResultType.RUBBISH, resultList);
+                        }
+                        mScanResults.add((Object)rubbishSize);
+                        mInfoMainTitle.setText(getString(R.string.find_garbage));
+                        String totalSize = FileSizeFormatter.transformShortType(rubbishSize);
+                        mInfoSubTitle.setText(totalSize);
+                        // 如果用户已经终止扫描，不再往下执行
+                        if (mCheckupIsRuning) {
+                            doNextTask(0);
+                        }
+                    }
+                    if (o instanceof VirusScanTask) {
+                        VirusScanTask virusTask = (VirusScanTask)mTaskList.get(1);
+                        mInfoMainTitle.setText(getString(R.string.find_virus_software));
+                        int totalSize = 0;
+                        if (virusTask.getResult() != null) {
+                            mScanResults.add(virusTask.getResult()); // 加入病毒扫描结果数组
+                            mScanResults.add(virusTask.getScanedSoftwareCount()); // 加入扫描的所有软件包个数
+                            List<QScanResultEntity> results = (List<QScanResultEntity>)virusTask.getResult();
+                            totalSize = results.size();
+                            mCheckupScore += getDeductScore(ResultType.VIRUS, results);
+                        } else {
+                            mScanResults.add(null);
+                        }
+                        mInfoSubTitle.setText(totalSize + "个");
+                        if (mCheckupIsRuning) {
+                            doNextTask(1000);
+                        }
+                    }
+                    if (o instanceof FlowMonTask) {
+                        // 流量监控状态: true - enable; false - disable
+                        SharedPreferences sPreferences = getActivity().getSharedPreferences(ShareUtil.DATABASE_NAME, Activity.MODE_WORLD_READABLE);
+                        boolean flowMonSwitch = sPreferences.getBoolean(ShareUtil.AUTO_BREAK_STATE, false);
+                        if (flowMonSwitch) {
+                            mInfoMainTitle.setText(getString(R.string.flow_switch));
+                            mInfoSubTitle.setText(getString(R.string.flow_switch_open));
+                        } else {
+                            mInfoMainTitle.setText(getString(R.string.flow_switch));
+                            mInfoSubTitle.setText(getString(R.string.flow_switch_close));
+                        }
+                        mScanResults.add((Object)flowMonSwitch);
+                        mCheckupScore += getDeductScore(ResultType.FLOWMON, (Object)flowMonSwitch);
+                        //doNextTask(1000);
+                        if (!mTosApkInstalled) {
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onScanComplete();
+                                }
+                            }, 1000);
+                        } else {
+                            if (mCheckupIsRuning) {
+                                doNextTask(1000);
+                            }
+                        }
+                    }
+                    if (o instanceof FirewallTask) {
+                        Context othercontext = null;
+                        try {
+                            othercontext = getActivity().createPackageContext("com.guli.firewall", Context.CONTEXT_IGNORE_SECURITY);
+                        } catch (PackageManager.NameNotFoundException ex) {
+                            ex.printStackTrace();
+                        }
+                        SharedPreferences pref = othercontext.getSharedPreferences("count", Context.MODE_MULTI_PROCESS);
+                        int firewallSwitch = pref.getInt("count", 1); // 读取骚扰拦截配置 1-不拦截；2-智能拦截；3-只拦截黑名单；4-只接受白名单
+                        Log.i(TAG, "--->>> firewallSwitch = " + firewallSwitch);
+                        if (firewallSwitch == 1) {
+                            mInfoMainTitle.setText(getString(R.string.firewall_switch));
+                            mInfoSubTitle.setText(getString(R.string.firewall_switch_close));
+                        } else {
+                            mInfoMainTitle.setText(getString(R.string.firewall_switch));
+                            mInfoSubTitle.setText(getString(R.string.firewall_switch_open));
+                        }
+                        mScanResults.add((Object)firewallSwitch);
+                        mCheckupScore += getDeductScore(ResultType.FIREWALL, (Object)firewallSwitch);
+                        if (mCheckupIsRuning) {
+                            doNextTask(1000);
+                        }
+                        /*
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onScanComplete();
+                            }
+                        }, 1000);
+                        */
+                    }
+
+                    if (o instanceof PermissionTask) {
+                        SharedPreferences sp = getActivity().getSharedPreferences(PermissionReceiver.DATABASE_PERMISSION, Activity.MODE_PRIVATE);
+                        int result = sp.getInt(PermissionReceiver.PERMISSIONSTATE, 0); // 读取敏感权限结果，1--存在敏感权限， 0 --安全
+
+                        Log.i(TAG, "--->>> PermissionFlag = " + result);
+                        if (result == 1) {
+                            mInfoMainTitle.setText(getString(R.string.permission_manager));
+                            mInfoSubTitle.setText(getString(R.string.PermissionRisk));
+                        } else {
+                            mInfoMainTitle.setText(getString(R.string.permission_manager));
+                            mInfoSubTitle.setText(getString(R.string.PermissionSafe));
+                        }
+
+                        mCheckupScore += getDeductScore(ResultType.PERMISSION, (Object)result);
+
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onScanComplete();
+                            }
+                        }, 1000);
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onCancel() {
+        if (isVisible()) {
+            //mRoundBar.setProgress(0);
+            //mInfoMainTitle.setText(getString(R.string.checkup_canceled));
+            //Toast.makeText(getActivity(), getString(R.string.checkup_canceled), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onProgressUpdate(int progress) {
+        if (isVisible() && mCheckupIsRuning) {
+            mRoundBar.setProgress(progress);
+        }
+    }
+
+    @Override
+    public void onError(String errorInfo) {
+
+    }
+    /*
+     * Required interface for hosting activities
+     */
+    public interface Callbacks {
+        void onHealthScanComplete(int score, ArrayList<Object> results);
+    }
+
+    public CheckupFragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume Enter: mFirstRunFlag = " + mFirstRunFlag);
+        if (mFirstRunFlag) {
+            mHealthScaner.startScan(mTaskList, mCurrTaskIndex, 0); // 仅在首次进入主界面时调用自动扫描函数
+            mCheckupIsRuning = true;
+            mUIStateMachine.sendMessage(mUIStateMachine.obtainMessage(mUIStateMachine.SCAN));
+        }
+
+        mFirstRunFlag = false;
+
+        if (mOptimizeStart) {
+            mUIStateMachine.sendMessage(mUIStateMachine.obtainMessage(mUIStateMachine.OPTIMIZE));
+        }
+        /*
+        Log.i(TAG, "onResume Enter: mFirstRunFlag = " + mFirstRunFlag);
+        if (mRoundBar != null && mFirstRunFlag == true) {
+                mInfoMainTitle.setText(getString(R.string.scan_in_process));
+                mHealthScaner.startScan(mTaskList, mCurrTaskIndex, 0); // 仅在首次进入主界面时调用自动扫描函数
+                mCheckupIsRuning = true;
+        }
+        mFirstRunFlag = false;
+        if (mCheckupComplete) {
+            // 已经完成体检，显示一键按钮。
+            // 如果是已经从优化界面返回，显示重新体检按钮
+            mInfo.setVisibility(View.GONE);
+            mCheckupAgain.setVisibility(View.VISIBLE);
+            setScore();
+        }
+        */
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause Enter...");
+        mUIStateMachine.sendMessage(mUIStateMachine.obtainMessage(mUIStateMachine.CANCEL));
+        stopScanTask();
+
+    }
+
+    // 从宿主Activity调用, onPause调用
+    public void stopScanTask() {
+        Log.i(TAG, "--->>> stopScanTask(): mCheckupIsRuning = " + mCheckupIsRuning);
+        if (!mCheckupIsRuning){
+            //mUIStateMachine.sendMessage(mUIStateMachine.obtainMessage(mUIStateMachine.CANCEL));
+            return;
+        }
+        try {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mHealthScaner.stopScan(mTaskList, mCurrTaskIndex, 0);
+                    mUIStateMachine.sendMessage(mUIStateMachine.obtainMessage(mUIStateMachine.CANCEL));
+                    mTaskList.get(mCurrTaskIndex).cancel();
+                    mTaskList.get(mCurrTaskIndex).free();
+                    mCheckupIsRuning = false;
+                    mScanResults.clear(); // 清空结果列表
+                    //mInfo.setVisibility(View.GONE);
+                    //mCheckupAgain.setVisibility(View.VISIBLE);
+
+                }
+            });
+        } catch (Exception ex) {
+            Log.e(TAG, "Error post mHealthScaner.stopScan msg to ui thread.", ex);
+        }
+    }
+
+    private void doNextTask(int delay) {
+        if (mCurrTaskIndex + 1 < mTaskList.size()) {
+            mCurrTaskIndex++;
+            mHealthScaner.startScan(mTaskList, mCurrTaskIndex, delay);
+        }
+    }
+
+    private void setScore() {
+
+        mInfoMainTitle.setVisibility(View.GONE);
+        mInfoSubTitle.setVisibility(View.GONE);
+        mScoreValue.setText(Integer.toString(mCheckupScore));
+        mScoreValue.setVisibility(View.VISIBLE);
+        mScoreUnit.setVisibility(View.VISIBLE);
+    }
+    private void onScanComplete() {
+        if (isVisible()) {
+            mCheckupComplete = true;
+            mCheckupIsRuning = false;
+            mUIStateMachine.sendMessage(mUIStateMachine.obtainMessage(mUIStateMachine.FINISH));
+        }
+    }
+
+    private void initUI() {
+        mCheckupComplete = false;
+        mCheckupScore = 100;
+        mCurrTaskIndex = 0;
+        mRoundBar.setMax(MAX_PROGRESS);
+        mRoundBar.setProgress(0);
+        mOptimize.setVisibility(View.GONE);
+        mCheckupAgain.setVisibility(View.GONE);
+        mInfo.setVisibility(View.VISIBLE);
+    }
+
+    private void scanningUI() {
+        mScoreValue.setVisibility(View.GONE);
+        mScoreUnit.setVisibility(View.GONE);
+        mInfoMainTitle.setVisibility(View.VISIBLE);
+        mInfoMainTitle.setText(getString(R.string.scan_in_process));
+        mInfoSubTitle.setVisibility(View.VISIBLE);
+        mInfoSubTitle.setText("");
+        mOptimize.setVisibility(View.GONE);
+        mCheckupAgain.setVisibility(View.GONE);
+        mInfo.setVisibility(View.VISIBLE);
+        mInfo.setText(getString(R.string.checkup_in_progress));
+        // 发送Intent，通知permission manager更新敏感权限状态
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(QUERY_PERMISSION_STATE);
+                getActivity().sendOrderedBroadcast(i, null);
+            }
+        });
+    }
+
+    private void stopUI() {
+        mInfoMainTitle.setVisibility(View.VISIBLE);
+        mInfoSubTitle.setVisibility(View.VISIBLE);
+        mInfo.setVisibility(View.GONE);
+        mOptimize.setVisibility(View.GONE);
+        mCheckupAgain.setVisibility(View.VISIBLE);
+    }
+
+    private void scanCompleteUI() {
+        mInfoMainTitle.setVisibility(View.VISIBLE);
+        mInfoSubTitle.setVisibility(View.GONE);
+        mInfo.setVisibility(View.GONE);
+        mCheckupAgain.setVisibility(View.GONE);
+        mOptimize.setVisibility(View.VISIBLE);
+        mRoundBar.setProgress(MAX_PROGRESS); // 进度显示需要和流程同步
+        setScore();
+    }
+
+    private void optimizedUI() {
+        //Log.i(TAG, "optimizedUI Enter ... ");
+        mInfoMainTitle.setVisibility(View.VISIBLE);
+        mInfoSubTitle.setVisibility(View.GONE);
+        mInfo.setVisibility(View.GONE);
+        mOptimize.setVisibility(View.GONE);
+        mCheckupAgain.setVisibility(View.VISIBLE);
+        setScore();
+    }
+
+    private void stopByEnterSubModuleUI() {
+        mInfoMainTitle.setVisibility(View.GONE);
+        mInfoSubTitle.setVisibility(View.GONE);
+        mInfo.setVisibility(View.GONE);
+        mOptimize.setVisibility(View.GONE);
+        mCheckupAgain.setVisibility(View.VISIBLE);
+        setScore();
+    }
+
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate ... ");
+        super.onCreate(savedInstanceState);
+        // 判断tos三个子功能包是否已经被安装
+        mTosApkInstalled = UnitConverter.isTosApkInstalled(getActivity());
+        if (mTosApkInstalled) {
+            MAX_PROGRESS += 40; // 260, add firewall task  & permission check task
+        }
+        setRetainInstance(true);
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case INIT:
+                        initUI();
+                        break;
+                    case SCANNING:
+                        scanningUI();
+                        break;
+                    case STOP:
+                        stopUI();
+                        break;
+                    case SCANCOMPLETE:
+                        scanCompleteUI();
+                        break;
+                    case OPTIMIZED:
+                        optimizedUI();
+                        break;
+                    case STOPBYENTERSUBMODULE:
+                        stopByEnterSubModuleUI();
+                        break;
+                }
+            }
+        };
+
+        mTaskList = new ArrayList<BaseTask>();
+        DeepCleanTask task = new DeepCleanTask(this, mHandler);
+        task.setProgressOffset(0);
+        mTaskList.add(task);
+        VirusScanTask virusTask = new VirusScanTask(this, mHandler);
+        virusTask.setProgressOffset(100);
+        mTaskList.add(virusTask);
+        FlowMonTask flowMonTask = new FlowMonTask(this, mHandler);
+        flowMonTask.setProgressOffset(200);
+        mTaskList.add(flowMonTask);
+        if (mTosApkInstalled) {
+            FirewallTask firewallTask = new FirewallTask(this, mHandler);
+            firewallTask.setProgressOffset(220);
+            mTaskList.add(firewallTask);
+            PermissionTask permissionTask = new PermissionTask(this, mHandler);
+            permissionTask.setProgressOffset(240);
+            mTaskList.add(permissionTask);
+        }
+        mScanResults = new ArrayList<Object>();
+        mFirstRunFlag = true;
+        mOptimizeStart = false;
+        mHealthScaner = new HealthScaner<ArrayList<BaseTask>>(mHandler);
+        mHealthScaner.start();
+        mHealthScaner.getLooper();
+        Log.i(TAG, "HealthScaner work thread started");
+
+        mUIStateMachine = UIStateMachine.make(getActivity(), mHandler);
+        Log.i(TAG, "UIStateMachine ready...");
+    }
+
+    private void hideMenuLayout() {
+        mMenusLayout.setVisibility(View.INVISIBLE);
+    }
+
+    private void showMenuLayout() {
+        mMenusLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void gotoSubModule() {
+        if (!mCheckupIsRuning) { // 已经扫描完毕
+            Log.i(TAG, "--->>> call gotoSubModule... ");
+            mUIStateMachine.sendMessage(mUIStateMachine.obtainMessage(mUIStateMachine.GOTOSUBMODULE));
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView enter... ");
+        View v;
+        if (mTosApkInstalled) {
+            v = inflater.inflate(R.layout.checkup_fragment_tos, container, false);
+        } else
+        {
+            v = inflater.inflate(R.layout.checkup_fragment, container, false);
+        }
+
+        mInfo = (TextView) v.findViewById(R.id.tv_checkup_info);
+        mRoundBar = (RoundProgressBarWidthNumber) v.findViewById(R.id.round_progress_bar);
+        mOptimize = (TextView) v.findViewById(R.id.tv_optimize);
+        mOptimize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOptimize.setVisibility(View.INVISIBLE);
+                hideMenuLayout();
+                if (getActivity() instanceof Callbacks) {
+                    mOptimizeStart = true;
+                    Log.i(TAG, "--->>> mScanResults size = " + mScanResults.size());
+                    mHealthScaner.processResult(mTaskList, 0, 0);
+                    // 发送Intent，通知permission manager更新敏感权限状态
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent i = new Intent(QUERY_PERMISSION_STATE);
+                            getActivity().sendOrderedBroadcast(i, null);
+                        }
+                    });
+                    ((Callbacks) getActivity()).onHealthScanComplete(mCheckupScore, mScanResults);
+                }
+            }
+        });
+        mCheckupAgain = (TextView) v.findViewById(R.id.tv_checkup_again);
+        mCheckupAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUIStateMachine.sendMessage(mUIStateMachine.obtainMessage(mUIStateMachine.RESCAN));
+                mRoundBar.setMax(MAX_PROGRESS);
+                mRoundBar.setProgress(0);
+                mScanResults.clear(); // 清空结果列表
+                mCurrTaskIndex = 0;
+                mCheckupScore = 100;
+                mCheckupComplete = false;
+                mHealthScaner.startScan(mTaskList, mCurrTaskIndex, 0);
+                mCheckupIsRuning = true;
+            }
+        });
+        mInfoMainTitle = (TextView) v.findViewById(R.id.tv_info_main_title);
+        mInfoSubTitle = (TextView) v.findViewById(R.id.tv_info_sub_title);
+        mScoreValue = (TextView) v.findViewById(R.id.tv_score_value);
+        mScoreUnit = (TextView) v.findViewById(R.id.tv_score_unit);
+
+        mMenusLayout = (TableLayout) v.findViewById(R.id.menu_layout);
+        // 功能菜单相关控件
+        mGarbageClean = (ImageButton) v.findViewById(R.id.iv_garbage_clean);
+        mGarbageClean.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                gotoSubModule();
+                //wangdsh add start
+                //Toast.makeText(getActivity(), "Go to Garbage Clean function.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), GarbageCleanActivity.class));
+                //wangdsh add  end
+            }
+        });
+		
+        mVirusScan = (ImageButton) v.findViewById(R.id.iv_virus_scan);
+        mVirusScan.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                gotoSubModule();
+                //shenyan add start
+                startActivity(new Intent(getActivity(), VirusScanActivity.class));
+                //shenyan add  end
+            }
+        });
+
+        mFlowMonitor = (ImageButton) v.findViewById(R.id.iv_flow_monitor);
+        //zouchl add start
+        mFlowMonitor.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                gotoSubModule();
+                startActivity(new Intent(getActivity(), FlowMonitorActivity.class));
+            }
+        });
+        //zouchl add end
+
+        if (mTosApkInstalled) {
+            mPermissionManager = (ImageButton) v.findViewById(R.id.iv_permission_manager);
+            mPermissionManager.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    gotoSubModule();
+                    Intent i = new Intent();
+                    i.setClassName("com.ktouch.security", "com.ktouch.security.ui.PermissionControlPageActivity");
+                    startActivity(i);
+                }
+            });
+            mPowerSave = (ImageButton) v.findViewById(R.id.iv_power_save);
+            mPowerSave.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    gotoSubModule();
+                    Intent i = new Intent();
+                    i.setClassName("com.ktouch.tysavebattery", "com.ktouch.tysavebattery.activity.MainActivity");
+                    startActivity(i);
+                }
+            });
+            mFirewall = (ImageButton) v.findViewById(R.id.iv_firewall);
+            mFirewall.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    gotoSubModule();
+                    Intent i = new Intent();
+                    i.setClassName("com.guli.firewall", "com.guli.firewall.ui.FireWallActivity");
+                    startActivity(i);
+                }
+            });
+        } else {
+            //mWifiManager = (ImageButton) v.findViewById(R.id.iv_wifi_manager);
+
+        }
+        //int powerSaveSwitch = Settings.Global.getInt(getActivity().getContentResolver(), "low_power", 0);
+        //Log.i(TAG, "powersavestate = " + powerSaveSwitch);
+        //if (powerSaveSwitch == 1) {
+        //    Toast.makeText(getActivity(), "power save mode enable", Toast.LENGTH_SHORT).show();
+        //}
+        return v;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        for (BaseTask a:mTaskList) {
+            a.free(); // 补漏
+        }
+        //Log.i(TAG, "--->>> onDestroy: mHealthScaner.quit() ; mUIStateMachine.Quit()");
+        mHealthScaner.quit();
+        mUIStateMachine.Quit();
+    }
+}

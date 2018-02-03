@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ktouch.kcalendar">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH.mail" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".AllInOneActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppThemeNoActionBar"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.APP_CALENDAR" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="time/epoch" />
+                <data android:host="com.ktouch.kcalendar" />
+                <data android:scheme="content"/>
+            </intent-filter>
+        </activity>
+        <activity-alias android:name="LaunchActivity"
+            android:targetActivity=".AllInOneActivity"
+            android:exported="true">
+        </activity-alias>
+
+        <activity android:name=".event.EditEventActivity"
+            android:theme="@style/AppThemeBlackTextNoActionBar">
+        </activity>
+
+        <activity-alias android:name="EditEventActivity"
+            android:targetActivity=".event.EditEventActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/event" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/event" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity android:name=".event.ReminderSettingsActivity"
+            android:theme="@style/AppThemeBlackTextNoActionBar">
+        </activity>
+
+        <activity android:name=".event.RecurrenceSettingsActivity"
+            android:theme="@style/AppThemeBlackTextNoActionBar">
+        </activity>
+
+        <activity android:name=".event.MarkAsSettingsActivity"
+            android:theme="@style/AppThemeBlackTextNoActionBar">
+        </activity>
+
+        <activity android:name=".agenda.AgendaListActivity"
+            android:theme="@style/AppThemeBlackTextNoActionBar">
+        </activity>
+
+        <activity android:name=".vacation.MyVacationActivity"
+            android:theme="@style/AppThemeBlackTextNoActionBar"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name=".vacation.MyVacationOperationActivity"
+            android:theme="@style/AppThemeBlackTextNoActionBar"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <provider android:name=".contentprovider.KCalendarProvider" android:authorities="com.ktouch.kcalendar.KCalendarProvider" />
+
+        <activity android:name=".selectcalendars.SelectVisibleCalendarsActivity"
+            android:label="@string/select_visible_calendars_title"
+            android:theme="@android:style/Theme.Material.Light.DarkActionBar"/>
+
+        <activity android:name=".selectcalendars.SelectSyncedCalendarsMultiAccountActivity"
+            android:label="@string/select_synced_calendars_title"
+            android:theme="@android:style/Theme.Material.Light.DarkActionBar"/>
+
+        <activity android:name="CalendarSettingsActivity" android:label="@string/preferences_title"
+            android:theme="@android:style/Theme.Material.Light.DarkActionBar"/>
+
+        <activity android:name="SettingsActivity" android:label="@string/preferences_title"
+            android:theme="@style/AppThemeNoActionBar"/>
+
+        <!-- Declarations for search -->
+        <!-- Make all activities a searchable context -->
+        <meta-data android:name="android.app.default_searchable"
+            android:value="com.ktouch.kcalendar.SearchActivity"/>
+
+        <activity android:name="SearchActivity" android:label="@string/search_title"
+            android:launchMode="singleTop" android:theme="@style/CalendarTheme.WithActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+        </activity>
+        <activity android:name="MySearchActivity" android:label="@string/search_title"
+            android:launchMode="singleTop" android:theme="@style/AppThemeNoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+        </activity>
+
+        <activity android:name="DeleteEventsActivity"
+            android:parentActivityName="com.ktouch.kcalendar.AllInOneActivity"
+            android:theme="@style/CalendarTheme.WithActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ktouch.kcalendar.AllInOneActivity" />
+        </activity>
+
+        <provider android:name=".CalendarRecentSuggestionsProvider"
+            android:exported="false"
+            android:authorities="com.ktouch.kcalendar.CalendarRecentSuggestionsProvider" />
+
+        <!-- baitao 2016.02.25 add begin -->
+        <provider android:name="com.qti.lunarinfo.LunarInfoProvider"
+            android:authorities="com.qti.lunarinfo"
+            android:exported="false" />
+        <!-- baitao 2016.02.25 add end -->
+
+        <!-- Declarations for alerts/reminders -->
+        <activity android:name=".alerts.AlertActivity" android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Material.Dialog" android:excludeFromRecents="true" />
+
+        <activity android:name=".alerts.QuickResponseActivity" android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Material.Dialog" android:excludeFromRecents="true"
+            android:label="@string/quick_response_dialog_title" />
+
+        <activity android:name=".alerts.SnoozeDelayActivity" android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Material.Dialog" android:excludeFromRecents="true" />
+
+        <receiver android:name=".alerts.AlertReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.EVENT_REMINDER" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <data android:scheme="content" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PROVIDER_CHANGED"/>
+                <data android:scheme="content"/>
+                <data android:host="com.android.calendar"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".alerts.GlobalDismissManager"
+            android:exported="false" />
+
+        <receiver android:name=".UpgradeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".alerts.AlertService" />
+
+        <service android:name=".alerts.DismissAlarmsService" />
+
+        <service android:name=".alerts.SnoozeAlarmsService" />
+
+        <service android:name=".alerts.InitAlarmsService" />
+
+        <!-- Declarations for the widget -->
+        <receiver android:name=".widget.CalendarAppWidgetProvider" android:label="@string/gadget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.ktouch.kcalendar.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/appwidget_info" />
+        </receiver>
+
+        <receiver android:name=".widget.CalendarAppWidgetService$CalendarFactory">
+            <intent-filter>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="android.intent.action.DATE_CHANGED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.LOCALE_CHANGED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PROVIDER_CHANGED"/>
+                <data android:scheme="content"/>
+                <data android:host="com.android.calendar"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.ktouch.kcalendar.APPWIDGET_SCHEDULED_UPDATE"/>
+                <data android:scheme="content"/>
+                <data android:host="com.android.calendar"/>
+                <data android:mimeType="vnd.android.data/update" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".widget.CalendarAppWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false">
+        </service>
+
+        <service android:name=".AsyncQueryServiceHelper" />
+
+    </application>
+</manifest>

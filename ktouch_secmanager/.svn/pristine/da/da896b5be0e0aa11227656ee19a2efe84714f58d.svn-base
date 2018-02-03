@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="314dp"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/listview_height"
+        android:id="@+id/title">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/set_time"
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            android:id="@+id/textView" />
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+        android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+        android:background="@color/list_line_color"
+        android:layout_below="@+id/title" />
+
+    <RelativeLayout
+        android:id="@+id/time_picker"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/title"
+        >
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/listview_height"
+            android:layout_centerVertical="true"
+            android:background="#f6f6f6"
+            />
+
+        <LinearLayout
+            android:id="@+id/NumPic1_layout"
+            android:layout_width="157dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:gravity="center">
+            <com.guli.secmanager.flowmonitor.NumberPicker
+                android:id="@+id/NumPic1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/NumPic2_layout"
+            android:layout_width="157dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/NumPic1_layout"
+            android:gravity="center">
+            <com.guli.secmanager.flowmonitor.NumberPicker
+                android:id="@+id/NumPic2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/listview_horizontal_margin_edge"
+        android:layout_marginRight="@dimen/listview_horizontal_margin_edge"
+        android:background="@color/list_line_color"
+        android:layout_above="@+id/cancel_panel" />
+
+    <LinearLayout
+        android:id="@+id/cancel_panel"
+        android:layout_width="157dp"
+        android:layout_height="@dimen/listview_height"
+        android:layout_below="@+id/time_picker"
+        android:layout_alignParentLeft="true"
+        android:background="@color/transparent"
+        android:clickable="true">
+        <TextView
+            android:id="@+id/flow_cancel"
+            android:layout_width="157dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textSize="17sp"
+            android:textColor="@color/word_color"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="@dimen/listview_height"
+        android:layout_alignTop="@+id/cancel_panel"
+        android:layout_alignBottom="@+id/cancel_panel"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/list_line_color"
+        android:layout_below="@+id/time_picker" />
+
+    <LinearLayout
+        android:id="@+id/ok_panel"
+        android:layout_width="157dp"
+        android:layout_height="@dimen/listview_height"
+        android:layout_below="@+id/time_picker"
+        android:layout_alignParentRight="true"
+        android:background="@color/transparent"
+        android:clickable="true" >
+        <TextView
+            android:id="@+id/flow_ok"
+            android:layout_width="157dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="@string/ok"
+            android:textSize="17sp"
+            android:textColor="@color/word_color" />
+    </LinearLayout>
+
+</RelativeLayout>

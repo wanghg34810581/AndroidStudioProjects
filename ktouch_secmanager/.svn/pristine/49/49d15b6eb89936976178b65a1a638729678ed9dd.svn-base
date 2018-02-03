@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
+
+    <ListView android:id="@+id/operator_select_list"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:divider="#00000000"
+        android:dividerHeight="0dip"
+        android:listSelector="@drawable/ripple_button"
+        android:scrollbars="none">
+    </ListView>
+
+</LinearLayout>

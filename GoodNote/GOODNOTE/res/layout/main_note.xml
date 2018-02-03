@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TY: 20140711 liteng merager (<LinearLayout> ...</LinearLayout> and android:layout_height="wrap_content") for PROD102933851 -->
+<!-- TIANYURD:songbangbang 20150408 modify the divider and background color for TOS3.0 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white_bg" >
+
+    <LinearLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
+    </LinearLayout>
+
+    <include
+        android:id="@+id/empty_layout_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/empty"
+        android:visibility="gone" />
+
+    <!--<include layout="@layout/floating_action_button" />-->
+
+</RelativeLayout>

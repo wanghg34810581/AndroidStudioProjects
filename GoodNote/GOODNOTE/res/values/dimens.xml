@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+     <dimen name="g_note_padding_top">10dp</dimen>
+     <dimen name="g_note_padding_left">20dp</dimen>
+     
+     <!--TIANYURD;songbangbang 20150408 add for TOS3.0 begin-->
+     <dimen name="action_bar_height">40dp</dimen>
+     <!--TIANYURD;songbangbang 20150408 add for TOS3.0 end-->
+     <!--Tianyu yuhf add-->
+     <dimen name="ab_title_text_size">18sp</dimen>
+     <dimen name="floating_action_button_margin_bottom">15dp</dimen>
+     <!-- TY zhencc add -->
+     <dimen name="list_image_round_corner">5dp</dimen>
+     <dimen name="spaces_item_decoration">5dp</dimen>
+     <dimen name="image_max_height">195dp</dimen>
+     <dimen name="image_min_height">115dp</dimen>
+     <dimen name="image_max_width">160dp</dimen>
+
+     <dimen name="image_height_linear">45dp</dimen>
+     <dimen name="image_width_linear">45dp</dimen>
+     
+     <dimen name="g_note_image_border">5dp</dimen>
+     <dimen name="g_note_image_shadow">6px</dimen>
+     <dimen name="g_note_icon_border">10dp</dimen>
+     <dimen name="g_note_bottom_menu_height">45dp</dimen>
+     <dimen name="g_note_top0_height">41dp</dimen>
+     <dimen name="g_note_bottom0_height">42dp</dimen>        
+     <dimen name="g_note_top1_height">60dp</dimen>     
+     <dimen name="g_note_bottom1_height">160dp</dimen>
+     <dimen name="g_note_top2_height">60dp</dimen>     
+     <dimen name="g_note_bottom2_height">115dp</dimen>
+     <dimen name="g_note_top3_height">60dp</dimen>     
+     <dimen name="g_note_bottom3_height">150dp</dimen>
+     <dimen name="g_note_top4_height">40dp</dimen>     
+     <dimen name="g_note_bottom4_height">145dp</dimen>
+     <dimen name="g_note_top5_height">40dp</dimen>     
+     <dimen name="g_note_bottom5_height">140dp</dimen>    
+     <dimen name="g_note_pager_margin">33dp</dimen>
+     <dimen name="g_note_line_space">22dp</dimen>
+     <!--dimen name="g_note_line_space">10dp</dimen-->
+     <dimen name="g_note_line_padding">15dp</dimen>
+     <!--dimen name="g_note_line_padding">10dp</dimen-->
+     <dimen name="g_note_text_size">16sp</dimen>
+     <dimen name="g_note_text_hint_size">18sp</dimen>
+     <dimen name="g_note_text_height">19dp</dimen>     
+     <dimen name="g_note_text_padding_left">36dp</dimen>
+     <dimen name="swipe_spring_region">5dp</dimen>
+</resources>

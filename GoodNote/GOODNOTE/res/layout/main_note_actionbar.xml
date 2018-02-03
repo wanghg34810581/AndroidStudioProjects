@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TY: 20140711 liteng merager (<LinearLayout> ...</LinearLayout> and android:layout_height="wrap_content") for PROD102933851 -->
+<!-- TIANYURD:songbangbang 20150408 modify the divider and background color for TOS3.0 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical"
+    android:background="@drawable/actionbar_background" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="#FFFFFFFF"
+        android:textSize="18sp"
+        android:text="@string/app_name" />
+    <!-- actionbar 右边按钮 -->
+
+    <ImageButton
+        android:id="@+id/float_imagebutton"
+        android:layout_width="66dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:onClick="CreateNote"
+        android:background="@drawable/actionbar_button"
+        android:src="@drawable/float_imagebutton" />
+
+</RelativeLayout>

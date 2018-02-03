@@ -1,0 +1,100 @@
+package com.guli.secmanager.Utils;
+
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+
+import com.guli.secmanager.R;
+
+/**
+ * Created by yujie on 16-4-10.
+ */
+public class UnitConverter {
+    public static final String TAG = "UnitConverter";
+
+    public static int dp2px(View v, int dpVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpVal, v.getResources().getDisplayMetrics());
+    }
+
+    public static int sp2px(View v, int spVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                spVal, v.getResources().getDisplayMetrics());
+    }
+
+    /*public static void updateButtonBg(View view) {
+        //Log.v("flow", "updateButtonBg view = " + view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setBackgroundResource(R.drawable.ripple_button);
+        } else {
+            view.setBackgroundResource(R.drawable.complete_btn_on_selector);
+        }
+    }*/
+
+    public static void updateButtonBg2(Context context, View view) {
+        //Log.v("flow", "updateButtonBg view = " + view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TypedValue outValue = new TypedValue();
+            context.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+            view.setBackgroundResource(outValue.resourceId);
+        } else {
+            view.setBackgroundResource(R.drawable.complete_btn_on_selector);
+        }
+    }
+
+    public static void updateButtonBgGreen(View view) {
+        //Log.v("flow", "updateButtonBg view = " + view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setBackgroundResource(R.drawable.ripple_button2);
+        } else {
+            view.setBackgroundResource(R.drawable.complete_btn_on_selector);
+        }
+    }
+
+    public static void updateButtonBgGrey(View view) {
+        //Log.v("flow", "updateButtonBg view = " + view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setBackgroundResource(R.drawable.ripple_button3);
+        } else {
+            view.setBackgroundResource(R.drawable.complete_btn_on_selector);
+        }
+    }
+
+    public static boolean isTosApkInstalled(Context context) {
+        boolean installed = false;
+
+        PackageInfo packageInfo1;
+        try {
+            packageInfo1 = context.getPackageManager().getPackageInfo("com.guli.firewall", 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            packageInfo1 = null;
+            //e.printStackTrace();
+        }
+        PackageInfo packageInfo2;
+        try {
+            packageInfo2 = context.getPackageManager().getPackageInfo("com.ktouch.security", 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            packageInfo2 = null;
+            //e.printStackTrace();
+        }
+        PackageInfo packageInfo3;
+        try {
+            packageInfo3 = context.getPackageManager().getPackageInfo("com.ktouch.tysavebattery", 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            packageInfo3 = null;
+            //e.printStackTrace();
+        }
+
+        if (packageInfo1 != null && packageInfo2 != null && packageInfo3 != null) {
+            installed = true;
+            Log.i(TAG, "--->>> Tos packages has installed.");
+        } else {
+            Log.i(TAG, "--->>> Tos packages not installed.");
+        }
+        return installed;
+    }
+}

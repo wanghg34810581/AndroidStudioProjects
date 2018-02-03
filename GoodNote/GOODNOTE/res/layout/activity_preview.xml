@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TY zhencc 20160825 modify for PROD104174129 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paint_bg_color" >
+
+    <LinearLayout
+        android:id="@+id/preview_bottom_menu"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/apply_button"
+            android:layout_width="237dp"
+            android:layout_height="38dp"
+            android:background="@drawable/preview_button"
+            android:gravity="center"
+            android:textColor="@color/color_white"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/skin_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/preview_bottom_menu"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="22dp"
+        android:includeFontPadding="false"
+        android:text="@string/skin_name0"
+        android:textColor="@color/color_txt"
+        android:textSize="17sp" />
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/skin_name"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:layerType="software"
+        android:orientation="horizontal" >
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/previewpager"
+            android:layout_width="226dp"
+            android:layout_height="402dp"
+            android:layout_marginLeft="67dp"
+            android:layout_marginRight="67dp"
+            android:clipChildren="false" />
+    </LinearLayout>
+
+</RelativeLayout>

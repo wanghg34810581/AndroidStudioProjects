@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    style="@style/CalendarBottomBarStyle">
+
+    <TextView
+        android:id="@+id/vacation_today_tv"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_height="48dp"
+        android:layout_marginLeft="20dp"
+        style="@style/ToolBarTextViewStyle"
+        android:onClick="goToToday"
+        android:text="@string/today_btn_title"/>
+
+    <TextView
+        android:id="@+id/vacation_custom_tv"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        style="@style/ToolBarTextViewStyle"
+        android:layout_marginRight="20dp"
+        android:text="@string/my_vacation_custom_title"/>
+</RelativeLayout>

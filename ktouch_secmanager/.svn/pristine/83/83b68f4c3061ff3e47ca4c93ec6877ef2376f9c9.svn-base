@@ -1,0 +1,215 @@
+package com.guli.secmanager.Checkup;
+
+import android.app.Fragment;
+import android.os.Handler;
+import android.util.Log;
+
+import java.io.File;
+import java.util.List;
+
+import tmsdk.common.module.qscanner.QScanConstants;
+import tmsdk.common.module.qscanner.QScanResultEntity;
+import tmsdk.fg.creator.ManagerCreatorF;
+import tmsdk.fg.module.qscanner.QScanListenerV2;
+import tmsdk.fg.module.qscanner.QScannerManagerV2;
+
+/**
+ * Created by yujie on 16-4-19.
+ */
+public class VirusScanTask extends BaseTask {
+    public static final String TAG = "VirusScanTask";
+
+    private QScannerManagerV2 mQScannerMananger;//病毒扫描功能接口
+    private List<QScanResultEntity> mTaskResult;
+
+    public TaskInterface mTaskListener;
+    private int mProgressOffset;
+    public int getProgressOffset() {
+        return mProgressOffset;
+    }
+
+    public void setProgressOffset(int progressOffset) {
+        this.mProgressOffset = progressOffset;
+    }
+
+    Handler mResponseHandler; // UI线程对应Handler
+    private int mSoftwareCount; // 已扫描软件个数
+
+    public VirusScanTask(TaskInterface taskListener, Handler ui) {
+        this.mTaskListener = taskListener;
+        this.mResponseHandler = ui;
+        this.mProgressOffset = 0;
+        this.mSoftwareCount = 0;
+
+    }
+
+    public boolean init() {
+        boolean result = false;
+        mSoftwareCount = 0;
+        mQScannerMananger = ManagerCreatorF.getManager(QScannerManagerV2.class);
+        if(mQScannerMananger.initScanner()==0) {
+            Log.i(TAG, "--->>> init VirusScanner return true");
+            result = true;
+        } else {
+            Log.i(TAG, "--->>> init VirusScanner return false");
+        }
+        Fragment fragment = (Fragment) this.mTaskListener;
+        Log.i(TAG, "病毒库版本：" + mQScannerMananger.getVirusBaseVersion(fragment.getActivity()));
+        return result;
+    }
+
+    // 在onFinished调用后可获取任务执行结果
+    public Object getResult() {
+        if (mTaskResult != null) {
+            return (Object) mTaskResult;
+        }
+        return null;
+    }
+
+    public int getScanedSoftwareCount() {
+        return mSoftwareCount;
+    }
+
+    public void execute() {
+        mQScannerMananger.scanInstalledPackages(initProcessListener(), true);
+    }
+
+    public void process() {
+        // do nothing now.
+    }
+
+    private String getScanTypeString(int type) {
+        switch (type) {
+            case QScanConstants.SCAN_INSTALLEDPKGS:
+                return "已安装软件扫描";
+            case QScanConstants.SCAN_UNINSTALLEDAPKS:
+                return "未安装的APK扫描";
+            case QScanConstants.SCAN_CLOUD:
+                return "云查杀";
+            default:
+                return String.valueOf(type);
+        }
+    }
+
+    private void countScanedSoftware(QScanResultEntity result) {
+        switch (result.type) {
+            case QScanConstants.TYPE_OK:
+            case QScanConstants.TYPE_RISK:
+            case QScanConstants.TYPE_VIRUS:
+            case QScanConstants.TYPE_SYSTEM_FLAW:
+            case QScanConstants.TYPE_TROJAN:
+            case QScanConstants.TYPE_UNKNOWN:
+                mSoftwareCount++;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private QScanListenerV2 initProcessListener() {
+        return new QScanListenerV2() {
+            @Override
+            public void onScanFinished(int scanType, List<QScanResultEntity> results) {
+                Log.i(TAG, "--->>> onScanFinished()");
+                if (results != null) {
+                    int count = results.size();
+                    Log.i(TAG, "--->>> onScanFinished(): results size = " + count);
+                    Log.i(TAG, "--->>> onScanFinished(): scaned software count = " + mSoftwareCount);
+                    mTaskResult = results;
+                    if (mTaskListener == null || mResponseHandler == null) {
+                        return;
+                    }
+                    try {
+                        mResponseHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mTaskListener.onFinished((Object)VirusScanTask.this);
+                            }
+                        });
+                    } catch (Exception ex) {
+                        Log.e(TAG, "--->>> Error post onFinished message to ui thread.", ex);
+                    }
+
+                /*
+                for(QScanResultEntity entity : results){
+                    Log.v(TAG, "[onScanFinished]" +
+                            "softName[" + entity.softName +
+                            "]packageName[" + entity.packageName +
+                            "]path[" + entity.path +
+                            "]name[" + entity.name + "]");
+
+                    Log.v(TAG, "[onScanFinished]" +
+                            "discription[" + entity.discription +
+                            "]url[" + entity.url);
+                }
+                */
+                }
+
+            }
+
+            @Override
+            public void onScanStarted(int scanType) {
+                Log.i(TAG, "--->>> onScanStarted(): scan type = " + getScanTypeString(scanType));
+            }
+
+            @Override
+            public void onScanCanceled(int scanType) {
+                Log.i(TAG, "--->>> onScanCanceled()");
+
+                if (mTaskListener == null || mResponseHandler == null) {
+                    return;
+                }
+                try {
+                    mResponseHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTaskListener.onCancel();
+                        }
+                    });
+                } catch (Exception ex) {
+                    Log.e(TAG, "--->>> Error post onCancel message to ui thread.", ex);
+                }
+            }
+
+            @Override
+            public void onScanError(int scanType, int errCode) {
+                Log.i(TAG, "--->>> onScanError(): errCode = " + errCode);
+            }
+
+            @Override
+            public void onScanProgress(int scantype, final int progress, QScanResultEntity result) {
+                //Log.i(TAG, "--->>> onScanProgress()");
+                countScanedSoftware(result);
+                if (mTaskListener == null || mResponseHandler == null) {
+                    return;
+                }
+
+                try {
+                    mResponseHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTaskListener.onProgressUpdate(mProgressOffset + progress);
+                        }
+                    });
+                } catch (Exception ex) {
+                    Log.e(TAG, "--->>> Error post onProgressUpdate message to ui thread.", ex);
+                }
+            }
+        };
+    }
+
+    public void cancel() {
+        if (mQScannerMananger != null) {
+            Log.e(TAG, "--->>> call puseScan & cancelScan");
+            //mQScannerMananger.pauseScan();
+            mQScannerMananger.cancelScan();
+        }
+    }
+
+    public void free() {
+        if (mQScannerMananger != null) {
+            mQScannerMananger.freeScanner();
+            //mQScannerMananger = null;
+        }
+    }
+}

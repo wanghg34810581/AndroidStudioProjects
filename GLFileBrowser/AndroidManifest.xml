@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.guli.fileexplorer"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="21" /><!--TYRD: weina 20150624 change 14 to 21-->
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+     <uses-permission android:name="android.permission.READ_PHONE_STATE" /><!--TYRD: weina 20150414 add for umeng analytics-->
+    <!--TYRD: weina 20150624 modity  begin-->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <application
+        android:icon="@drawable/ic_launcher_filemanager"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Material.Light.TY"
+        android:debuggable="false">
+        <!--TYRD:weina 20151015 add |orientation for PROD104072669-->
+        <activity
+            android:name=".FileExplorerTabActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            
+            android:theme="@style/Theme.Material.Light.TY">
+    <!--<application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo.Light"
+        android:uiOptions="splitActionBarWhenNarrow">
+        <activity
+            android:name=".FileExplorerTabActivity"
+            android:configChanges="screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:theme="@style/FileTabActivityStyle">-->	    
+    <!--TYRD: weina 20150624 modity  end-->
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="android.intent.action.PICK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+            <!--
+            <intent-filter >
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.OPENABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            -->
+            <!--TYRD:weina 20150923 add for PROD104042909 begin-->
+            <intent-filter >
+                <action android:name="com.android.fileexplorer.action.FILE_SINGLE_SEL" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!--TYRD:weina 20150923 add for PROD104042909 end-->
+        </activity>
+
+        <activity android:name=".com.realfame.fileexplorer.SearchActivity" >
+            <intent-filter >
+                <action android:name="android.intent.action.SEARCH" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <!--TYRD: weina 20150624 change android:theme="@android:style/Theme.Holo.Light.NoActionBar"  to 
+	    android:theme="@style/Theme.Material.Light.NoActionBar.TY" -->
+        <activity
+            android:label="@string/menu_setting"
+            android:launchMode="singleTop"
+            android:name="FileExplorerPreferenceActivity"
+            android:theme="@style/Theme.Material.Light.NoActionBar.TY" >
+        </activity>
+
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".SearchActivity" />
+
+        <service android:name=".FTPServerService" />
+        <!--TYRD: weina 20150414 add for umeng analytics begin-->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="56fce58367e58e20c500092a" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Umeng" >
+        </meta-data>
+        <!--TYRD: weina 20150414 add for umeng analytics end-->
+    </application>
+
+</manifest>

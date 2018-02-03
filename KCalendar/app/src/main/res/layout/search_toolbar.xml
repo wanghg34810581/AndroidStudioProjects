@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/agenda_list_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/normal_height"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@color/title_bar_color"
+    app:layout_scrollFlags="scroll|enterAlways">
+
+    <EditText
+        android:id="@+id/searchBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/ty_search_bg"
+        android:hint="@string/search"
+        android:textSize="@dimen/toolbar_text_size"
+        android:textColor="@color/primary_text_black_color"
+        android:drawableLeft="@drawable/ic_search_inside"
+        android:drawablePadding="5dp"
+        android:singleLine="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:layout_marginRight="10dp"
+        android:text="@string/negative_button"
+        android:textSize="@dimen/toolbar_text_size"
+        android:textColor="@color/primary_text_black_color"
+        android:clickable="true"
+        android:onClick="onBackPressed"/>
+
+</LinearLayout>

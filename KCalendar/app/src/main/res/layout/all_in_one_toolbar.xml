@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/title_bar_color"
+    app:layout_scrollFlags="scroll|enterAlways"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height">
+
+        <Spinner
+            android:id="@+id/title_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:layout_marginLeft="@dimen/normal_gap"
+            android:layout_gravity="center_vertical"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/agenda_list_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_menu_agenda" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
+                android:onClick="goToSearch"
+                android:src="@drawable/ic_menu_search" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
+                android:onClick="goToSettings"
+                android:src="@drawable/ic_menu_settings" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/week_names"
+        layout="@layout/full_month_header"
+        android:background="@color/title_bar_color" />
+</LinearLayout>

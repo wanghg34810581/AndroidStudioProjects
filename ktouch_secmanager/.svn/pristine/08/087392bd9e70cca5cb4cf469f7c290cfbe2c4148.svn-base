@@ -1,0 +1,204 @@
+package com.guli.secmanager.Checkup;
+import android.os.Handler;
+import android.util.Log;
+
+import java.util.List;
+
+import tmsdk.fg.creator.ManagerCreatorF;
+import tmsdk.fg.module.deepclean.DeepcleanManager;
+import tmsdk.fg.module.deepclean.RubbishEntity;
+import tmsdk.fg.module.deepclean.RubbishEntityManager;
+import tmsdk.fg.module.deepclean.RubbishType;
+import tmsdk.fg.module.deepclean.ScanProcessListener;
+
+/**
+ * Created by yujie on 16-4-18.
+ */
+public class DeepCleanTask extends BaseTask{
+    public static final String TAG = "DeepCleanTask";
+
+    private DeepcleanManager mDeepcleanManager;
+    private List<RubbishEntity> mTaskResult;
+
+    public TaskInterface mTaskListener;
+    private int mProgressOffset;
+    public int getProgressOffset() {
+        return mProgressOffset;
+    }
+
+    public void setProgressOffset(int progressOffset) {
+        this.mProgressOffset = progressOffset;
+    }
+
+
+    Handler mResponseHandler; // UI线程对应Handler
+
+    public DeepCleanTask(TaskInterface taskListener, Handler ui) {
+        this.mTaskListener = taskListener;
+        this.mResponseHandler = ui;
+        this.mProgressOffset = 0;
+    }
+
+    // 在onFinished调用后可获取任务执行结果
+    public Object getResult() {
+        if (mTaskResult != null) {
+            return (Object) mTaskResult;
+        }
+        return null;
+    }
+
+    public boolean init() {
+        mDeepcleanManager = ManagerCreatorF.getManager(DeepcleanManager.class);
+        //mDeepcleanManager.appendWhitePath("/tencent/mobileqq");
+        //mDeepcleanManager.appendWhitePath("/tencent/MicroMsg");
+        ScanProcessListener listener = initProcessListener();//扫描进程
+        if(!mDeepcleanManager.init(listener)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public long getAllRubbishSize() {
+        mDeepcleanManager.getmRubbishEntityManager();
+        RubbishEntityManager rm = mDeepcleanManager.getmRubbishEntityManager();
+        return rm.getAllRubbishSize();
+    }
+
+    public void free() {
+        Log.i(TAG, "free resource for this task.");
+        if(mDeepcleanManager != null) {
+            //找垃圾
+            mDeepcleanManager.onDestory();
+            //mDeepcleanManager = null;
+        }
+    }
+
+    public void execute(){
+        Log.i(TAG, "--->>> excute task ...");
+        int flags = RubbishType.SCAN_FLAG_ALL;
+        if(!mDeepcleanManager.startScan(flags)) {
+            Log.e(TAG, "--->>> please call mDeepcleanManager.init() first!");
+        }
+    }
+
+    public void cancel() {
+        Log.i(TAG, "cancel task... ");
+        if (mDeepcleanManager != null) {
+            mDeepcleanManager.cancelScan();
+        }
+    }
+
+    public void process() {
+        if (mDeepcleanManager != null) {
+            mDeepcleanManager.startClean();
+        }
+    }
+
+    private ScanProcessListener initProcessListener() {
+        return new ScanProcessListener() {
+            @Override
+            public void onScanStarted( ) {
+                Log.i(TAG,"--->>> onScanStarted : "  );
+            }
+
+            @Override
+            public void onScanProcessChange(final int nowPercent, String scanPath){
+                if (mTaskListener == null || mResponseHandler == null) {
+                    return;
+                }
+                try {
+                    mResponseHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTaskListener.onProgressUpdate(mProgressOffset + nowPercent);
+                        }
+                    });
+                } catch (Exception ex) {
+                    Log.e(TAG, "--->>> Error post onProgressUpdate message to ui thread.", ex);
+                }
+            }
+
+            public void onRubbishFound(RubbishEntity aRubbish){
+                Log.i(TAG,"--->>> onRubbishFound."  );
+            }
+
+            @Override
+            public void onScanFinished() {
+                Log.i(TAG, "--->>> onScanFinished.");
+
+                RubbishEntityManager rm = mDeepcleanManager.getmRubbishEntityManager();
+                List<RubbishEntity> _Rubbishes = rm.getRubbishes();
+                final long allSize = rm.getAllRubbishSize();
+                if (_Rubbishes != null) {
+                    mTaskResult = _Rubbishes;
+                }
+
+                if (mTaskListener == null || mResponseHandler == null) {
+                    return;
+                }
+                try {
+                    mResponseHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTaskListener.onFinished((Object)DeepCleanTask.this);
+                        }
+                    });
+                } catch (Exception ex) {
+                    Log.e(TAG, "--->>> Error post onScanFinished message to ui thread.", ex);
+                }
+            }
+
+            @Override
+            public void onScanCanceled( ) {
+                Log.i(TAG,"--->>> onScanCanceled."  );
+                if (mTaskListener == null || mResponseHandler == null) {
+                    return;
+                }
+                try {
+                    mResponseHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTaskListener.onCancel();
+                        }
+                    });
+                } catch (Exception ex) {
+                    Log.e(TAG, "--->>> Error post onCancel message to ui thread.", ex);
+                }
+            }
+
+            @Override
+            public void onScanError(int error) {
+                // TODO Auto-generated method stub
+                if (DeepcleanManager.ERROR_CODE_SCAN_LOAD_ERROR == error)
+                    Log.e("--->>> onScanError", "load  do error!!   report in ui ...");
+                else if (DeepcleanManager.ERROR_CODE_PROCESS_ERROR == error)
+                    Log.e("--->>> onScanError", "service error!!   report in ui ...");
+                Log.i(TAG,"--->>> onScanError : error code = " + error);
+            }
+
+            // 如下接口不关注
+            public void onCleanStart( ) {
+                Log.i(TAG,"--->>> onCleanStart."  );
+            }
+            @Override
+            public void onCleanProcessChange(  long currenCleanSize, int nowPercent) {
+                //Log.i(TAG,"--->>> onCleanProcessChange : "+nowPercent+ "% ::" +currenCleanSize );
+            }
+            @Override
+            public void onCleanCancel( ) {
+                //清理出错，自动退出清理垃圾。
+                Log.i(TAG,"--->>> onCleanCancel."  );
+            }
+            public void onCleanFinish() {
+                Log.i(TAG,"--->>> onCleanFinish."  );
+            }
+            @Override
+            public void onCleanError(int error) {
+                Log.i(TAG,"--->>> onCleanError: error code = " + error);
+            }
+        };
+    }
+}
+
+

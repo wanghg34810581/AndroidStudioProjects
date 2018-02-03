@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/primary_foreground_color">
+
+    <RelativeLayout
+        android:id="@+id/edit_event_detail_all_day"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height"
+        android:clickable="false">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/all_day_title"
+            style="@style/EditEventListLabel"/>
+
+        <Switch
+            android:id="@+id/all_day_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/normal_gap"
+            style="@style/MySwitchStyle"/>
+    </RelativeLayout>
+
+    <include layout="@layout/edit_event_divider"/>
+
+    <RelativeLayout
+        android:id="@+id/edit_event_detail_start_time"
+        android:clickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_time_title"
+            style="@style/EditEventListLabel"/>
+
+        <TextView
+            android:id="@+id/start_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fdsafdsafas"
+            style="@style/EditEventListContent"/>
+    </RelativeLayout>
+
+    <include layout="@layout/edit_event_divider"/>
+
+    <RelativeLayout
+        android:id="@+id/edit_event_detail_end_time"
+        android:clickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/end_time_title"
+            style="@style/EditEventListLabel"/>
+
+        <TextView
+            android:id="@+id/end_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fdsafdsafas"
+            style="@style/EditEventListContent"/>
+    </RelativeLayout>
+
+    <include layout="@layout/edit_event_divider"/>
+
+    <RelativeLayout
+        android:id="@+id/edit_event_detail_reminders"
+        android:clickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reminders_title"
+            style="@style/EditEventListLabel"/>
+
+        <TextView
+            android:id="@+id/reminders_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fdsafdsafas"
+            style="@style/EditEventListContent"/>
+    </RelativeLayout>
+
+    <include layout="@layout/edit_event_divider"/>
+
+    <RelativeLayout
+        android:id="@+id/edit_event_detail_repetition"
+        android:clickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/repetition_title"
+            style="@style/EditEventListLabel"/>
+
+        <TextView
+            android:id="@+id/repetition_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fdsafdsafas"
+            style="@style/EditEventListContent"/>
+    </RelativeLayout>
+
+    <include layout="@layout/edit_event_divider"/>
+
+    <RelativeLayout
+        android:id="@+id/edit_event_detail_mark"
+        android:clickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mark_title"
+            style="@style/EditEventListLabel"/>
+
+        <TextView
+            android:id="@+id/mark_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fdsafdsafas"
+            style="@style/EditEventListContent"/>
+    </RelativeLayout>
+
+</LinearLayout>

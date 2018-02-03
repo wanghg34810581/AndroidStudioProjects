@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:visibility="gone"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height" />
+
+    <View android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="@drawable/list_divider"/>
+
+    <TextView
+        android:id="@+id/month_view_no_data_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height"
+        android:text="@string/no_data_hint_text"
+        android:textColor="@color/no_data_hint_color"
+        android:textSize="@dimen/normal_text_size"
+        android:gravity="center"/>
+
+    <View android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="@drawable/list_divider"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height" />
+
+    <View android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="@drawable/list_divider"/>
+    <TextView
+        android:id="@+id/week_view_no_data_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height"
+        android:text="@string/no_data_hint_text"
+        android:textColor="@color/no_data_hint_color"
+        android:textSize="@dimen/normal_text_size"
+        android:gravity="center"/>
+
+    <View android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="@drawable/list_divider"/>
+    <TextView
+        android:id="@+id/year_view_no_data_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height"
+        android:text="@string/no_data_hint_text"
+        android:textColor="@color/no_data_hint_color"
+        android:textSize="@dimen/normal_text_size"
+        android:gravity="center"/>
+
+    <View android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="@drawable/list_divider"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height" />
+
+    <View android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="@drawable/list_divider"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height" />
+
+    <View android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="@drawable/list_divider"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/normal_height" />
+
+    <View android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="@drawable/list_divider"/>
+
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TYRD: weina 20150624 add -->
+<ImageButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@*android:id/action_mode_close_button"
+    android:focusable ="true"
+    android:clickable="true"
+    android:src ="?android:attr/actionModeCloseDrawable"
+    android:contentDescription ="@*android:string/action_mode_done"
+    style ="?android:attr/actionModeCloseButtonStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>

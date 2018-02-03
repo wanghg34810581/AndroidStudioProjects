@@ -1,0 +1,33 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!--wangdsh add common dimens start-->
+
+    <dimen name="cmn_font_size">17sp</dimen>
+    <dimen name="background_anim">10dp</dimen>
+    <!--wangdsh add common dimens end-->
+
+    <!--shenyan add color start-->
+    <dimen name="space_list_divier">2dp</dimen>
+    <!--shenyan add color end-->
+
+    <!--zouchl add color start-->
+    <dimen name="time_picker_margin">5dp</dimen>
+    <dimen name="left_size_to_round">14dp</dimen>
+    <dimen name="vertical_line">2dp</dimen>
+    <dimen name="listview_horizontal_margin_edge">20dp</dimen>
+    <dimen name="listview_height">56dp</dimen>
+    <dimen name="edittext_width">60dp</dimen>
+    <dimen name="edittext_height">25dp</dimen>
+
+    <dimen name="outside_circle_radius">96dp</dimen>
+    //96dp * 2 +2
+    <dimen name="roundWidth">194dp</dimen>
+    <!--zouchl add color end-->
+
+    <!--wanghg add for v2 start-->
+    <dimen name="panel_margin">5dp</dimen>
+    <!--wanghg add for v2 end-->
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical">
+    <LinearLayout
+        android:id="@+id/parent_linear_layout"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="56dp">
+        <ImageView
+            android:id="@+id/parent_item_image_view"
+            android:src="@drawable/home_icon_intercept_04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"/>
+
+        <TextView
+            android:id="@+id/parent_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center_vertical"
+            android:textSize="17sp"
+            android:textColor="@color/ltgray"/>
+
+        <LinearLayout
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+            <TextView
+                android:id="@+id/parent_scan_num_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:textSize="17sp"
+                android:textColor="@color/ltgray"/>
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:id="@+id/parent_divider"
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_below= "@id/parent_linear_layout"
+        android:background="@color/greydivider"
+        android:visibility="visible"/>
+</RelativeLayout>

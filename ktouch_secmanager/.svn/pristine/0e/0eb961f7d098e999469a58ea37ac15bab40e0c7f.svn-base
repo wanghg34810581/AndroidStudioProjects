@@ -1,0 +1,175 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    xmlns:secmanager="http://schemas.android.com/apk/res-auto">
+
+    <com.guli.secmanager.widget.RoundProgressBarWidthNumber
+        android:id="@+id/round_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:progress="0"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        secmanager:radius="93dp"
+        secmanager:radius_color="#51bb24"
+        secmanager:radius_background_color="#f2f2f2"
+        secmanager:radius_height="9dp"
+        secmanager:outer_circle_radius="101dp"
+        secmanager:outer_circle_radius_color="#f2f2f2"
+        secmanager:outer_circle_height="1dp"
+        secmanager:shadow_radius="91dp"
+        secmanager:shadow_color="#cdcdcd"
+        secmanager:shadow_height="1dp"/>
+
+    <RelativeLayout
+        android:id="@+id/total_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="85dp">
+        <TextView
+            android:id="@+id/total_left_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:textColor="#000000"
+            android:text="300"/>
+
+        <TextView
+            android:id="@+id/total_left_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/total_left_size"
+            android:layout_toRightOf="@+id/total_left_size"
+            android:layout_marginRight="5dp"
+            android:textSize="12sp"
+            android:text="@string/total_flow"
+            android:textColor="#000000"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/total_left_size"
+            android:layout_toRightOf="@+id/total_left_size"
+            android:layout_marginRight="5dp"
+            android:textSize="12sp"
+            android:text="@string/MB"
+            android:textColor="#000000" />
+
+    </RelativeLayout>
+
+    <!--TextView
+        android:id="@+id/detail"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:clickable="true"
+        android:text="@string/detail"
+        android:textSize="12sp"
+        android:textColor="#51bb24"
+        android:layout_below="@+id/total_left"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" /-->
+
+    <TextView
+        android:id="@+id/left_common"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/left_month"
+        android:textSize="14sp"
+        android:textColor="#000000"
+        android:layout_below="@+id/total_left"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"/>
+
+
+    <TextView
+        android:id="@+id/traffic_ranking"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:clickable="true"
+        android:text="@string/strTraffic_ranking"
+        android:textSize="12sp"
+        android:textColor="#51bb24"
+        android:layout_alignTop="@+id/left_common"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/network_manager"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:clickable="true"
+        android:text="@string/strNetwork_manager"
+        android:textSize="12sp"
+        android:textColor="#51bb24"
+        android:layout_alignTop="@+id/left_common"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/common"
+        android:orientation="vertical"
+        android:layout_below="@+id/left_common"
+        android:layout_marginTop="22dp"
+        android:layout_marginLeft="56dp">
+        <TextView
+            android:id="@+id/total_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flow_common"
+            android:textSize="17sp"
+            android:textColor="#000000"/>
+        <TextView
+            android:id="@+id/total_common_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="17sp"
+            android:textColor="#51bb24"
+            android:layout_marginTop="8dp"
+            android:text="300M"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/list_line_color"
+        android:layout_below="@+id/common"
+        android:layout_alignTop="@+id/common"
+        android:layout_alignBottom="@+id/common"
+        android:layout_centerHorizontal="true"/>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/flow_free"
+        android:orientation="vertical"
+        android:layout_below="@+id/left_common"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="56dp"
+        android:layout_marginTop="22dp">
+        <TextView
+            android:id="@+id/left_free_flow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/free_flow"
+            android:textSize="17sp"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:id="@+id/left_free_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="17sp"
+            android:textColor="#51bb24"
+            android:layout_marginTop="8dp"
+            android:text="30M"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TYRD: weina 20150624 add -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="?attr/listDividerLeftPadding"
+    android:insetRight  ="?attr/listDividerRightPadding"
+    android:drawable ="@drawable/ty_material_list_divider"/>

@@ -1,0 +1,12 @@
+package com.guli.secmanager.Checkup;
+
+/**
+ * Created by yujie on 16-4-19.
+ */
+abstract public class BaseTask {
+    abstract public boolean init();
+    abstract public void execute();
+    abstract public void process();
+    abstract public void cancel();
+    abstract public void free();
+}

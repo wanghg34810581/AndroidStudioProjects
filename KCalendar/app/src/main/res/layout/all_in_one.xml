@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2010 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/total_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/title_bar_color"
+    android:fitsSystemWindows="true">
+
+    <FrameLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--<android.support.design.widget.AppBarLayout
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/tool_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/title_bar_color"
+                    android:title="@null"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                    <Spinner
+                        android:id="@+id/title_spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="20dp"
+                        android:onClick="goToSettings"
+                        android:src="@drawable/ic_menu_settings" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_menu_search" />
+
+                    <ImageView
+                        android:id="@+id/agenda_list_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_menu_agenda" />
+                </android.support.v7.widget.Toolbar>
+
+                <include
+                    android:id="@+id/week_names"
+                    layout="@layout/full_month_header"
+                    android:background="@color/title_bar_color" />
+            </LinearLayout>
+
+        </android.support.design.widget.AppBarLayout>-->
+        <include layout="@layout/all_in_one_toolbar"/>
+
+        <include layout="@layout/agenda_list_toolbar" />
+    </FrameLayout>
+
+    <include
+        android:id="@+id/bottom_bar"
+        layout="@layout/bottom_bar_all_in_one"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_bar"
+        android:layout_below="@id/appbar"
+        android:background="@color/main_pane_color"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/home_time"
+            android:layout_width="match_parent"
+            android:layout_height="16dip"
+            android:background="@color/calendar_date_banner_background"
+            android:gravity="center_vertical|right"
+            android:paddingRight="8dip"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/main_pane"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="2" />
+
+        <FrameLayout
+            android:id="@+id/secondary_pane"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- The views after this are retained to prevent crashes.
+        TODO: Remove if the app can handle them not being there. -->
+    <View
+        android:id="@+id/mini_month_container"
+        android:layout_width="0dip"
+        android:layout_height="0dip"
+        android:layout_above="@id/bottom_bar"
+        android:layout_below="@id/appbar"
+        android:background="@color/main_pane_color"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/mini_month"
+        android:layout_width="0dip"
+        android:layout_height="0dip"
+        android:layout_above="@id/bottom_bar"
+        android:layout_below="@id/appbar"
+        android:background="@color/main_pane_color"
+        android:visibility="gone" />
+
+
+    <FrameLayout
+        android:id="@+id/calendar_list"
+        android:layout_width="0dip"
+        android:layout_height="0dip"
+        android:layout_above="@id/bottom_bar"
+        android:layout_below="@id/appbar"
+        android:background="@color/main_pane_color"
+        android:visibility="gone" />
+
+
+</RelativeLayout>

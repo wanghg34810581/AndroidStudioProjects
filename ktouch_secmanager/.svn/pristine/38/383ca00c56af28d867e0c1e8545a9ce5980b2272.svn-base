@@ -1,0 +1,58 @@
+package com.guli.secmanager.Checkup;
+
+/**
+ * Created by yujie on 16-4-10.
+ */
+public class CheckupResultItem {
+    public static final String TAG = "CheckupResultItem";
+    public enum ItemType {
+        RISK,
+        SECURITY
+    }
+
+    private ItemType mType;
+    private String mName;
+    private String mState;
+
+    public ItemType getType() {
+        return mType;
+    }
+
+    public void setType(ItemType type) {
+        this.mType = type;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        this.mName = name;
+    }
+
+    public String getState() {
+        return mState;
+    }
+
+    public void setState(String state) {
+        this.mState = state;
+    }
+
+    public CheckupResultItem() {
+        mName = "unKnownItem";
+        mState = "close";
+        mType = ItemType.SECURITY;
+    }
+
+    public CheckupResultItem(String itemName, String itemState, ItemType type) {
+        mName = itemName;
+        mState = itemState;
+        mType = type;
+    }
+
+    public String toString() {
+        String output;
+        output = "Name: " + mName + "| State: " + mState + "| Type: " + mType.name();
+        return output;
+    }
+}
